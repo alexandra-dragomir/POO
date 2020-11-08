@@ -1,0 +1,14 @@
+Proiectul prezinta strcutura unei agentii imobiliare. Exista 4 clase: Building, Buyer, Employee, Agency.
+Buildidng retine cateva detalii tehnice despre fiecare cladire care urmeaza sa fie vanduta/inchiriata de catre agentia imobiliara. Buyer retine detaliile cumparatorului, Employee
+ale angajatilor iar Agency cele ale agentiei imobilare. Voi imparti ulterior Employee in Brokeri si alta clasa de angajati din agentie. La Brokeri voi crea liste cu obiecte
+de tip Building pentru fiecare categorie: casele inchiriate, vandute si cele ramase pe piata. In Agency voi avea o lista cu Brokerii care lucreaza acolo.
+
+Pe parcursul progrmaului, voi construi o functie care sa simuleze procesul de cumparare si anume: voi schimba statutul cladirii din "de vanzare" sau "de inchiriere" in "ocupata".
+De asemenea, dupa cumparare, cladirea brokerului va trece de pe liste de "houses on market" pe "houses sold" sau "houses rented" si se va adauga valoare comisionului primit
+la lista "comissions".
+
+Clasa Buyer o voi extinde si imparti in fosti si actuali clienti in functie de valoarea variabilei bool isIntersted. La cei care au cumparat deja voi avea o functie care sa 
+calculeze rata lunara. 
+
+La meniu voi adauga pe parcurs si restul functionalitatilor facute si voi crea o bucla pentru a putea oricand sa ajunga la starea 0 sau sa iasa din program la anumite comenzi. 
+Datele introduse de fiecare data vor fi salvate ulterior in vectori de obiecte pentru fiecare clasa. 
