@@ -25,7 +25,8 @@ comisionului primit la lista "comissions". Cumpararea este conditionata si de va
 Datele introduse de fiecare data vor fi salvate ulterior in vectori de obiecte pentru fiecare clasa. 
     
     In etapa a 2 a am transformat clasa Employee intr-o clasa abstracta si am derivat-o in clasele Broker si Agent. Clasa Interface este o interfata si este mostenita de catre   
-Buyer si Agent. Virtualizarea este exemplificata in supraincarcarile operatorului << din clasele Buyer si ForeignBuyer.
+Buyer si Agent. Virtualizarea este exemplificata in supraincarcarile operatorului << din clasele Buyer si ForeignBuyer si in calculul taxelor anuale din clasele Employee,
+Agent si Broker.
     In clasa Agent exista 3 liste cu obiecte de tip Building in care sunt retinute casele vandute, inchiriate si disponibile. Comisionul e calculat in functie de sumele 
 contractelor de vanzare si inchiriere. Am luat ca si coeficient 5% din pretul imobilului pentru vnzare, respectiv 5% din chiria anuala. Pentru a calcula pretul chiriei anuale 
 am inmultit pretul imobilului cu 0,6. In clasa Agent exista functii prin care pot fi adaugate/scoase case din cele 3 liste si functii prin care unor case li se schimba statutul
