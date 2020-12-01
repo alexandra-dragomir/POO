@@ -1,0 +1,2893 @@
+#include <iostream>
+#include <string.h>
+#include <string>
+#include <stdio.h>
+#include <iomanip>
+
+using namespace std;
+
+class Interface
+{
+    virtual float anualSalary() = 0;
+    virtual double totalIncome() = 0;
+};
+
+///------------------------------------------------------------------- Building ----------------------------------------------------------
+
+class Building
+
+{
+
+private:
+
+    int nrRooms;
+    bool extSpace;
+    char state;                  //sold, rented, available ---> s, r, a
+    char *ownerName;
+    char *adress;
+    char type[3];               //ap, gs, cs
+    float totalSurface;
+    float *roomSurface;
+    double price;
+    int yearOfConst;
+    static int currentYear;
+    const int idBuilding;
+    static int currentId;
+
+public:
+
+/// ....................................................................CONSTRUCTORI................................................
+///................................................FARA PARAMETRU...................................................................
+
+    Building() : idBuilding(currentId ++ )
+    {
+
+        this -> nrRooms = 0;
+        this -> price = 0;
+        this -> extSpace = 0;
+        this -> yearOfConst = 0;
+        this -> state = ' ';
+        this -> totalSurface = 0;
+
+        strcpy(this -> type, "  ");
+
+        this -> roomSurface = new float[0];
+
+        this -> ownerName = new char[strlen("Unknown") + 1];
+            strcpy(this -> ownerName, "Unknown");
+        this -> adress = new char[strlen("Unknown") + 1];
+            strcpy(this -> adress, "Unknown");
+    }
+
+///................................................CU TOTI PARAMETRII...................................................................
+
+    Building(int nrRooms, bool extSpace, char state, char *ownerName, char *adress, char type[3], float *roomSurface, double price, int yearOfConst) : idBuilding(currentId ++ )
+    {
+        this -> nrRooms = nrRooms;
+        this -> price = price;
+        this -> extSpace = extSpace;
+        this -> yearOfConst = yearOfConst;
+        this -> state = state;
+
+        strcpy(this -> type, type);
+
+        this -> ownerName = new char[strlen(ownerName) + 1];
+            strcpy(this -> ownerName, ownerName);
+
+        this -> adress = new char[strlen(adress) + 1];
+            strcpy(this -> adress, adress);
+
+        this -> roomSurface = new float[nrRooms];
+        for(int i = 0; i < this -> nrRooms; i++)
+            this -> roomSurface[i] = roomSurface[i];
+
+        float sup = 0;
+        for(int i = 0; i < this -> nrRooms; i++)
+            sup = sup + this -> roomSurface[i];
+        this -> totalSurface = sup;
+
+    }
+
+///................................................CU PARAMETRII........................................................................
+
+    Building(int nrRooms, char state, char *ownerName, float *roomSurface) : idBuilding(currentId ++ )
+    {
+        this -> nrRooms = nrRooms;
+        this -> state = state;
+
+        this -> ownerName = new char[strlen(ownerName) + 1];
+            strcpy(this -> ownerName, ownerName);
+
+        this -> roomSurface = new float[nrRooms];
+        for(int i = 0; i < this -> nrRooms; i++)
+            this -> roomSurface[i] = roomSurface[i];
+
+        float sup = 0;
+        for(int i = 0; i < this -> nrRooms; i++)
+            sup = sup + this -> roomSurface[i];
+        this -> totalSurface = sup;
+    }
+
+    Building(char *ownerName, int nrRooms, float *roomSurface, double price) : idBuilding(currentId ++ )
+    {
+        this -> nrRooms = nrRooms;
+        this -> price = price;
+
+        this -> ownerName = new char[strlen(ownerName) + 1];
+            strcpy(this -> ownerName, ownerName);
+
+        this -> roomSurface = new float[this -> nrRooms];
+        float total = 0;
+        for(int i = 0; i < this -> nrRooms; i++)
+        {
+            this -> roomSurface[i] = roomSurface[i];
+            total = total + roomSurface[i];
+        }
+        this -> totalSurface = total;
+
+    }
+
+///................................................DE COPIERE...................................................................
+
+    Building(const Building &b) : idBuilding(currentId)
+    {
+     //   cout << "S-A APELAT CST COPIERE BUILDING si id ul e " << this -> idBuilding << endl;
+        this -> nrRooms = b.nrRooms;
+        this -> price = b.price;
+        this -> extSpace = b.extSpace;
+        this -> yearOfConst = b.yearOfConst;
+        this -> state = b.state;
+        this -> totalSurface = b.totalSurface;
+
+        strcpy(this -> type, b.type);
+
+        this -> ownerName = new char[0];
+        this -> adress = new char[0];
+        this -> roomSurface = new float[0];
+
+        if(this -> ownerName != NULL)
+            delete [] this -> ownerName;
+        if(this -> adress != NULL)
+            delete [] this -> adress;
+        if(this -> roomSurface != NULL)
+            delete [] this -> roomSurface;
+
+        this -> ownerName = new char[strlen(b.ownerName) + 1];
+            strcpy(this -> ownerName, b.ownerName);
+
+        this -> adress = new char[strlen(b.adress) + 1];
+            strcpy(this -> adress, b.adress);
+
+        this -> roomSurface = new float[b.nrRooms];
+        for(int i = 0; i < this -> nrRooms; i++)
+            this -> roomSurface[i] = b.roomSurface[i];
+
+    }
+///................................................SUPRAINCARCAREA =...................................................................
+
+    Building& operator = (const Building &b)
+    {
+        if(this != &b)
+        {
+            this -> nrRooms = b.nrRooms;
+            this -> price = b.price;
+            this -> extSpace = b.extSpace;
+            this -> yearOfConst = b.yearOfConst;
+            this -> state = b.state;
+            this -> totalSurface = b.totalSurface;
+
+            strcpy(this -> type, b.type);
+
+            this -> ownerName = new char[0];
+            this -> adress = new char[0];
+            this -> roomSurface = new float[0];
+
+            if(this -> ownerName != NULL)
+                delete [] this -> ownerName;
+            if(this -> adress != NULL)
+                delete [] this -> adress;
+            if(this -> roomSurface != NULL)
+                delete [] this -> roomSurface;
+
+            this -> ownerName = new char[strlen(b.ownerName) + 1];
+                strcpy(this -> ownerName, b.ownerName);
+
+            this -> adress = new char[strlen(b.adress) + 1];
+                strcpy(this -> adress, b.adress);
+
+            this -> roomSurface = new float[b.nrRooms];
+            for(int i = 0; i < this -> nrRooms; i++)
+                this -> roomSurface[i] = b.roomSurface[i];
+
+        }
+        return *this;
+    }
+
+
+/// ....................................................................SETTERS................................................
+
+    void setPrice(double x)
+    {
+        this -> price = x;
+    }
+
+    void setRooms(int nrRoomsAux, float *roomSurfaceAux)
+    {
+        if(this -> roomSurface != NULL)
+            delete [] this -> roomSurface;
+
+        this -> nrRooms = nrRoomsAux;
+        this -> roomSurface = new float[nrRoomsAux];
+
+        for(int i = 0; i < nrRoomsAux; i++)
+            this -> roomSurface[i] = roomSurfaceAux[i];
+    }
+
+    void setState(char s)
+    {
+        this -> state = s;
+    }
+
+    void setName(char *c)
+    {
+        delete [] this -> ownerName;
+        this -> ownerName = new char[strlen(c) + 1];
+        strcpy(this -> ownerName, c);
+    }
+
+    void setAdress(char *a)
+    {
+        delete [] this -> adress;
+        this -> adress = new char[strlen(a) + 1];
+        strcpy(this -> adress, a);
+    }
+/// ....................................................................GETTERS................................................
+
+    int getNrRooms()
+    {
+        return this -> nrRooms;
+    }
+    bool getExtSpace()
+    {
+        return this -> extSpace;
+    }
+    char getState()
+    {
+        return this -> state;
+    }
+    char* getName()
+    {
+        return this -> ownerName;
+    }
+    char* getAdress()
+    {
+        return this -> adress;
+    }
+    char* getType()
+    {
+        return this -> type;
+    }
+    double getPrice()
+    {
+        return this -> price;
+    }
+    int getYearOfConst()
+    {
+        return this -> yearOfConst;
+    }
+    float getTotalSurface()
+    {
+        float sup = 0;
+        for(int i = 0; i < this -> nrRooms; i++)
+            sup = sup + this -> roomSurface[i];
+        this -> totalSurface = sup;
+        return sup;
+    }
+    int getId()
+    {
+        return currentId;
+    }
+
+///..................................................................FUNCTIONALITATI...................................................................
+
+    float anualRent()
+    {
+        float randament = (float) 5/100;                    //stabilirea chiriei in functie de valoarea imobilului -> randament de 5%
+        float r = this -> price;
+        r = r * randament;
+
+        return r;
+    }
+
+    float priceMP()
+    {
+        float p;
+        p = this -> price / getTotalSurface();
+        return p;
+    }
+
+    void addRoom(float s)
+    {
+        float *aux = new float[this -> nrRooms];
+
+        for(int i = 0; i < this -> nrRooms; i++)
+        {
+            aux[i] = this -> roomSurface[i];
+        }
+
+        this -> nrRooms ++;
+        delete [] this -> roomSurface;
+        this -> roomSurface = new float[this -> nrRooms];
+
+        for(int i = 0; i < this -> nrRooms; i++)
+        {
+            this -> roomSurface[i] = aux[i];
+        }
+        this -> roomSurface[this -> nrRooms - 1] = s;
+    }
+
+///..................................................................SUPRAINCARCARI...................................................................
+
+     Building operator ++ ()
+    {
+        this -> price = this -> price *1.1;         //crestere cu 10%
+        return *this;
+    }
+
+     Building operator ++ (int)
+    {
+        Building aux(*this);
+        this -> price = this -> price *1.1;         //crestere cu 10%
+        return aux;
+    }
+
+    bool operator == (const Building &b)
+    {
+        if(this -> nrRooms != b.nrRooms)
+            return false;
+        if(this -> extSpace != b.extSpace)
+            return false;
+        if(this -> price != b.price)
+            return false;
+        if(this -> state != b.state)
+            return false;
+        if(strcmp(this -> ownerName, b.ownerName))
+            return false;
+        if(strcmp(this -> adress, b.adress))
+            return false;
+        if(strcmp(this -> type, b.type))
+            return false;
+        if(this -> totalSurface != b.totalSurface)
+            return false;
+        if(this -> yearOfConst != b.yearOfConst)
+            return false;
+        for(int i = 0; i < this -> nrRooms; i++)
+            if(this -> roomSurface[i] != b.roomSurface[i])
+                return false;
+
+        return true;
+
+    }
+
+    bool operator < (const Building &b)
+    {
+        float r1, r2;
+        r1 = this -> price / this -> totalSurface;
+        r2 = b.price / b.totalSurface;;
+        if(r1 < r2)
+            return true;
+        return false;
+    }
+
+    bool operator > (const Building &b)
+    {
+        float r1, r2;
+        r1 = this -> price / this -> totalSurface;
+        r2 = b.price / b.totalSurface;
+        if(r1 > r2)
+            return true;
+        return false;
+    }
+
+    Building& operator + (int a)
+    {
+        this -> price = this -> price + a;
+        return *this;
+    }
+
+    Building& operator * (float i)
+    {
+        this -> price = this -> price * i;
+        return *this;
+    }
+
+    int operator [] (int i)
+    {
+        if(i == 1)
+            return this -> nrRooms;
+        if(i == 2)
+            return this -> price;
+    }
+
+    explicit operator int()
+    {
+        return (int) this -> totalSurface;
+    }
+
+
+
+/// .................................................................... SUPRAINCARCARILE << SI >> ................................................
+
+
+    friend istream& operator >> (istream& in, Building& b)
+    {
+        cout << "Introduceti detaliile constructiei: \n";
+
+        cout << "Numele proprietarului: \n";
+        char aux[10];
+        in.get(aux, 100);
+        if(b.ownerName != NULL)
+            delete [] b.ownerName;
+        b.ownerName =  new char[strlen(aux) + 1];
+        strcpy(b.ownerName, aux);
+        in.get();
+
+        cout << "Adresa cladirii (zona): \n";
+        char aux2[100];
+        in.get(aux2, 100);
+        if(b.adress != NULL)
+            delete [] b.adress;
+        b.adress =  new char[strlen(aux2) + 1];
+        strcpy(b.adress, aux2);
+        in.get();
+
+        cout << "Tipul locuintei: (ap-apartament, gs-garsoniera, cs-casa)\n";
+        char htype[3];
+        in.get(htype, 4);
+        strcpy(b.type, htype);
+
+        cout << "Starea locuintei: (s-vanduta, r-inchiriata, a-disponibila) \n";
+        in >> b.state;
+
+        cout << "\nNr de camere: \n";
+        in >> b.nrRooms;
+
+        cout << "\nSuprafetele camerelor: \n";
+        for(int i = 0; i < b.nrRooms; i++)
+        {
+            cout << "Suprafata camera " << i + 1 <<": ";
+            in >> b.roomSurface[i];
+        }
+
+        cout << "Are spatiu exterior? (0 sau 1)\n";
+        int i;
+        in >> i;
+        b.extSpace = bool(i);
+
+        cout << "Introduceti pretul: ";
+        in >> b.price;
+
+        cout << "Introduceti anul construirii: ";
+        in >> b.yearOfConst;
+
+        cin.get();
+
+        return in;
+
+
+    }
+
+
+    friend ostream& operator << (ostream& out, Building& b)
+    {
+
+        cout << b.ownerName << " are o proprietate de " << b.getTotalSurface() << " mp construita in anul " << b.yearOfConst << endl;                                 //getTotalSurface() doesn't work here
+        cout << "Suprafete pe camere sunt: \n";
+        for(int i =0 ; i < b.nrRooms; i++)
+        {
+            cout << "Camera " << i+1 << " are ";
+            cout << fixed;
+            cout << setprecision(2);
+            cout << b.roomSurface[i] << " mp \n";
+        }
+
+        cout << "Imobilul se afla in zona: " << b.adress << endl;
+        if(b.state == 's')
+            cout << b.type << " este vandut. ";
+        if(b.state == 'r')
+            cout << b.type << " este inchiriat. ";
+        if(b.state == 'a')
+            cout << b.type << " este disponibil. ";
+        if(b.extSpace)
+            cout << "Are spatiu exterior. ";
+        else
+            cout << "Nu are spatiu exterior. ";
+        cout << "Pretul imobilului este de " << b.price << endl;
+
+        return out;
+
+    }
+
+
+/// ....................................................................DESTRUCTOR................................................
+
+    ~Building()
+    {
+        if(this -> ownerName != NULL)
+            delete [] this -> ownerName;
+        if(this -> roomSurface != NULL)
+            delete [] this -> roomSurface;
+        if(this -> adress != NULL)
+            delete [] this -> adress;
+    }
+
+};
+
+///-------------------------------------------------------------------- Buyer ----------------------------------------------------------
+
+class Buyer : public Interface
+
+{
+private:
+    int age;
+    int nrAccounts;
+    bool isIntersted;
+    char options;               //buying, renting, none(daca nu mai este interesat)  -> b/r/n
+    char *name;
+    char cnp[14];
+    float salary;
+    float *otherIncomes;
+    double totalFromOtherIncomes;
+    const int idBuyer;
+    static int currentId;
+
+public:
+/// ....................................................................CONSTRUCTORI................................................
+
+///................................................FARA PARAMETRU...................................................................
+
+    Buyer() : idBuyer(currentId ++ )
+    {
+        this -> age = 0;
+        this -> salary = 0;
+        this -> nrAccounts = 0;
+        this -> options = ' ';
+        this -> isIntersted = bool(0);
+        this -> totalFromOtherIncomes = 0;
+
+        strcpy(this -> cnp, "unknown");
+
+        this -> otherIncomes = new float[0];
+        this -> name = new char[strlen("Unknown") + 1];
+            strcpy(this -> name, "Unknown");
+
+    }
+
+///................................................CU TOTI PARAMETRII...................................................................
+
+    Buyer(int age, bool isIntersted, char options, char *name, char cnp[13], float salary, int nrAccounts, float *otherIncomes) : idBuyer(currentId ++ )
+    {
+        this -> age = age;
+        this -> options = options;
+        this -> salary = salary;
+        this -> nrAccounts = nrAccounts;
+        this -> isIntersted = isIntersted;
+
+        this -> otherIncomes = new float[nrAccounts];
+        this -> name = new char[strlen(name) + 1];
+
+        strcpy(this -> name, name);
+        strcpy(this -> cnp, cnp);
+
+        double total = 0;
+        for(int i = 0; i < nrAccounts; i++)
+        {
+            this -> otherIncomes[i] = otherIncomes[i];
+            total = total + otherIncomes[i];
+        }
+        this -> totalFromOtherIncomes = total;
+
+    }
+///................................................CU PARAMETRII...................................................................
+
+    Buyer(int age, bool isIntersted, char options, char *name, float salary) : idBuyer(currentId ++ )
+    {
+        this -> age = age;
+        this -> options = options;
+        this -> isIntersted = isIntersted;
+        this -> salary = salary;
+
+        this -> name = new char[strlen(this -> name) + 1];
+            strcpy(this -> name, name);
+
+    }
+
+    Buyer(char cnp[14], float salary, int nrAccounts, float *otherIncomes) : idBuyer(currentId ++ )
+    {
+        this -> salary = salary;
+        this -> nrAccounts = nrAccounts;
+
+        strcpy(this -> cnp, cnp);
+
+        this -> otherIncomes = new float[this -> nrAccounts];
+
+        double total = 0;
+        for(int i = 0; i < this -> nrAccounts; i++)
+        {
+            this -> otherIncomes[i] = otherIncomes[i];
+            total = total + otherIncomes[i];
+        }
+
+
+        this -> totalFromOtherIncomes = total;
+    }
+
+
+///................................................DE COPIERE...................................................................
+
+    Buyer(const Buyer& b) : idBuyer(currentId ++ )
+    {
+        this -> age = b.age;
+        this -> options = b.options;
+        this -> isIntersted = b.isIntersted;
+        this -> salary = b.salary;
+        this -> nrAccounts = b.nrAccounts;
+
+        strcpy(this -> cnp, b.cnp);
+
+        this -> name = new char[0];
+        this -> otherIncomes = new float[0];
+
+        if(this -> name != NULL)
+                delete [] this -> name;
+        if(this -> otherIncomes != NULL)
+                delete [] this -> otherIncomes;
+
+        this -> name = new char[strlen(b.name) + 1];
+            strcpy(this -> name, b.name);
+
+        this -> otherIncomes = new float[b.nrAccounts];
+
+        double total = 0;
+        for(int i = 0; i < b.nrAccounts; i++)
+        {
+            this -> otherIncomes[i] = b.otherIncomes[i];
+            total = total + b.otherIncomes[i];
+        }
+        this -> totalFromOtherIncomes = total;
+
+    }
+
+///................................................SUPRAINCARCAREA =...................................................................
+
+    Buyer& operator = (const Buyer &b)
+    {
+        if( this != &b)
+        {
+            this -> age = b.age;
+            this -> options = b.options;
+            this -> isIntersted = b.isIntersted;
+            this -> salary = b.salary;
+            this -> nrAccounts = b.nrAccounts;
+
+            strcpy(this -> cnp, b.cnp);
+
+            if(this -> name != NULL)
+                delete [] this -> name;
+            if(this -> otherIncomes != NULL)
+                delete [] this -> otherIncomes;
+
+            this -> name = new char[strlen(this -> name) + 1];
+            strcpy(this -> name, b.name);
+
+            this -> otherIncomes = new float[b.nrAccounts];
+
+            double total = 0;
+            for(int i = 0; i < b.nrAccounts; i++)
+            {
+                this -> otherIncomes[i] = b.otherIncomes[i];
+                total = total + b.otherIncomes[i];
+            }
+            this -> totalFromOtherIncomes = total;
+
+        }
+        return *this;
+    }
+
+/// ....................................................................SETTERS................................................
+
+    void setAge(int a)
+    {
+        this -> age = a;
+    }
+
+    void setName(char *n)
+    {
+        if(this -> name != NULL)
+            delete [] this -> name;
+        this -> name = new char[strlen(n) + 1];
+        strcpy(this -> name, n);
+    }
+    void setOptions(char o)
+    {
+        this -> options = o;
+    }
+    void setSalary(float s)
+    {
+        this -> salary = s;
+    }
+    void setOtherIncomes(int nrAccountsAux, float *otherIncomesAux)
+    {
+        if(this -> otherIncomes != NULL)
+            delete [] this -> otherIncomes;
+
+        this -> nrAccounts = nrAccountsAux;
+        this -> otherIncomes = new float[nrAccountsAux];
+        for(int i = 0; i < nrAccountsAux; i++)
+            this -> otherIncomes[i] = otherIncomesAux[i];
+    }
+    void setIntersted(bool o)
+    {
+        this -> isIntersted = o;
+    }
+
+
+/// ....................................................................GETTERS................................................
+
+    int getAge() const
+    {
+        return this -> age;
+    }
+    bool getIntersted() const
+    {
+        return bool(this -> isIntersted);
+    }
+    int getNrAccounts() const
+    {
+        return this -> nrAccounts;
+    }
+    char* getName() const
+    {
+        return this -> name;
+    }
+    char* getCnp()
+    {
+        return this -> cnp;
+    }
+    char getOptions() const
+    {
+        return this -> options;
+    }
+    float getSalary() const
+    {
+        return this -> salary;
+    }
+    double getTotalIncome() const
+    {
+        double total = 0;
+        total = total + 12 * this -> salary;
+        if(this -> nrAccounts != 0)
+            for(int i = 0; i < this -> nrAccounts; i++)
+            {
+                total = total + this -> otherIncomes[i];
+            }
+        return total;
+    }
+
+ ///..................................................................SUPRAINCARCARI OPERATORI...................................................................
+
+    const Buyer operator ++ ()
+    {
+        this -> age ++;
+        return *this;
+    }
+
+    const Buyer operator ++ (int)
+    {
+        Buyer aux(*this);
+        this -> age ++;
+        return aux;
+    }
+
+    bool operator == (const Buyer &b)
+    {
+        if(strcmp(this -> cnp, b.cnp) == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    bool operator < (const Buyer &b)
+    {
+        double t1;
+        double t2 = 0;
+        t2 = t2 + 12 * b.salary;
+        if(b.nrAccounts != 0)
+            for(int i = 0; i < b.nrAccounts; i++)
+            {
+                t2 = t2 + b.otherIncomes[i];
+            }
+        t1 = getTotalIncome();
+        if(t1 < t2)
+            return true;
+        return false;
+    }
+
+    Buyer& operator + (float i)
+    {
+        this -> salary = this -> salary + i;
+        return *this;
+    }
+
+    Buyer& operator * (float i)
+    {
+        this -> salary = this -> salary * i;      //crestere a salariului cu un proccent
+        return *this;
+    }
+
+    char* operator [] (int i)
+    {
+        if(i == 1)
+            return this -> name;
+    }
+
+    explicit operator int()
+    {
+        return (int)this -> salary;
+    }
+
+
+ ///..................................................................FUNCTIONALITATI...................................................................
+
+    double bugetBuy()
+    {
+        float total = 0;
+        total = total + getTotalIncome();
+        total = total * 20 * 0.3;
+        return total;
+    }
+    float bugetRent()
+    {
+        float total = 0;
+        total = 0.3 * this -> salary;
+        return total;
+    }
+
+    void addAccount(float s)
+    {
+        float *aux = new float[this -> nrAccounts];
+
+        for(int i = 0; i < this -> nrAccounts; i++)
+        {
+            aux[i] = this -> otherIncomes[i];
+        }
+
+        this -> nrAccounts ++;
+        delete [] this -> otherIncomes;
+        this -> otherIncomes = new float[this -> nrAccounts];
+
+        for(int i = 0; i < this -> nrAccounts; i++)
+        {
+            this -> otherIncomes[i] = aux[i];
+        }
+        this -> otherIncomes[this -> nrAccounts - 1] = s;
+    }
+
+    double totalIncome()                           //-----din interfata
+    {
+        double total = 0;
+        total = total + 12 * this -> salary;
+        if(this -> nrAccounts != 0)
+            for(int i = 0; i < this -> nrAccounts; i++)
+            {
+                total = total + this -> otherIncomes[i];
+            }
+
+        return total;
+    }
+
+    float anualSalary()                             //-----din interfata
+    {
+        float total = 0;
+        total = 12 * this -> salary;
+        return total;
+    }
+
+
+
+/// .................................................................... SUPRAINCARCARILE << SI >> ................................................
+
+
+    friend istream& operator >> (istream& in, Buyer& b)
+    {
+        cout << "Introduceti datele despre cumparator: \n";
+
+        cout << "Introduceti numele lui: \n";
+        char aux[100];
+        in.get(aux, 100);
+        if(b.name != NULL)
+            delete [] b.name;
+        b.name = new char[strlen(aux) + 1];
+        strcpy(b.name, aux);
+        in.get();
+
+        cout << "Varsta cumparatorului: \n";
+        in >> b.age;
+
+        cout << "CNP ul: \n";
+        char c[100];
+        in >> c;
+        strcpy(b.cnp, c);
+        in.get();
+
+        cout << "Este interesat sa cumpere/inchirieze? (0-nu, 1-da)\n";
+        char opt;
+        in >> opt;
+        b.isIntersted = opt;
+
+        cout << "Ce doreste sa faca? (b-cumparat, r-inchiriat, n - niciuna)\n";
+        in >> b.options;
+        in.get();
+
+        cout << "Care este salariul anual? \n";
+        in >>  b.salary;
+
+
+        cout << "Are si alte surse de venit? (0-nu, 1-da) \n";
+        int ok;
+        in >> ok;
+        if(ok == 0)
+        {
+            b.nrAccounts = 0;
+            b.otherIncomes = new float[0];
+        }
+        else
+        {
+            cout << "Introduceti numarul de conturi in care sunt celalte venituri: \n";
+            in >> b.nrAccounts;
+            if(b.nrAccounts != 0)
+            {
+                b.otherIncomes = new float[b.nrAccounts];
+                for(int i = 0; i < b.nrAccounts; i++)
+                {
+                    cout << "Suma din contul " << i + 1 << ": ";
+                    in >> b.otherIncomes[i];
+                }
+            }
+        }
+
+        cin.get();
+        return in;
+    }
+
+
+    friend ostream& operator << (ostream& out, const Buyer& b)
+    {
+        return b.print(out);
+    }
+
+    virtual ostream& print (ostream& out) const
+    {
+        out << "Persoana " << this -> name << ", in varsta de " << this -> age;
+
+        if(this -> isIntersted)
+            out << " este interesata sa cumpere ";
+        else
+            out << " nu este interesata sa cumpere ";
+        out << endl;
+
+        out << "Are un salariu de ";
+        out << fixed;
+        out << setprecision(2);
+        out << this -> salary << endl;
+
+        out << "Venitul total este de: ";
+        out << fixed;
+        out << setprecision(2);
+        out << getTotalIncome() << endl;
+
+        out << "Are cnp ul acesta: " << this -> cnp << " si Id ul acesta: " << this -> idBuyer << endl;
+
+        return out;
+    }
+
+
+
+/// ....................................................................DESTRUCTOR................................................
+
+    ~Buyer()
+    {
+        if(this -> name != NULL)
+            delete [] this -> name;
+        if(this -> otherIncomes != NULL)
+            delete [] this -> otherIncomes;
+    }
+
+};
+
+
+class ForeignBuyer : public Buyer
+
+{
+private:
+
+    string nationality;
+    bool resident;
+    int nrProperties;
+
+public:
+
+    ForeignBuyer() : Buyer()
+    {
+        this -> nationality = "unknown";
+        this -> resident = 0;
+        this -> nrProperties = 0;
+    }
+
+    ForeignBuyer(int age, bool isIntersted, char options, char *name, char cnp[13], float anualSalary, int nrAccounts, float *otherIncomes, string nationality, bool resident, int nrProperties) : Buyer(age, isIntersted, options, name, cnp, anualSalary, nrAccounts, otherIncomes)
+    {
+        this -> nationality = nationality;
+        this -> resident = resident;
+        this -> nrProperties = nrProperties;
+    }
+
+    ForeignBuyer(const ForeignBuyer &fb) : Buyer(fb)
+    {
+        Buyer :: operator = (fb);
+        this -> nationality = fb.nationality;
+        this -> resident = fb.resident;
+        this -> nrProperties = fb.nrProperties;
+    }
+
+    ForeignBuyer& operator = (const ForeignBuyer &fb)
+    {
+        if(this != &fb)
+        {
+            Buyer :: operator = (fb);
+            this -> nationality = fb.nationality;
+            this -> resident = fb.resident;
+            this -> nrProperties = fb.nrProperties;
+        }
+        return *this;
+    }
+
+    void input()
+    {
+        cout << "Nationalitatea cumparatorului:\n";
+        cin >> this -> nationality;
+        cout << "Este rezident in tara noastra?\n";
+        cin >> this -> resident;
+        cout << "Cate proprietati mai are in tara?\n";
+        cin >> this -> nrProperties;
+    }
+
+    void output()
+    {
+        cout << "Nationalitatea " << this -> nationality << " rezident " << this -> resident << " si are " << this -> nrProperties << " proprietati in tara\n" << endl;
+    }
+
+    virtual ostream& print(ostream& out) const override
+    {
+        out << getName() << " este de cetatenie " << this -> nationality;
+        if(this -> resident)
+            out << " si locuieste in tara. ";
+        else
+            out << " si nu locuieste in tara. ";
+        out << endl;
+        out << "Acesta are " << this -> nrProperties << " proprietati in tara. ";
+        if(getIntersted())
+            out << " si este interesata sa cumpere. ";
+        else
+            out << " si nu este interesata sa cumpere. ";
+        out << " Are un venit total de " << getTotalIncome();
+
+        return out;
+    }
+
+    ~ForeignBuyer() {}
+
+};
+
+///------------------------------------------------------------------- Employee ----------------------------------------------------------
+
+class Employee                  /// abstract class
+
+{
+private:
+    int years;
+    char *name;
+    float salary;
+    const int idEmployee;
+    static int currentId;
+
+public:
+/// ....................................................................CONSTRUCTORI................................................
+
+///................................................FARA PARAMETRU...................................................................
+
+    Employee() : idEmployee(currentId ++)
+    {
+        this -> salary = 0;
+        this -> years = 0;
+        this -> name = new char[strlen("Unknown") + 1];
+            strcpy(this -> name, "Unknown");
+    }
+
+///................................................CU PARAMETRII...................................................................
+
+    Employee(int years, char *name, float salary) : idEmployee(currentId ++ )
+    {
+        this -> years = years;
+        this -> salary = salary;
+        this -> name = new char[strlen(name) + 1];
+            strcpy(this -> name, name);
+    }
+
+///................................................DE COPIERE...................................................................
+
+    Employee(const Employee& e) : idEmployee(currentId ++)
+    {
+        this -> years = e.years;
+        this -> salary = e.salary;
+        this -> name = new char[0];
+            delete [] this -> name;
+        this -> name = new char[strlen(e.name) + 1];
+            strcpy(this -> name, e.name);
+    }
+
+///................................................SUPRAINCARCAREA =...................................................................
+
+    Employee& operator = (const Employee &e)
+    {
+        if(this != &e)
+        {
+            this -> years = e.years;
+            this -> salary = e.salary;
+
+            this -> name = new char[0];
+            if(this -> name != NULL)
+                delete [] this -> name;
+
+            this -> name = new char[strlen(e.name) + 1];
+                strcpy(this -> name, e.name);
+        }
+        return *this;
+    }
+
+///................................................ GETTERS ...................................................................
+
+    int getYears()
+    {
+        return this -> years;
+    }
+
+    char* getName()
+    {
+        return this -> name;
+    }
+    float getSalary()
+    {
+        return this -> salary;
+    }
+
+/// .................................................................... functie virtuala pura ................................................
+
+    virtual int nrHouses() = 0;
+
+/// .................................................................... SUPRAINCARCARILE << SI >> ................................................
+
+    friend ostream& operator << (ostream& out, Employee &e)
+    {
+        out << e.name << " are un salariu de ";
+        out << fixed;
+        out << setprecision(2);
+        out << e.salary << " si " << e.years << " ani vechime.";
+        out << "Are id-ul " << e.idEmployee << ".\n";
+
+        return out;
+    }
+
+    friend istream& operator >> (istream& in, Employee &e)
+    {
+        cout << "Introduceti numele: \n";
+        char aux[100];
+        in.get(aux, 100);
+        in.get();
+        e.name = new char[strlen(aux) + 1];
+        strcpy(e.name, aux);
+
+        cout << "De cati ani lucreaza la agentie? \n";
+        in >> e.years;
+
+        cout << "Introduceti salariul: \n";
+        in >> e.salary;
+
+        in.get();
+
+        return in;
+    }
+/// ....................................................................DESTRUCTOR................................................
+
+    ~Employee()
+    {
+        if(this -> name != NULL)
+            delete [] this -> name;
+    }
+
+
+};
+
+class Agent : public Employee, public Interface
+
+{
+
+private:
+    int nrHousesSold;
+    int nrHousesRented;
+    int nrHousesOnMarket;
+    Building *housesSold;
+    Building *housesRented;
+    Building *housesOnMarket;
+
+
+public:
+/// ....................................................................CONSTRUCTORI................................................
+
+///................................................FARA PARAMETRU...................................................................
+
+    Agent() : Employee()
+    {
+        this -> nrHousesSold = 0;
+        this -> nrHousesRented = 0;
+        this -> nrHousesOnMarket = 0;
+
+        this -> housesSold = new Building[0];
+        this -> housesRented = new Building[0];
+        this -> housesOnMarket = new Building[0];
+
+    }
+
+///................................................CU PARAMETRII...................................................................
+
+    Agent(int years, char *name, float salary, int nrHousesSold, int nrHousesRented, int nrHousesOnMarket, Building *housesSold, Building *housesRented, Building *housesOnMarket) : Employee(years, name, salary)
+    {
+        this -> nrHousesSold = nrHousesSold;
+        this -> nrHousesRented = nrHousesRented;
+        this -> nrHousesOnMarket = nrHousesOnMarket;
+
+        for(int i = 0; i < this -> nrHousesSold; i++)
+            this -> housesSold[i] = housesSold[i];
+        for(int i = 0; i < this -> nrHousesRented; i++)
+            this -> housesRented[i] = housesRented[i];
+        for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            this -> housesOnMarket[i] = housesOnMarket[i];
+
+    }
+
+///................................................DE COPIERE...................................................................
+
+    Agent(const Agent& b) : Employee(b)
+    {
+        this -> nrHousesSold = b.nrHousesSold;
+        this -> nrHousesRented = b.nrHousesRented;
+        this -> nrHousesOnMarket = b.nrHousesOnMarket;
+
+        this -> housesSold = new Building[0];
+        this -> housesRented = new Building[0];
+        this -> housesOnMarket = new Building[0];
+
+        if(this -> housesSold != NULL)
+            delete [] this -> housesRented;
+        if(this -> housesRented != NULL)
+            delete [] this -> housesSold;
+        if(this -> housesOnMarket != NULL)
+            delete [] this -> housesOnMarket;
+
+        this -> housesSold = new Building[b.nrHousesSold];
+        this -> housesRented = new Building[b.nrHousesRented];
+        this -> housesOnMarket = new Building[b.nrHousesOnMarket];
+
+        for(int i = 0; i < this -> nrHousesSold; i++)
+            this -> housesSold[i] = b.housesSold[i];
+        for(int i = 0; i < this -> nrHousesRented; i++)
+            this -> housesRented[i] = b.housesRented[i];
+        for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            this -> housesOnMarket[i] = b.housesOnMarket[i];
+
+    }
+
+///................................................SUPRAINCARCAREA =...................................................................
+
+    Agent& operator = (const Agent &b)
+    {
+        if(this != &b)
+        {
+            Employee :: operator = (b);
+            this -> nrHousesSold = b.nrHousesSold;
+            this -> nrHousesRented = b.nrHousesRented;
+            this -> nrHousesOnMarket = b.nrHousesOnMarket;
+
+            this -> housesSold = new Building[0];
+            this -> housesRented = new Building[0];
+            this -> housesOnMarket = new Building[0];
+
+            if(this -> housesSold != NULL)
+                delete [] this -> housesRented;
+            if(this -> housesRented != NULL)
+                delete [] this -> housesSold;
+            if(this -> housesOnMarket != NULL)
+                delete [] this -> housesOnMarket;
+
+            this -> housesSold = new Building[b.nrHousesSold];
+            this -> housesRented = new Building[b.nrHousesRented];
+            this -> housesOnMarket = new Building[b.nrHousesOnMarket];
+
+            for(int i = 0; i < this -> nrHousesSold; i++)
+                this -> housesSold[i] = b.housesSold[i];
+            for(int i = 0; i < this -> nrHousesRented; i++)
+                this -> housesRented[i] = b.housesRented[i];
+            for(int i = 0; i < this -> nrHousesOnMarket; i++)
+                this -> housesOnMarket[i] = b.housesOnMarket[i];
+
+        }
+        return *this;
+    }
+
+/// .................................................................... GETTERS ................................................
+
+    float getComission()
+    {
+        float c = 0;
+
+        for(int i = 0; i < this -> nrHousesSold; i++)
+            c = c + (this -> housesSold[i]).getPrice();
+        for(int i = 0; i < this -> nrHousesRented; i++)
+            c = c + (this -> housesRented[i]).anualRent();
+
+        c = c * 6/100;                  //comision de 6% al tranzactiilor
+
+        return c;
+    }
+    int getNrHousesSold()
+    {
+        return this -> nrHousesSold;
+    }
+    int getNrHousesRented()
+    {
+        return this -> nrHousesRented;
+    }
+    int getNrHousesOnMarket()
+    {
+        return this -> nrHousesOnMarket;
+    }
+    void getHousesSold()
+    {
+        for(int i = 0; i < this -> nrHousesSold; i++)
+            cout << (this -> housesSold[i]).getName() << " " << (this -> housesSold[i]).getAdress() << endl;
+    }
+    void getHousesRented()
+    {
+        for(int i = 0; i < this -> nrHousesRented; i++)
+            cout << (this -> housesRented[i]).getName() << " " << (this -> housesRented[i]).getAdress() << endl;
+    }
+    void getHousesOnMarket()
+    {
+        for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            cout << (this -> housesOnMarket[i]).getName() << " " << (this -> housesOnMarket[i]).getAdress() << endl;
+    }
+
+
+
+
+/// .................................................................... FUNCTIONALITATI ................................................
+
+    void removeHouseSold(const Building &b)
+    {
+        int index = -1;
+        for(int i = 0; i < this -> nrHousesSold; i++)
+            if(this -> housesSold[i] == b)
+                index = i;
+        if(index == -1)
+            cout << "Casa nu exista in lista!\n";
+        else
+        {
+            Building *auxList;
+            auxList = new Building[this -> nrHousesSold - 1];
+            int j = 0;
+            for(int i = 0; i < this -> nrHousesSold; i++)
+            {
+                if(i == index)
+                    j--;
+                else
+                    auxList[j] = this -> housesSold[i];
+                j++;
+            }
+
+            delete [] this -> housesSold;
+            this -> nrHousesSold --;
+            this -> housesSold = new Building[this -> nrHousesSold];
+            for(int i = 0; i < this -> nrHousesSold; i++)
+            {
+                this -> housesSold[i] = auxList[i];
+            }
+        }
+    }
+
+    void removeHouseRented(const Building &b)
+    {
+        int index = -1;
+        for(int i = 0; i < this -> nrHousesRented; i++)
+            if(this -> housesRented[i] == b)
+                index = i;
+        if(index == -1)
+            cout << "Casa nu exista in lista!\n";
+        else
+        {
+            Building *auxList;
+            auxList = new Building[this -> nrHousesRented - 1];
+            int j = 0;
+            for(int i = 0; i < this -> nrHousesRented; i++)
+            {
+                if(i == index)
+                    j--;
+                else
+                    auxList[j] = this -> housesRented[i];
+                j++;
+            }
+
+            delete [] this -> housesRented;
+            this -> nrHousesRented --;
+            this -> housesRented = new Building[this -> nrHousesRented];
+            for(int i = 0; i < this -> nrHousesRented; i++)
+            {
+                this -> housesRented[i] = auxList[i];
+            }
+        }
+    }
+
+    void removeHouseOnMarket(const Building &b)
+    {
+        int index = -1;
+        for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            if(this -> housesOnMarket[i] == b)
+                index = i;
+        if(index == -1)
+            cout << "Casa nu exista in lista!\n";
+        else
+        {
+            Building *auxList;
+            auxList = new Building[this -> nrHousesOnMarket - 1];
+            int j = 0;
+            for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            {
+                if(i == index)
+                    j--;
+                else
+                    auxList[j] = this -> housesOnMarket[i];
+                j++;
+            }
+
+            delete [] this -> housesOnMarket;
+            this -> nrHousesOnMarket --;
+            this -> housesOnMarket = new Building[this -> nrHousesOnMarket];
+            for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            {
+                this -> housesOnMarket[i] = auxList[i];
+            }
+        }
+    }
+
+    void changeStatusToSold(const Building &b)
+    {
+        int index = -1;
+        for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            if(this -> housesOnMarket[i] == b)
+                index = i;
+        if(index == -1)
+            cout << "Casa nu exista in lista!\n";
+        else
+        {
+            Building aux;
+            aux = this -> housesOnMarket[index];
+            aux.setState('s');
+            removeHouseOnMarket(b);
+            addHouseSold(aux);
+        }
+    }
+
+    void changeStatusToRented(const Building &b)
+    {
+        int index = -1;
+        for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            if(this -> housesOnMarket[i] == b)
+                index = i;
+        if(index == -1)
+            cout << "Casa nu exista in lista!\n";
+        else
+        {
+            Building aux;
+            aux = this -> housesOnMarket[index];
+            aux.setState('r');
+            removeHouseOnMarket(b);
+            addHouseRented(aux);
+        }
+    }
+
+    void addHouseRented(Building &b)
+    {
+
+        if(this -> nrHousesRented != 0)
+        {
+            Building *bAux;
+            bAux = new Building[this -> nrHousesRented];
+            for(int i = 0; i < this -> nrHousesRented; i++)
+            bAux[i] = this -> housesRented[i];
+            delete [] this -> housesRented;
+            this -> nrHousesRented ++;
+            this -> housesRented = new Building[this -> nrHousesRented];
+            for(int i = 0; i < this -> nrHousesRented - 1; i++)
+                this -> housesRented[i] = bAux[i];
+            this -> housesRented[this -> nrHousesRented - 1] = b;
+        }
+        else
+        {
+            this -> nrHousesRented ++;
+            this -> housesRented = new Building[this -> nrHousesRented];
+            this -> housesRented[this -> nrHousesRented - 1] = b;
+        }
+
+
+
+    }
+
+    void addHouseSold(Building &b)
+    {
+
+        if(this -> nrHousesSold != 0)
+        {
+            Building *bAux;
+            bAux = new Building[this -> nrHousesSold];
+            for(int i = 0; i < this -> nrHousesSold; i++)
+            bAux[i] = this -> housesSold[i];
+            delete [] this -> housesSold;
+            this -> nrHousesSold ++;
+            this -> housesSold = new Building[this -> nrHousesSold];
+            for(int i = 0; i < this -> nrHousesSold - 1; i++)
+                this -> housesSold[i] = bAux[i];
+            this -> housesSold[this -> nrHousesSold - 1] = b;
+        }
+        else
+        {
+            this -> nrHousesSold ++;
+            this -> housesSold = new Building[this -> nrHousesSold];
+            this -> housesSold[this -> nrHousesSold - 1] = b;
+        }
+
+
+    }
+
+    void addHouseOnMarket(Building &b)
+    {
+        if(this -> nrHousesOnMarket != 0)
+        {
+            Building *bAux;
+            bAux = new Building[this -> nrHousesOnMarket];
+            for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            bAux[i] = this -> housesOnMarket[i];
+            delete [] this -> housesOnMarket;
+            this -> nrHousesOnMarket++;
+            this -> housesOnMarket = new Building[this -> nrHousesOnMarket];
+            for(int i = 0; i < this -> nrHousesOnMarket - 1; i++)
+                this -> housesOnMarket[i] = bAux[i];
+            this -> housesOnMarket[this -> nrHousesOnMarket- 1] = b;
+        }
+        else
+        {
+            this -> nrHousesOnMarket++;
+            this -> housesOnMarket = new Building[this -> nrHousesOnMarket];
+            this -> housesOnMarket[this -> nrHousesOnMarket- 1] = b;
+        }
+
+
+    }
+
+    float anualSalary()
+    {
+        float s = Employee :: getSalary();
+        return 12*s;
+    }
+
+    double totalIncome()
+    {
+        double total;
+        total = anualSalary() + getComission();
+        return total;
+    }
+
+    int nrHouses()
+    {
+        return this -> nrHousesOnMarket + this -> nrHousesRented + this -> nrHousesSold;
+    }
+/// .................................................................... SUPRAINCARCARI ................................................
+
+    Agent& operator + (Building& b)
+    {
+        if(b.getState() == 'r')
+            addHouseRented(b);
+        else if(b.getState() == 's')
+            addHouseSold(b);
+        else if(b.getState() == 'a')
+            addHouseOnMarket(b);
+        else
+            cout << "Nu ati introdus o varianta posibila!\n";
+        return *this;
+    }
+
+/// .................................................................... SUPRAINCARCARILE << SI >> ................................................
+
+    friend ostream& operator << (ostream& out, Agent &b)
+    {
+        out << (Employee&)b;
+        out << "Acesta a vandut si inchiriat " << b.nrHousesSold + b.nrHousesRented << " case, din care a obtinut un comision de " << b.getComission() << endl;
+        if(b.nrHousesRented != 0)
+        {
+            out << "Casele inchiriate sunt acestea:\n";
+            for(int i = 0; i < b.nrHousesRented; i++)
+            {
+                //out << "Id imobil: " << (b.housesRented[i]).getId();
+                out << "--- Proprietar: " << (b.housesRented[i]).getName();
+                out << "--- Adresa: " << (b.housesRented[i]).getAdress();
+                out << endl;
+            }
+        }
+        if(b.nrHousesSold != 0)
+        {
+            out << "Casele vandute sunt acestea:\n";
+            for(int i = 0; i < b.nrHousesSold; i++)
+                {
+                    //out << "Id imobil: " << (b.housesSold[i]).getId();
+                    out << "--- Proprietar: " << (b.housesSold[i]).getName();
+                    out << "--- Adresa: " << (b.housesSold[i]).getAdress();
+                    out << "--- starea: " << (b.housesSold[i]).getState();
+                    out << endl;
+                }
+        }
+        if(b.nrHousesOnMarket != 0)
+        {
+            out << "Casele disponibile sunt acestea:\n";
+            for(int i = 0; i < b.nrHousesOnMarket; i++)
+                {
+                    //out << "Id imobil: " << (b.housesOnMarket[i]).getId();
+                    out << "--- Proprietar: " << (b.housesOnMarket[i]).getName();
+                    out << "--- Adresa: " << (b.housesOnMarket[i]).getAdress();
+                    out << endl;
+                }
+        }
+
+        return out;
+    }
+
+    friend istream& operator >> (istream& in, Agent &b)
+    {
+        in >> (Employee&)b;
+        int n;
+        cout << "Introduceti numarul de case vandute: \n";
+        in >> n;
+        if(n != 0)
+        {
+            cout << "Introduceti datele despre casele respective:\n";
+            b.nrHousesSold = 0;
+            for(int i = 0; i < n; i++)
+                {
+                    Building aux;
+                    in.get();
+                    in >> aux;
+                    b.addHouseSold(aux);
+                }
+            in.get();
+        }
+
+        cout << "Introduceti numarul de case inchiriate: \n";
+        in >> n;
+        if(n != 0)
+        {
+            cout << "Introduceti datele despre casele respective:\n";
+            b.nrHousesRented = 0;
+            for(int i = 0; i < n; i++)
+                {
+                    Building aux;
+                    in.get();
+                    in >> aux;
+                    b.addHouseRented(aux);
+                }
+            in.get();
+        }
+
+        cout << "Introduceti numarul de case disponibile pt vanzare/cumparare: \n";
+        in >> n;
+        if(n != 0)
+        {
+            cout << "Introduceti datele despre casele respective:\n";
+            b.nrHousesOnMarket = 0;
+            for(int i = 0; i < n; i++)
+                {
+                    Building aux;
+                    in.get();
+                    in >> aux;
+                    b.addHouseOnMarket(aux);
+                }
+            in.get();
+        }
+
+        return in;
+    }
+
+/// ....................................................................DESTRUCTOR................................................
+
+
+    ~Agent()
+    {
+        if(this -> housesRented != NULL)
+            delete [] this -> housesRented;
+        if(this -> housesSold != NULL)
+            delete [] this -> housesSold;
+        if(this -> housesOnMarket != NULL)
+            delete [] this -> housesOnMarket;
+    }
+
+};
+
+class Broker : public Employee
+
+{
+private:
+    int nrContracts;
+    int yearsLeadingPosition;
+
+public:
+
+    Broker() : Employee()
+    {
+        this -> nrContracts = 0;
+        this -> yearsLeadingPosition = 0;
+    }
+
+    Broker(const Broker& d)
+    {
+        this -> nrContracts = d.nrContracts;
+        this -> yearsLeadingPosition  = d.yearsLeadingPosition;
+    }
+
+    Broker& operator = (const Broker& d)
+    {
+        if(this != &d)
+        {
+            Employee :: operator = (d);
+            this -> nrContracts = d.nrContracts;
+            this -> yearsLeadingPosition  = d.yearsLeadingPosition;
+        }
+        return *this;
+    }
+
+    int nrHouses()
+    {
+        return 0;
+    }
+
+    int getNrContracts()
+    {
+        return this -> nrContracts;
+    }
+    int getYearsLeadingPosition()
+    {
+        return this -> yearsLeadingPosition;
+    }
+
+    friend ostream& operator << (ostream& out, Broker& d)
+    {
+        out << (Employee&)d;
+        out << "Brokerul are un numar de " << d.nrContracts << " contracte si " << d.yearsLeadingPosition << " ani in pozitie de conducere.\n";
+        return out;
+    }
+
+    friend istream& operator >> (istream& in, Broker& d)
+    {
+        in >> (Employee&)d;
+        cout << "Introduceti nr de contracte:\n";
+        in >> d.nrContracts;
+        cout << "Introduceti nr de ani de cand e in pozitie de conducere: \n";
+        in >> d.yearsLeadingPosition;
+        return in;
+    }
+
+
+};
+
+///-------------------------------------------------------------------- Agency ----------------------------------------------------------
+
+class Agency
+
+{
+
+private:
+
+    double totalIncome;
+    int nrBrokers;
+    int nrAgents;
+    float KPI;                          // de vazut ulterior calculul KPI ului + lista cu evolutia incomului pe mai multi ani
+    Broker *brokers;
+    Agent *agents;
+
+public:
+
+    static char agencyName[22];
+    static char agencyAdress[15];
+
+/// ....................................................................CONSTRUCTORI................................................
+
+///................................................FARA PARAMETRU...................................................................
+
+    Agency()
+    {
+        this -> totalIncome = 0;
+        this -> nrBrokers = 0;
+        this -> nrAgents = 0;
+
+        this -> brokers = new Broker[0];
+        this -> agents = new Agent[0];
+    }
+
+///................................................CU PARAMETRU...................................................................
+
+    Agency(int nrBrokers, int nrAgents, double totalIncome, Broker *brokers, Agent *agents)
+    {
+        this -> totalIncome = totalIncome;
+        this -> nrBrokers = nrBrokers;
+        this -> nrAgents = nrAgents;
+
+        this -> brokers = new Broker[nrBrokers];
+        this -> agents = new Agent[nrAgents];
+
+        for(int i = 0; i < nrBrokers; i++)
+            this -> brokers[i] = brokers[i];
+        for(int i = 0; i < nrAgents; i++)
+            this -> agents[i] = agents[i];
+
+    }
+
+///................................................DE COPIERE...................................................................
+
+    Agency(const Agency& a)
+    {
+        this -> totalIncome = a.totalIncome;
+        this -> nrBrokers = a.nrBrokers;
+        this -> nrAgents = a.nrAgents;
+
+        this -> brokers = new Broker[0];
+        this -> agents = new Agent[0];
+        delete [] this -> brokers;
+        delete [] this -> agents;
+
+        this -> brokers = new Broker[a.nrBrokers];
+        this -> agents = new Agent[a.nrAgents];
+
+        for(int i = 0; i < a.nrBrokers; i++)
+            this -> brokers[i] = a.brokers[i];
+        for(int i = 0; i < a.nrAgents; i++)
+            this -> agents[i] = a.agents[i];
+
+    }
+
+///................................................SUPRAINCARCAREA =...................................................................
+
+    Agency& operator = (const Agency &a)
+    {
+        if(this != &a)
+        {
+            this -> totalIncome = a.totalIncome;
+            this -> nrBrokers = a.nrBrokers;
+            this -> nrAgents = a.nrAgents;
+
+            this -> brokers = new Broker[0];
+            this -> agents = new Agent[0];
+            if(this -> brokers != NULL)
+                delete [] this -> brokers;
+            if(this -> agents != NULL)
+                delete [] this -> agents;
+
+            this -> brokers = new Broker[a.nrBrokers];
+            this -> agents = new Agent[a.nrAgents];
+
+            for(int i = 0; i < a.nrBrokers; i++)
+                this -> brokers[i] = a.brokers[i];
+            for(int i = 0; i < a.nrAgents; i++)
+                this -> agents[i] = a.agents[i];
+        }
+        return *this;
+    }
+
+/// .................................................................... FUNCTINALITATI ................................................
+
+    void addBroker(Broker& b)
+    {
+        Broker *bAux;
+        bAux = new Broker[this -> nrBrokers];
+        for(int i = 0; i < this -> nrBrokers; i++)
+            bAux[i] = this -> brokers[i];
+        delete [] this -> brokers;
+        this -> nrBrokers ++;
+        this -> brokers = new Broker[this -> nrBrokers];
+        for(int i = 0; i < this -> nrBrokers - 1; i++)
+            this -> brokers[i] = bAux[i];
+        this -> brokers[this -> nrBrokers - 1] = b;
+    }
+
+    void addAgent(Agent& b)
+    {
+        Agent *bAux;
+        bAux = new Agent[this -> nrAgents];
+        for(int i = 0; i < this -> nrAgents; i++)
+            bAux[i] = this -> agents[i];
+        delete [] this -> agents;
+        this -> nrAgents ++;
+        this -> agents = new Agent[this -> nrAgents];
+        for(int i = 0; i < this -> nrAgents - 1; i++)
+            this -> agents[i] = bAux[i];
+        this -> agents[this -> nrAgents - 1] = b;
+    }
+
+/// .................................................................... SUPRAINCARCARILE << SI >> ................................................
+
+
+    friend ostream& operator << (ostream& out, Agency &a)
+    {
+        out << "Agentia imobiliara " << a.agencyName << " are " << a.nrBrokers + a.nrAgents << " angajati. ";
+
+        out << "Cifra de afaceri a agentiei " << a.agencyName << " este de ";
+        out << fixed;
+        out << setprecision(2);
+        out << a.totalIncome << endl;
+
+        if(a.nrBrokers != 0)
+        {
+            out << "Brokerii sunt: \n";
+            for(int i = 0; i < a.nrBrokers; i++)
+                out << a.brokers[i] << endl;
+
+        }
+        else
+            cout << "Agentia nu are brokeri!\n";
+
+        if(a.nrAgents != 0)
+        {
+            out << "Agentii sunt: \n";
+            for(int i = 0; i < a.nrAgents; i++)
+                out << a.agents[i] << endl;
+        }
+        else
+            cout << "Agentia nu are agenti!\n";
+
+
+        return out;
+    }
+
+    friend istream& operator >> (istream& in, Agency &a)
+    {
+        int n;
+        cout << "Introduceti numarul de brokeri al agentiei: \n";
+        in >> n;
+        if(n != 0)
+        {
+            cout << "Introduceti datele brokerilor: \n";
+            a.nrBrokers = 0;
+            for(int i = 0; i < n; i++)
+            {
+                Broker aux;
+                in.get();
+                in >> aux;
+                a.addBroker(aux);
+            }
+            in.get();
+        }
+
+        cout << "Introduceti numarul de agenti al agentiei: \n";
+        in >> n;
+        if(n != 0)
+        {
+            cout << "Introduceti datele agentilor: \n";
+            a.nrAgents = 0;
+            for(int i = 0; i < n; i++)
+            {
+                Agent aux;
+                in.get();
+                in >> aux;
+                a.addAgent(aux);
+            }
+            in.get();
+        }
+
+        cout << "Introduceti cifra de afaceri a agentiei: \n";
+        in >> a.totalIncome;
+
+        in.get();
+        return in;
+    }
+
+/// ....................................................................DESTRUCTOR................................................
+
+    ~Agency()
+    {
+        if(this -> brokers != NULL)
+            delete [] this -> brokers;
+        if(this -> agents != NULL)
+            delete [] this -> agents;
+    }
+
+
+};
+
+class Transactions
+{
+public:
+    Transactions() {}
+
+    buy(Building &bu, Buyer &br, Agent &a)
+    {
+        if(!br.getIntersted())
+            cout << "Persoana nu doreste sa faca vreo tranzactie!\n";
+        else if(br.getOptions() != 'b')
+            cout << "Persoana nu este interesata sa cumpere!\n";
+        else if(br.bugetBuy() < bu.getPrice())
+            cout << "Pretul imobilului nu este in bugetul persoanei interesate!\n";
+        else
+        {
+            a.changeStatusToSold(bu);
+            bu.setState('s');
+            br.setIntersted(0);
+            br.setOptions('n');
+            cout << "Tranzactia s-a efectuat cu succes!\n";
+        }
+    }
+    rent(Building &bu, Buyer &br, Agent &a)
+    {
+        if(!br.getIntersted())
+            cout << "Persoana nu doreste sa faca vreo tranzactie!\n";
+        else if(br.getOptions() != 'b')
+            cout << "Persoana nu este interesata sa inchirieze!\n";
+        else if(br.bugetRent() < bu.getPrice())
+            cout << "Pretul chiriei nu este in bugetul persoanei interesate!\n";
+        else
+        {
+            a.changeStatusToRented(bu);
+            bu.setState('r');
+            br.setIntersted(0);
+            br.setOptions('n');
+
+            cout << "Tranzactia s-a efectuat cu succes!\n";
+        }
+    }
+    newHouse(Building &bu, Agent &a)
+    {
+        a = a + bu;
+    }
+
+};
+
+
+
+char Agency :: agencyName[22] = "Real Estate Bucharest";
+char Agency :: agencyAdress[15] = "Bucurestii Noi";
+
+
+int Building :: currentYear = 2020;
+int Building :: currentId = 0;
+int Buyer :: currentId = 0;
+int Employee :: currentId = 0;
+
+void meniu()
+{
+    Agency a;
+
+int ok = 1;
+while(ok)
+{
+    int o1;
+    cout << "----------Bine ati venit la agentia imobiliara " << a.agencyName << "!----------\n";
+    cout << "Ce doriti sa faceti? \n";
+    cout << "       1 - Adaugati element\n";
+    cout << "       2 - Afisati elemente salvate deja\n";
+    cout << "       0 - Exit\n";
+
+    cin >> o1;
+
+    switch(o1){
+    case 0:
+    {
+        cout << "Ati iesit din program!\n";
+        break;
+    }
+    case 1:         //adaugati elemente
+    {
+        cout << endl;
+        cout << "1 - Adaugati cladire\n";
+        cout << "2 - Adaugati cumparator\n";
+        cout << "3 - Adaugati angajat\n";
+        cout << "0 - Exit\n";
+
+        int o2;
+        cin >> o2;
+
+        switch(o2){
+        case 0:
+        {
+            cout << "Ati iesit din program!\n";
+            break;
+        }
+        case 1:         //cladirea
+        {
+            Building ba;
+            cin.get();
+            cin >> ba;
+            cout << endl;
+            cout << "Doriti sa afisati vreo informatie din cladirea introdusa?  0-nu, 1-da \n";
+            int o3;
+            cin >> o3;
+            switch(o3){
+            case 0:         //nu
+                cout << "Ati ales nu!\n";
+                break;
+            case 1:         //da
+            {
+                int ok = 1;
+                while(ok)
+                {
+                    cin.get();
+                    cout << "Ce doriti din urmatoarele: pret, nrCamere, suprafata, nume, adresa, anul, tot\n";
+                    char c[20];
+                    cin.get(c, 20);
+                    cin.get();
+                    if(strcmp(c, "pret") == 0)
+                        cout << ba.getPrice() << endl;
+                    else if(strcmp(c, "nrCamere") == 0)
+                        cout << ba.getNrRooms() << endl;
+                    else if(strcmp(c, "suprafata") == 0)
+                        cout << ba.getTotalSurface() << endl;
+                    else if(strcmp(c, "nume") == 0)
+                        cout << ba.getName() << endl;
+                    else if(strcmp(c, "adresa") == 0)
+                        cout << ba.getAdress() << endl;
+                    else if(strcmp(c, "anul") == 0)
+                        cout << ba.getYearOfConst() << endl;
+                    else if(strcmp(c, "tot") == 0)
+                        cout << ba << endl;
+                    else
+                    {
+                        cout << "Nu ati introdus nici una din variantele date!\n";
+
+                    }
+
+                    cout << "Mai doriti vreo informatie? 0-nu, 1-da\n";
+                    cin >> ok;
+                    if(ok == 0)
+                        cout << "Multumim!\n";
+                }
+                break;
+            }
+            default:
+                cout << "Nu ati introdus nici una din variantele date!\n";
+            }                   // end of switch o3
+
+            cout << "Doriti sa schimbati ceva la cladire? 0-nu, 1-da \n ";
+            int o4;
+            cin >> o4;
+            switch(o4){
+            case 0:
+                {
+                    cout << "Ati ales nu!\n";
+                    break;
+                }
+            case 1:
+                {
+                    int ok = 1;
+                    while(ok)
+                    {
+                    cout << "Ce doriti sa schimbati? Optiunile sunt: camerele, starea(inchiriat, vandut, ocupat), pretul, nume\n";
+                    char c[100];
+                    cin.get();
+                    cin.get(c, 100);
+                    cin.get();
+
+                    if(strcmp(c, "nume") == 0)
+                    {
+                        cout << "Introdcuceti noul nume: \n";
+                        char aux[100];
+                        cin.get(aux, 100);
+                        cin.get();
+                        ba.setName(aux);
+                        cout << "Numele a fost modificat! \n";
+                    }
+                    else if(strcmp(c, "starea") == 0)
+                    {
+                        cout << "Introdcuceti noua stare: \n";
+                        char aux;
+                        cin >> aux;
+                        cin.get();
+                        ba.setState(aux);
+                        cout << "Optiunea a fost modificata! \n";
+                    }
+                    else if(strcmp(c, "pretul") == 0)
+                    {
+                        cout << "Introdcuceti noul pret: \n";
+                        double aux;
+                        cin >> aux;
+                        cin.get();
+                        ba.setPrice(aux);
+                        cout << "Pretul a fost modificat! \n";
+                    }
+                    else if(strcmp(c, "camerele") == 0)
+                    {
+                        cout << "Introdcuceti nr de camere si suprafetele acestora: \n";
+                        int nr;
+                        float *s;
+                        cin >> nr;
+                        s = new float[nr];
+                        for(int i = 0; i < nr; i++)
+                        {
+                            cout << "Suprafata camerei " << i+1 << ": ";
+                            cin >> s[i];
+                        }
+                        cin.get();
+                        ba.setRooms(nr, s);
+                        cout << "Camerele au fost modificate! \n";
+                        cout << "Suprafetele lor sunt acum: \n";
+                        for(int i = 0; i < nr; i++)
+                            cout << s[i] << " ";
+                        cout << endl;
+                    }
+                    else
+                        cout << "Nu ati selectat una din variantele de mai sus!\n";
+
+                    cout << "Mai doriri sa schimbati ceva? \n";
+                    cin >> ok;
+                    if(ok == 0)
+                        cout << "Multumim!\n";
+                    }
+                    break;
+                }
+            default:
+                cout << "Nu ati introdus nici una din variantele date!\n";
+
+            }                               //end of switch o4
+            break;
+        }                                   //end of case 1 switch o2
+        case 2:         //cumparator
+        {
+            Buyer cumparator;
+            cin.get();
+            cin >>  cumparator;
+            cout << endl;
+            cout << "Doriti sa afisati vreo informatie legata de cumparator?  0-nu, 1-da \n";
+            int o3;
+            cin >> o3;
+            switch(o3){
+            case 0:
+            {
+                cout << "Ati ales nu! \n";
+                break;
+            }
+            case 1:
+            {
+                int ok = 1;
+                while(ok)
+                {
+                    cin.get();
+                    cout << "Ce doriti din urmatoarele: varsta, interesat?, bugetul cumparare, nume, cnp, optiunea, tot\n";
+                    char c[20];
+                    cin.get(c, 20);
+                    cin.get();
+
+                    if(strcmp(c, "varsta") == 0)
+                        cout <<cumparator.getAge() << endl;
+                    else if(strcmp(c, "interesat?") == 0)
+                        cout << cumparator.getIntersted() << endl;
+                    else if(strcmp(c, "buget cumparare") == 0)
+                    {
+                        cout << fixed;
+                        cout << setprecision(2);
+                        cout << cumparator.bugetBuy() << endl;
+                    }
+
+                    else if(strcmp(c, "nume") == 0)
+                        cout << cumparator.getName() << endl;
+                    else if(strcmp(c, "cnp") == 0)
+                        cout << cumparator.getCnp() << endl;
+                    else if(strcmp(c, "optiunea") == 0)
+                        cout << cumparator.getOptions() << endl;
+                    else if(strcmp(c, "tot") == 0)
+                        cout << cumparator << endl;
+                    else
+                    {
+                        cout << "Nu ati introdus nici una din variantele date!\n";
+
+                    }
+
+                    cout << "Mai doriti vreo informatie? 0-nu, 1-da\n";
+                    cin >> ok;
+                    if(ok == 0)
+                        cout << "Multumim!\n";
+                }
+                break;
+            }
+            default:
+                cout << "Nu ati introdus nici una din variantele date!\n";
+            }                   //end of switch o3
+
+            cout << "Doriti sa schimbati ceva la cumparator? 0-nu, 1-da \n ";
+            int o4;
+            cin >> o4;
+            switch(o4){
+            case 0:
+                {
+                    cout << "Ati ales nu!\n";
+                    break;
+                }
+            case 1:
+                {
+                    int ok = 1;
+                    while(ok)
+                    {
+                    cout << "Ce doriti sa schimbati? Optiunile sunt: nume, optiunea, salariul, alte venituri\n";
+                    char c[100];
+                    cin.get();
+                    cin.get(c, 100);
+                    cin.get();
+
+                    if(strcmp(c, "nume") == 0)
+                    {
+                        cout << "Introdcuceti noul nume: \n";
+                        char aux[100];
+                        cin.get();
+                        cin.get(aux, 100);
+                        cin.get();
+                        cumparator.setName(aux);
+                        cout << "Numele a fost modificat! \n";
+                    }
+                    else if(strcmp(c, "optiunea") == 0)
+                    {
+                        cout << "Introdcuceti noua optiune: \n";
+                        char aux;
+                        cin >> aux;
+                        cin.get();
+                        cumparator.setOptions(aux);
+                        cout << "Optiunea a fost modificata! \n";
+                    }
+                    else if(strcmp(c, "salariul") == 0)
+                    {
+                        cout << "Introdcuceti noul salariu: \n";
+                        float aux;
+                        cin.get();
+                        cin >> aux;
+                        cin.get();
+                        cumparator.setSalary(aux);
+                        cout << "Salriul a fost modificat! \n";
+                    }
+                    else if(strcmp(c, "alte venituri") == 0)
+                    {
+                        cout << "Introdcuceti nr de conturi si veniturile din acestea: \n";
+                        int nr;
+                        float *v;
+                        cin >> nr;
+                        v = new float[nr];
+                        for(int i = 0; i < nr; i++)
+                        {
+                            cout << "Suma din contul " << i+1 << ": ";
+                            cin >> v[i];
+                        }
+                        cin.get();
+                        cumparator.setOtherIncomes(nr, v);
+                        cout << "Conturile au fost modificate! \n";
+                        cout << "Sumele sunt acum: \n";
+                        for(int i = 0; i < nr; i++)
+                            cout << v[i] << " ";
+                        cout << endl;
+                    }
+                    else
+                        cout << "Nu ati selectat una din variantele de mai sus!\n";
+
+                    cout << "Mai doriri sa schimbati ceva? \n";
+                    cin >> ok;
+                    if(ok == 0)
+                        cout << "Multumim!\n";
+                    }
+                    break;
+                }               //end of case 1 switch o4
+            default:
+                cout << "Nu ati introdus nici una din variantele date!\n";
+
+            }                   //end of switch o4
+            break;
+        }                       //end of case 2 switch o2
+
+        case 3:         //angajat  ----- broker sau agent
+        {
+            cout << "Broker sau agent?\n";
+            cout << "1 - Adaugare Broker\n";
+            cout << "2 - Adaugare Agent\n";
+            cout << "0 - Exit\n";
+
+            int o4;
+            cin >> o4;
+
+            switch(o4){
+            case 0:
+                {
+                    cout << "Ati iesit din program!\n";
+                    break;
+                }
+            case 1:             //adaugare broker
+                {
+                    Broker b;
+                    cin.get();
+                    cin >> b;
+                    cout << endl;
+                    cout << "Ce doriti sa faceti acum? \n";
+                    cout << "1 - Afisare informatii ale bokerului\n";
+                    cout << "2 - Modificare informatii ale bokerului\n";
+                    cout << "0 - Exit\n";
+
+                    int o5;
+                    cin >> o5;
+
+                    switch(o5){
+                    case 0:
+                        {
+                            cout << "Ati iesit din program!\n";
+                            break;
+                        }
+                    case 1:
+                        {
+                            int ok2 = 1;
+                            while(ok2)
+                            {
+                            cout << "Ce informatii doriti sa afisati?\n";
+                            cout << "   1 - nr de contracte \n";
+                            cout << "   2 - salariul lunar \n";
+                            cout << "   3 - ani experienta\n";
+                            cout << "   4 - ani in pozitia de conducere\n";
+                            cout << "   5 - numele\n";
+                            cout << "   6 - tot\n";
+                            cout << "   0 - exit\n";
+
+                            int o5;
+                            cin >> o5;
+
+                            switch(o5){
+                            case 0:
+                                {
+                                    cout << "Ati iesit din program!\n";
+                                    break;
+                                }
+                            case 1:
+                                {
+                                    cout << b.getNrContracts() << endl;
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    cout << b.getSalary() << endl;
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    cout << b.getYears() << endl;
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    cout << b.getYearsLeadingPosition() << endl;
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    cout << b.getName() << endl;
+                                    break;
+                                }
+                            case 6:
+                                {
+                                    cout << b << endl;
+                                    break;
+                                }
+
+
+                            }
+
+                            cout << "mai doriti vreo informatie?\n";
+                            cin >> ok2;
+                            if(ok2 == 0)
+                                cout << "Multumim!\n";
+                            }
+                            break;
+                        }
+                    case 2:
+                        {
+                            cout << "Ce doriti sa modificati?\n";
+                            cout << "   unavailable \n";
+                            break;
+                        }
+
+                    default:
+                        cout << "Nu ati introdus nici una din variantele date!\n";
+                    }
+                    break;
+                }
+            case 2:             //adaugare agent
+                {
+                    Agent a1;
+                    cin.get();
+                    cin >> a1;
+                    cout << endl;
+                    cout << "Ce doriti sa faceti acum? \n";
+                    cout << "1 - Afisare informatii ale bokerului\n";
+                    cout << "2 - Modificare informatii ale bokerului\n";
+                    cout << "0 - Exit\n";
+
+                    int o5;
+                    cin >> o5;
+
+                    switch(o5){
+                    case 0:
+                        {
+                            cout << "Ati iesit din program!\n";
+                            break;
+                        }
+                    case 1:
+                        {
+                            cout << "Ce informatii doriti sa afisati?\n";
+                            cout << "   1 - nr case vandute \n";
+                            cout << "   2 - nr case inchiriate \n";
+                            cout << "   3 - nr case disponibile \n";
+                            cout << "   4 - comisionul castigat \n";
+                            cout << "   5 - salariul lunar \n";
+                            cout << "   6 - ani experienta\n";
+                            cout << "   7 - numele\n";
+                            cout << "   8 - tot\n";
+                            cout << "   0 - exit\n";
+
+                            int o6;
+                            cin >> o6;
+
+                            switch(o6){
+                            case 0:
+                                {
+                                    cout << "Ati iesit din program!\n";
+                                    break;
+                                }
+                            case 1:
+                                {
+                                    cout << a1.getNrHousesSold() << endl;
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    cout << a1.getNrHousesRented() << endl;
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    cout << a1.getNrHousesOnMarket() << endl;
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    cout << a1.getComission() << endl;
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    cout << a1.getSalary() << endl;
+                                    break;
+                                }
+                            case 6:
+                                {
+                                    cout << a1.getYears() << endl;
+                                    break;
+                                }
+                            case 7:
+                                {
+                                    cout << a1.getName() << endl;
+                                    break;
+                                }
+                            case 8:
+                                {
+                                    cout << a1 << endl;
+                                    break;
+                                }
+                            default:
+                                cout << "Nu ati introdus una din variantele date!\n";
+
+                            }
+
+                            break;
+                        }
+                    case 2:
+                        {
+                            cout << "Ce doriti sa modificati?\n";
+                            cout << "   unavailable";
+                            break;
+                        }
+                    default:
+                        cout << "Nu ati introdus nici una din variantele date!\n";
+                    }
+
+                    break;
+                }
+            default:
+                cout << "Nu ati introdus nici una din variantele date!\n";
+
+            }
+
+            break;
+        }               //end of case3 switch o2
+
+        }               //end of switch o2
+        break;
+    }                                           //end of case 1 switch o1
+    case 2:         //afisati elemente existente
+    {
+        int opt[] = {1, 1, 1, 2};
+        float prices[] = {1000000, 200000, 3500000, 2000};
+        float acc1[] = {2000, 3000, 5000};
+        float acc2[] = {4000, 3300, 5000, 5050};
+        float sup[] = {30, 40, 40};
+        int com[] = {3000, 100, 200, 200, 150, 10000};
+        char nume1[] = "ale";
+        char nume2[] = "alex";
+        char adresa[] = "babesti";
+        char cnp1[] = "6010215450035";
+        Broker *brokers = new Broker[0];
+        Agent *agents = new Agent[0];
+
+        Building b1(3, 1, 'v', nume1, adresa, "ap", sup, 75000, 2020);
+        Building b2(3, 1, 'v', nume2, adresa, "ap", sup, 60000, 2010);
+        Buyer b3(19, 1, 'c', nume1, cnp1, 77000, 3, acc1);
+        Buyer b4(30, 1, 'i', nume2, cnp1, 100000, 4, acc2);
+
+        Agency a2(0, 0, 10000000000000, brokers, agents);
+
+
+        int ok1 = 1;
+        while(ok1)
+        {
+            cout << "Ce doriti sa afisati?\n";
+            cout << "1 - Cladire\n";
+            cout << "2 - Cumparator\n";
+            cout << "3 - Broker\n";
+            cout << "4 - Agent\n";
+            cout << "5 - Agentie\n";
+            cout << "0 - Exit\n";
+
+            int o2;
+            cin >> o2;
+            cin.get();
+            switch(o2){
+            case 0:
+            {
+                cout << "Ati iesit din program!\n";
+                break;
+            }
+            case 1:
+            {
+                cout << b1 << endl;
+                cout << "---------------\n";
+                cout << b2 << endl;
+                cout << "---------------\n";
+                break;
+            }
+            case 2:
+            {
+                cout << b3 << endl;
+                cout << "---------------\n";
+                cout << b4 << endl;
+                cout << "---------------\n";
+                break;
+            }
+            case 3:
+            {
+                cout << "-------- Nu exista un broker salvat -------\n";
+                break;
+            }
+            case 4:
+            {
+                cout << "-------- Nu exista un agent salvat -------\n";
+                break;
+            }
+            case 5:
+            {
+                cout << a2 << endl;
+                break;
+            }
+            default:
+                cout << "Nu ati introdus nici una din variantele date!\n";
+            }               //end of switch o2
+
+            cout << "Mai doriti sa afisati si alt obiet?\n";
+            cin >> ok1;
+            if(ok1 == 0)
+                cout << "Asta a fost tot!\n";
+
+        }
+        break;
+    }                       //end of case 2 switch o1
+
+    default:
+        cout << "Nu ati introdus o varianta activa!\n";
+
+    }                       //end of switch o1
+
+    cout << "Mai doriti si altceva?\n";
+    cin >> ok;
+    if(ok == 0)
+        cout << "Asta a fost tot, multumim!\n";
+}
+}
+
+int main()
+{
+    meniu();
+
+/*
+    Building b1;
+    cin >> b1;
+    cout << "-------------" << endl;
+    cout << b1 << endl;;
+    cout << "-------------" << endl;
+
+    Buyer b7;
+    cin >> b7;
+    cout << "-------------" << endl;
+    cout << b7 << endl;
+*/
+/*
+    char nume2[] = "alex";
+    char adresa[] = "babesti";
+    float sup[] = {30, 40, 40};
+    Building b5(nume2, 2, sup, 100);         //1000
+    Building b6(nume2, 2, sup, 7000);          //100
+    Building bt(3, 1, 'v', nume2, adresa, "ap", sup, 60000, 2010);
+ //   cout << "b1 < b2: " << (b5 < b6) << endl;
+ //   cout << (b1 == b2) << endl;
+ //   cout << b1.getPrice() << endl;
+ //   b1++;
+//    cout << b1.getPrice() << endl;
+  //  cout << bt << endl;
+    bt.addRoom(20);
+ //   cout << "-------------" << endl;
+    cout << bt << endl;
+    cout << "-------------" << endl;
+    cout << bt.getId();
+  //  cout << "suprafata pe mp: " << bt.priceMP() << endl;
+
+    bt = bt + 1000;
+    cout << bt.getPrice() << endl;*/
+
+/*
+    char cnp1[] = "6010215450035";
+    char cnp2[] = "6010215550035";
+    char nume1[] = "ale";
+    float acc1[] = {2000, 3000, 5000};
+    float acc2[] = {2000, 4000, 5000};
+    Buyer b3(19, 1, 'c', nume1, cnp1, 77000, 3, acc1);
+ //   Buyer b4(cnp2, 12000, 3, acc2);
+ //   cout << (b3 == b4) << endl;
+ //   cout << (b3 < b4) << endl;
+  //  b3.setName("ale");
+    cout << b3 << endl;
+    cout << b3.getTotalIncome() << endl;
+    cout << b3.buget() << endl;
+    cout << "adaugare alt cont \n";
+    b3.addAccount(1000);
+    cout << b3.getTotalIncome() << endl;
+    b3++;
+    cout << "varsta lui: " << b3.getAge() << endl;
+    b3 = b3*1.1;
+    cout << "noul venit total: " << b3.getTotalIncome() << endl;
+*/
+
+/*
+    int opt[] = {1, 1, 1, 2};
+    float prices[] = {1000000, 200000, 3500000, 2000};
+    Agency a1;
+    Agency a2(12, 10, 20, 4, opt, prices, 10000000000000);
+    cin >> a1;
+    cout << a1;
+    cout << "-------------\n";
+    cout << a2;
+    cout << "-------------\n";
+
+
+*/
+
+/*
+    char cnp1[] = "6010215450035";
+    char cnp2[] = "6010215550035";
+    char nume1[] = "ale1";
+    char nume2[] = "ale2";
+    char nume3[] = "ale3";
+    char adresa[] = "babesti";
+    float acc1[] = {2000, 3000, 5000};
+    float acc2[] = {2000, 4000, 5000};
+    float sup[] = {30, 40, 40};
+    Buyer b2(20, 1, 'b', nume1, cnp1, 7000, 3, acc1);
+    cout << "intersted? " << b2.getIntersted() << endl;
+    ForeignBuyer b3(19, 1, 'c', nume1, cnp1, 7000, 3, acc1, "englez", 1, 2);
+    Building bt1(3, 1, 'a', nume1, adresa, "ap", sup, 40000, 2010);
+    Building bt2(3, 1, 'a', nume2, adresa, "ap", sup, 40000, 2010);
+    Building bt3(3, 1, 'a', nume3, adresa, "ap", sup, 60000, 2010);
+    Building *bSale = new Building[0];
+    Building *bRent = new Building[0];
+    Building *bOnMarket = new Building[0];
+
+    //Agent a(7, nume2, 5000, 0, 0, 0, bSale, bRent, bOnMarket);
+    Agent a;
+
+    cout << endl;
+    cout << fixed;
+    cout << setprecision(2);
+    cout << b2.bugetBuy() << endl;
+    cout << "================\n";
+
+    Agent b;
+
+    b = b + bt1;
+    b = b + bt2;
+    b = b + bt3;
+
+    cout << "ajunge?";
+
+    Transactions t;
+    a = a + bt2;
+    cout << "ajunge?";
+    t.buy(bt2, b2, a);
+    cout << "ajunge?";
+
+    cout << a << endl;
+*/
+
+/*
+
+    cout << "casele vandute pana acum \n";
+    b.getHousesSold();
+    cout << "casele inchiriate pana acum \n";
+    b.getHousesRented();
+
+
+    b.getHousesRented();
+    b.addHouseOnMarket(bt2);
+    cout << "casele disponibile acum \n";
+    b.getHousesOnMarket();
+    cout << "casele disponibile acum \n";
+    b.getHousesOnMarket();
+    cout << "               ======              \n";
+    cout << b.totalIncome() << endl;
+*/
+
+//    cout << b;
+//    cout << "--------\n";
+//    cout << b.getComission() << endl;
+   // cout << bt2.anualRent() << endl;
+   // b.output();
+
+ //   Agency a;
+  //  Broker b;
+ //   cin >> a;
+
+ //   cin >> b;
+ //   a.addBroker(b);
+ //   a.addBroker(b);
+ //   cout << a;
+ //   cout << b;
+
+
+    return 0;
+}
