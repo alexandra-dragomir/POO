@@ -1154,6 +1154,12 @@ public:
         }
         return *this;
     }
+///................................................ SETTERS ...................................................................
+
+    void setSalary(int s)
+    {
+        this -> salary = s;
+    }
 
 ///................................................ GETTERS ...................................................................
 
@@ -1169,6 +1175,12 @@ public:
     float getSalary()
     {
         return this -> salary;
+    }
+
+
+    virtual float taxes()
+    {
+        return 0.1*12*this -> salary;
     }
 
 /// .................................................................... functie virtuala pura ................................................
@@ -1608,6 +1620,12 @@ public:
     int nrHouses()
     {
         return this -> nrHousesOnMarket + this -> nrHousesRented + this -> nrHousesSold;
+    }
+
+    float taxes()
+    {
+        float total = totalIncome();
+        return 0.1*total;
     }
 /// .................................................................... SUPRAINCARCARI ................................................
 
@@ -2818,33 +2836,34 @@ int main()
     float acc1[] = {2000, 3000, 5000};
     float acc2[] = {2000, 4000, 5000};
     float sup[] = {30, 40, 40};
+
     Buyer b2(20, 1, 'b', nume1, cnp1, 7000, 3, acc1);
-    cout << "intersted? " << b2.getIntersted() << endl;
     ForeignBuyer b3(19, 1, 'c', nume1, cnp1, 7000, 3, acc1, "englez", 1, 2);
-    Building bt1(3, 1, 'a', nume1, adresa, "ap", sup, 40000, 2010);
-    Building bt2(3, 1, 'a', nume2, adresa, "ap", sup, 40000, 2010);
-    Building bt3(3, 1, 'a', nume3, adresa, "ap", sup, 60000, 2010);
+    Building bt1(3, 1, 's', nume1, adresa, "ap", sup, 40000, 2010);
+    Building bt2(3, 1, 's', nume2, adresa, "ap", sup, 40000, 2010);
+    Building bt3(3, 1, 'r', nume3, adresa, "ap", sup, 60000, 2010);
     Building *bSale = new Building[0];
     Building *bRent = new Building[0];
     Building *bOnMarket = new Building[0];
 
     //Agent a(7, nume2, 5000, 0, 0, 0, bSale, bRent, bOnMarket);
-    Agent a;
 
-    cout << endl;
-    cout << fixed;
-    cout << setprecision(2);
-    cout << b2.bugetBuy() << endl;
-    cout << "================\n";
 
     Agent b;
+    Broker bb;
+    bb.setSalary(1000);
+    b.setSalary(1000);
 
     b = b + bt1;
     b = b + bt2;
     b = b + bt3;
 
-    cout << "ajunge?";
+    cout << b.taxes() << endl;
+    cout << b.getComission() << endl;
 
+    cout << bb.taxes();
+*/
+  /*
     Transactions t;
     a = a + bt2;
     cout << "ajunge?";
@@ -2852,8 +2871,8 @@ int main()
     cout << "ajunge?";
 
     cout << a << endl;
-*/
 
+*/
 /*
 
     cout << "casele vandute pana acum \n";
@@ -2887,6 +2906,8 @@ int main()
  //   a.addBroker(b);
  //   cout << a;
  //   cout << b;
+
+
 
 
     return 0;
