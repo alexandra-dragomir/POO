@@ -3,7 +3,7 @@ Grupa 212
 
     Real Estate Agency 
 
-    Proiectul prezinta strcutura unei agentii imobiliare. Exista 4 clase: 
+    Proiectul prezinta strcutura unei agentii imobiliare. In prima etapa a proiectului am implementat 4 clase: 
     
     1) Building
     2) Buyer
@@ -11,17 +11,24 @@ Grupa 212
     4) Agency
 
     Buildidng retine cateva detalii tehnice despre fiecare cladire care urmeaza sa fie vanduta/inchiriata de catre agentia imobiliara. Buyer retine detaliile cumparatorului, 
-Employee ale angajatilor iar Agency cele ale agentiei imobilare. Voi imparti ulterior Employee in Brokeri si alta clasa de angajati din agentie. La Brokeri voi crea liste cu 
-obiecte de tip Building pentru fiecare categorie: casele inchiriate, vandute si cele ramase pe piata. In Agency voi avea o lista cu Brokerii care lucreaza acolo.
+Employee ale angajatilor iar Agency cele ale agentiei imobilare. Voi imparti ulterior Employee in Brokeri si Agenti. La Agenti voi crea liste cu 
+obiecte de tip Building pentru fiecare categorie: casele inchiriate, vandute si cele ramase pe piata. In Agency voi avea o lista cu Brokerii si Agentii care lucreaza acolo.
 
-    Pe parcursul progrmaului, voi construi o functie care sa simuleze procesul de cumparare si anume: voi schimba statutul cladirii din "de vanzare" sau "de inchiriere" in 
-"ocupata". Cumpararea se poate face doar daca imobilul respectiv este in bugetul clientului. Pentru a-i afla bugetul am facut o simulare prin care am calculat veniturile totale
+    Pe parcursul progrmaului, voi construi o functie care sa simuleze procesul de cumparare si anume: voi schimba statutul cladirii din "available" in "sold" sau "rented".
+Cumpararea se poate face doar daca imobilul respectiv este in bugetul clientului. Pentru a-i afla bugetul am facut o simulare prin care am calculat veniturile totale
 pe 20 ani (o perioada minima pe care se ia un credit ipotecar) si am specificat ca bugetul sa fie 30% din veniturile totale, adica suma pe care o poate plati cumparatorul drept 
 rata lunara la banca. De asemenea, dupa cumparare, cladirea brokerului va trece de pe liste de "houses on market" pe "houses sold" sau "houses rented" si se va adauga valoare 
-comisionului primit la lista "comissions".
-
-    Clasa Buyer o voi extinde si imparti in fosti si actuali clienti in functie de valoarea variabilei bool isIntersted. La cei care au cumparat deja voi avea o functie care sa 
-calculeze rata lunara. 
-
+comisionului primit la lista "comissions". Cumpararea este conditionata si de valoarea vaiaibilelor "isIntersted" si "options" din Buyer. 
+    Un proces asemanator exista si pentru inchiriere. Aceste functii se vor gasi in clasa Transactions.
+    
     La meniu voi adauga pe parcurs si restul functionalitatilor facute si voi crea o bucla pentru a putea oricand sa ajunga la starea 0 sau sa iasa din program la anumite comenzi. 
 Datele introduse de fiecare data vor fi salvate ulterior in vectori de obiecte pentru fiecare clasa. 
+    
+    In etapa a 2 a am transformat clasa Employee intr-o clasa abstracta si am derivat-o in clasele Broker si Agent. Clasa Interface este o interfata si este mostenita de catre   
+Buyer si Agent. Virtualizarea este exemplificata in supraincarcarile operatorului << din clasele Buyer si ForeignBuyer.
+    In clasa Agent exista 3 liste cu obiecte de tip Building in care sunt retinute casele vandute, inchiriate si disponibile. Comisionul e calculat in functie de sumele 
+contractelor de vanzare si inchiriere. Am luat ca si coeficient 5% din pretul imobilului pentru vnzare, respectiv 5% din chiria anuala. Pentru a calcula pretul chiriei anuale 
+am inmultit pretul imobilului cu 0,6. In clasa Agent exista functii prin care pot fi adaugate/scoase case din cele 3 liste si functii prin care unor case li se schimba statutul
+din "available" in "rented" sau "sold". Tot in aceasta clasa am supraincarcat operatorul "+" pentru a adauga case in portofoliul agentului. La aceasta adaugare, programul
+identifica lista in care trebuie pusa casa cu ajutorul variabilei "state" din Building.
+
