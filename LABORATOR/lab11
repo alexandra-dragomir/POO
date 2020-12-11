@@ -1,0 +1,89 @@
+#include <iostream>
+#include <exception>
+#include <stdexcept>
+
+using namespace std;
+using std::runtime_error;
+
+double Fractie(int numarator, int numitor)
+{
+
+    if(numitor == 0)
+        throw runtime_error("Numitorul este 0");
+
+    return (double)numarator/numitor;
+}
+
+class ExceptiaMea: public exception
+{
+public:
+    virtual const char*what() const throw()
+    {
+        return "exceptia mea";
+    }
+} exceptiaMea;
+
+void functiaMea(int a)
+{
+    if(a==10) throw exceptiaMea;
+    if(a==0) throw 10;
+    if(a > 0) throw 3.4;
+    if(a < 0) throw 'a';
+
+}
+
+int main()
+{
+/*
+    try
+{
+    cout << Fractie(3,0);
+    cout << "ceva2";
+}
+    catch(exception& e)
+{
+    cout << e.what();
+    cout << "am prins excptia de runtime";
+}
+    cout << "ceva";
+*/
+/*
+    int a=10;
+    try{
+    cout << "\n ceva1 \n";
+    functiaMea(a);
+    cout << "\n ceva2 \n";
+    }
+    catch(int){
+    cout << "Am prins o exceptie int";
+    }
+    catch(...){
+    cout << "Am prins o exceptie necunoscuta";
+    }
+    cout << "\n ceva3 \n";
+*/
+    int a=-7;
+    try{
+        cout << "\n ceva1 \n";
+        try{
+            cout << "\n ceva4 \n";
+            functiaMea(a);
+            cout << "\n ceva5 \n";
+        }
+        catch(double){
+            cout << "S-a prins double";
+        }
+
+        cout << "\n ceva2 \n";
+    }
+    catch(int){
+    cout << "Am prins o exceptie int";
+    }
+    catch(...){
+    cout << "Am prins o exceptie necunoscuta";
+    }
+    cout << "\n ceva3 \n";
+
+
+    return 0;
+}
