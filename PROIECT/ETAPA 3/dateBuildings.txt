@@ -1,0 +1,72 @@
+Dragomir Alexandra
+Str Babesti, 12
+ap
+a
+2
+30 40
+0
+100000
+2019
+Popa Alex
+Victoriei, 20
+gs
+a
+1
+60
+0
+20000
+2016
+Constantinescu Alin
+Unirii, 45
+ap
+r
+3
+40 40 20
+1
+3500000
+2010
+Costache Marin
+Pipera
+cs
+r
+4
+20 30 20 40
+1
+500000
+2018
+Sandu Livia
+Victoriei, 21
+gs
+s
+1
+70
+0
+40000
+2015
+Constantinescu Maria
+Titan
+ap
+s
+2
+30 40
+0
+40000
+2010
+alex
+militari
+ap
+s
+2
+30 30
+0
+200000
+2020
+alex2
+militari2
+ap
+s
+2
+30 30
+0
+300000
+2021
