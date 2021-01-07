@@ -1,0 +1,5662 @@
+#include <iostream>
+#include <string.h>
+#include <string>
+#include <stdio.h>
+#include <iomanip>
+#include <fstream>
+#include <iterator>
+#include <set>
+#include <map>
+#include <vector>
+#include <list>
+#include <typeinfo>
+
+using namespace std;
+
+
+template <class T1, class T2>       //in Transactions newHouse()
+T1 add(T1 a, T2 b){
+    return a + b;
+}
+
+class Interface
+{
+    virtual float anualSalary() = 0;
+    virtual double totalIncome() = 0;
+};
+
+///------------------------------------------------------------------- Building ----------------------------------------------------------
+
+void exc(int a)
+{
+    if(a < 0) throw -1;
+}
+
+void excBool(int a)
+{
+    if(a != 0 && a != 1) throw -1;
+}
+
+class Building
+
+{
+
+private:
+
+    int nrRooms;
+    bool extSpace;
+    char state;                  //sold, rented, available ---> s, r, a
+    char *ownerName;
+    char *adress;
+    char type[3];               //ap, gs, cs
+    float totalSurface;
+    float *roomSurface;
+    double price;
+    int yearOfConst;
+    static int currentYear;
+    const int idBuilding;
+    static int currentId;
+
+public:
+
+/// ....................................................................CONSTRUCTORI................................................
+///................................................FARA PARAMETRU...................................................................
+
+    Building() : idBuilding(currentId ++ )
+    {
+
+        this -> nrRooms = 0;
+        this -> price = 0;
+        this -> extSpace = 0;
+        this -> yearOfConst = 0;
+        this -> state = ' ';
+        this -> totalSurface = 0;
+
+        strcpy(this -> type, "  ");
+        try{
+            this -> roomSurface = new float[0];
+        }
+        catch(bad_alloc){
+            cout << "Nu s-a putut aloca spatiu\n";
+        }
+
+        try{
+            this -> ownerName = new char[strlen("Unknown") + 1];
+            strcpy(this -> ownerName, "Unknown");
+        }
+        catch(bad_alloc){
+            cout << "Nu s-a putut aloca spatiu\n";
+        }
+
+        try{
+            this -> adress = new char[strlen("Unknown") + 1];
+            strcpy(this -> adress, "Unknown");
+        }
+        catch(bad_alloc){
+            cout << "Nu s-a putut aloca spatiu\n";
+        }
+
+    }
+
+///................................................CU TOTI PARAMETRII...................................................................
+
+    Building(int nrRooms, bool extSpace, char state, char *ownerName, char *adress, char type[3], float *roomSurface, double price, int yearOfConst) : idBuilding(currentId ++ )
+    {
+        try{
+            if(price < 0) throw -1;
+            this -> price = price;
+        }
+        catch(int)
+        {
+            cout << "Pretul nu poate fi negativ\n";
+        }
+        try{
+            if(extSpace != 0 && extSpace != 1) throw -1;
+            this -> extSpace = bool(extSpace);
+        }
+        catch(int)
+        {
+            cout << "Variabila extSpace nu este de tip bool\n";
+        }
+        try{
+            if(yearOfConst < 0) throw -1;
+            this -> yearOfConst = yearOfConst;
+        }
+        catch(int)
+        {
+            cout << "Anul constructiei nu poate fi negativ\n";
+        }
+        try{
+            if(state != 'a' && state != 'r' && state != 's') throw -1;
+            this -> state = state;
+        }
+        catch(int)
+        {
+            cout << "Starea nu este dintre variantele disponibile(a, r, s)\n";
+        }
+        try{
+            if(abs(strcmp(type, "ap")) && abs(strcmp(type, "cs")) && abs(strcmp(type, "gs")))
+                throw -1;
+            strcpy(this -> type, type);
+        }
+        catch(int)
+        {
+            cout << "Tipul nu este dintre variantele disponibile(ap, cs, gs)\n";
+        }
+
+        try{
+            this -> ownerName = new char[strlen(ownerName) + 1];
+            strcpy(this -> ownerName, ownerName);
+        }
+        catch(bad_alloc){
+            cout << "Nu s-a putut aloca spatiu\n";
+        }
+
+        try{
+            this -> adress = new char[strlen(adress) + 1];
+            strcpy(this -> adress, adress);
+        }
+        catch(bad_alloc){
+            cout << "Nu s-a putut aloca spatiu\n";
+        }
+
+        try{
+            if(nrRooms <= 0) throw -1;
+            this -> nrRooms = nrRooms;
+            this -> roomSurface = new float[nrRooms];
+            for(int i = 0; i < this -> nrRooms; i++)
+                this -> roomSurface[i] = roomSurface[i];
+
+            float sup = 0;
+            for(int i = 0; i < this -> nrRooms; i++)
+                sup = sup + this -> roomSurface[i];
+            this -> totalSurface = sup;
+        }
+        catch(int){
+            cout << "Nr de camere nu poate fi negativ\n";
+        }
+
+
+
+
+    }
+
+///................................................CU PARAMETRII........................................................................
+
+    Building(int nrRooms, char state, char *ownerName, float *roomSurface) : idBuilding(currentId ++ )
+    {
+        try{
+            if(nrRooms <= 0) throw -1;
+            this -> nrRooms = nrRooms;
+            this -> roomSurface = new float[nrRooms];
+            for(int i = 0; i < this -> nrRooms; i++)
+                this -> roomSurface[i] = roomSurface[i];
+
+            float sup = 0;
+            for(int i = 0; i < this -> nrRooms; i++)
+                sup = sup + this -> roomSurface[i];
+            this -> totalSurface = sup;
+        }
+        catch(int){
+            cout << "Nr de camere nu poate fi negativ\n";
+        }
+        try{
+            if(state != 'a' && state != 'r' && state != 's') throw -1;
+            this -> state = state;
+        }
+        catch(int)
+        {
+            cout << "Starea nu este dintre variantele disponibile(a, r, s)\n";
+        }
+        try{
+            this -> ownerName = new char[strlen(ownerName) + 1];
+            strcpy(this -> ownerName, ownerName);
+        }
+        catch(bad_alloc)
+        {
+            cout << "Nu s-a putut aloca memorie pentru nume\n";
+        }
+
+
+    }
+
+    Building(char *ownerName, int nrRooms, float *roomSurface, double price) : idBuilding(currentId ++ )
+    {
+        try{
+            if(nrRooms <= 0) throw -1;
+            this -> nrRooms = nrRooms;
+            this -> roomSurface = new float[nrRooms];
+            for(int i = 0; i < this -> nrRooms; i++)
+                this -> roomSurface[i] = roomSurface[i];
+
+            float sup = 0;
+            for(int i = 0; i < this -> nrRooms; i++)
+                sup = sup + this -> roomSurface[i];
+            this -> totalSurface = sup;
+        }
+        catch(int){
+            cout << "Nr de camere nu poate fi negativ\n";
+        }
+
+        try{
+            if(price < 0) throw -1;
+            this -> price = price;
+        }
+        catch(int)
+        {
+            cout << "Pretul nu poate fi negativ\n";
+        }
+
+        try{
+            this -> ownerName = new char[strlen(ownerName) + 1];
+            strcpy(this -> ownerName, ownerName);
+        }
+        catch(bad_alloc)
+        {
+            cout << "Nu s-a putut aloca memorie pentru nume\n";
+        }
+
+    }
+
+///................................................DE COPIERE...................................................................
+
+    Building(const Building &b) : idBuilding(currentId)
+    {
+     //   cout << "S-A APELAT CST COPIERE BUILDING si id ul e " << this -> idBuilding << endl;
+        this -> nrRooms = b.nrRooms;
+        this -> price = b.price;
+        this -> extSpace = b.extSpace;
+        this -> yearOfConst = b.yearOfConst;
+        this -> state = b.state;
+        this -> totalSurface = b.totalSurface;
+
+        strcpy(this -> type, b.type);
+
+        this -> ownerName = new char[0];
+        this -> adress = new char[0];
+        this -> roomSurface = new float[0];
+
+        if(this -> ownerName != NULL)
+            delete [] this -> ownerName;
+        if(this -> adress != NULL)
+            delete [] this -> adress;
+        if(this -> roomSurface != NULL)
+            delete [] this -> roomSurface;
+
+        this -> ownerName = new char[strlen(b.ownerName) + 1];
+            strcpy(this -> ownerName, b.ownerName);
+
+        this -> adress = new char[strlen(b.adress) + 1];
+            strcpy(this -> adress, b.adress);
+
+        this -> roomSurface = new float[b.nrRooms];
+        for(int i = 0; i < this -> nrRooms; i++)
+            this -> roomSurface[i] = b.roomSurface[i];
+
+    }
+///................................................SUPRAINCARCAREA =...................................................................
+
+    Building& operator = (const Building &b)
+    {
+        if(this != &b)
+        {
+            this -> nrRooms = b.nrRooms;
+            this -> price = b.price;
+            this -> extSpace = b.extSpace;
+            this -> yearOfConst = b.yearOfConst;
+            this -> state = b.state;
+            this -> totalSurface = b.totalSurface;
+
+            strcpy(this -> type, b.type);
+
+            this -> ownerName = new char[0];
+            this -> adress = new char[0];
+            this -> roomSurface = new float[0];
+
+            if(this -> ownerName != NULL)
+                delete [] this -> ownerName;
+            if(this -> adress != NULL)
+                delete [] this -> adress;
+            if(this -> roomSurface != NULL)
+                delete [] this -> roomSurface;
+
+            this -> ownerName = new char[strlen(b.ownerName) + 1];
+                strcpy(this -> ownerName, b.ownerName);
+
+            this -> adress = new char[strlen(b.adress) + 1];
+                strcpy(this -> adress, b.adress);
+
+            this -> roomSurface = new float[b.nrRooms];
+            for(int i = 0; i < this -> nrRooms; i++)
+                this -> roomSurface[i] = b.roomSurface[i];
+
+        }
+        return *this;
+    }
+
+
+/// ....................................................................SETTERS................................................
+
+    void setPrice(double x)
+    {
+        this -> price = x;
+    }
+
+    void setRooms(int nrRoomsAux, float *roomSurfaceAux)
+    {
+        if(this -> roomSurface != NULL)
+            delete [] this -> roomSurface;
+
+        this -> nrRooms = nrRoomsAux;
+        this -> roomSurface = new float[nrRoomsAux];
+
+        for(int i = 0; i < nrRoomsAux; i++)
+            this -> roomSurface[i] = roomSurfaceAux[i];
+    }
+
+    void setState(char s)
+    {
+        this -> state = s;
+    }
+
+    void setName(char *c)
+    {
+        delete [] this -> ownerName;
+        this -> ownerName = new char[strlen(c) + 1];
+        strcpy(this -> ownerName, c);
+    }
+
+    void setAdress(char *a)
+    {
+        delete [] this -> adress;
+        this -> adress = new char[strlen(a) + 1];
+        strcpy(this -> adress, a);
+    }
+/// ....................................................................GETTERS................................................
+
+    int getNrRooms()
+    {
+        return this -> nrRooms;
+    }
+    bool getExtSpace()
+    {
+        return this -> extSpace;
+    }
+    char getState()
+    {
+        return this -> state;
+    }
+    char* getName()
+    {
+        return this -> ownerName;
+    }
+    char* getAdress()
+    {
+        return this -> adress;
+    }
+    char* getType()
+    {
+        return this -> type;
+    }
+    double getPrice()
+    {
+        return this -> price;
+    }
+    int getYearOfConst()
+    {
+        return this -> yearOfConst;
+    }
+    float getTotalSurface() const
+    {
+        float sup = 0;
+        for(int i = 0; i < this -> nrRooms; i++)
+            sup = sup + this -> roomSurface[i];
+//        this -> totalSurface = sup;
+        return sup;
+    }
+    int getId()
+    {
+        return currentId;
+    }
+
+///..................................................................FUNCTIONALITATI...................................................................
+
+    float anualRent()
+    {
+        float randament = (float) 5/100;                    //stabilirea chiriei in functie de valoarea imobilului -> randament de 5%
+        float r = this -> price;
+        r = r * randament;
+
+        return r;
+    }
+
+    float priceMP()
+    {
+        float p;
+        p = this -> price / getTotalSurface();
+        return p;
+    }
+
+    void addRoom(float s)
+    {
+        float *aux = new float[this -> nrRooms];
+
+        for(int i = 0; i < this -> nrRooms; i++)
+        {
+            aux[i] = this -> roomSurface[i];
+        }
+
+        this -> nrRooms ++;
+        delete [] this -> roomSurface;
+        this -> roomSurface = new float[this -> nrRooms];
+
+        for(int i = 0; i < this -> nrRooms; i++)
+        {
+            this -> roomSurface[i] = aux[i];
+        }
+        this -> roomSurface[this -> nrRooms - 1] = s;
+    }
+
+///..................................................................SUPRAINCARCARI...................................................................
+
+     Building operator ++ ()
+    {
+        this -> price = this -> price *1.1;         //crestere cu 10%
+        return *this;
+    }
+
+     Building operator ++ (int)
+    {
+        Building aux(*this);
+        this -> price = this -> price *1.1;         //crestere cu 10%
+        return aux;
+    }
+
+    bool operator == (const Building &b)
+    {
+        if(this -> nrRooms != b.nrRooms)
+            return false;
+        if(this -> extSpace != b.extSpace)
+            return false;
+        if(this -> price != b.price)
+            return false;
+        if(this -> state != b.state)
+            return false;
+        if(strcmp(this -> ownerName, b.ownerName))
+            return false;
+        if(strcmp(this -> adress, b.adress))
+            return false;
+        if(strcmp(this -> type, b.type))
+            return false;
+        if(getTotalSurface() != b.getTotalSurface())
+            return false;
+        if(this -> yearOfConst != b.yearOfConst)
+            return false;
+        for(int i = 0; i < this -> nrRooms; i++)
+            if(this -> roomSurface[i] != b.roomSurface[i])
+                return false;
+
+        return true;
+
+    }
+
+    bool operator < (const Building &b)
+    {
+        float r1, r2;
+        r1 = this -> price / this -> totalSurface;
+        r2 = b.price / b.totalSurface;;
+        if(r1 < r2)
+            return true;
+        return false;
+    }
+
+    bool operator > (const Building &b)
+    {
+        float r1, r2;
+        r1 = this -> price / this -> totalSurface;
+        r2 = b.price / b.totalSurface;
+        if(r1 > r2)
+            return true;
+        return false;
+    }
+
+    Building& operator + (int a)
+    {
+        this -> price = this -> price + a;
+        return *this;
+    }
+
+    Building& operator * (float i)
+    {
+        this -> price = this -> price * i;
+        return *this;
+    }
+
+    int operator [] (int i)
+    {
+        if(i == 1)
+            return this -> nrRooms;
+        if(i == 2)
+            return this -> price;
+    }
+
+    explicit operator int()
+    {
+        return (int) this -> totalSurface;
+    }
+
+
+
+/// .................................................................... SUPRAINCARCARILE << SI >> ................................................
+
+
+    friend istream& operator >> (istream& in, Building& b)
+    {
+        cout << "Introduceti detaliile constructiei: \n";
+
+        cout << "Numele proprietarului: \n";
+        char aux[10];
+        in.get(aux, 100);
+        if(b.ownerName != NULL)
+            delete [] b.ownerName;
+        b.ownerName =  new char[strlen(aux) + 1];
+        strcpy(b.ownerName, aux);
+        in.get();
+
+        cout << "Adresa cladirii (zona): \n";
+        char aux2[100];
+        in.get(aux2, 100);
+        if(b.adress != NULL)
+            delete [] b.adress;
+        b.adress =  new char[strlen(aux2) + 1];
+        strcpy(b.adress, aux2);
+        in.get();
+
+        cout << "Tipul locuintei: (ap-apartament, gs-garsoniera, cs-casa)\n";
+        char htype[3];
+        in.get(htype, 4);
+        in.get();
+        try{
+            if(abs(strcmp(htype, "ap")) && abs(strcmp(htype, "cs")) && abs(strcmp(htype, "gs")))
+                throw -1;
+            strcpy(b.type, htype);
+        }
+        catch(int)
+        {
+            cout << "Tipul nu este dintre variantele disponibile(ap, cs, gs)\n";
+        }
+
+
+        cout << "Starea locuintei: (s-vanduta, r-inchiriata, a-disponibila) \n";
+        char hstate;
+        in >> hstate;
+        try{
+            if(hstate != 'a' && hstate != 'r' && hstate != 's') throw -1;
+            b.state = hstate;
+        }
+        catch(int)
+        {
+            cout << "Starea nu este dintre variantele disponibile(a, r, s)\n";
+        }
+
+        cout << "\nNr de camere: \n";
+        int nr;
+        in >> nr;
+        try{
+            exc(nr);
+            b.nrRooms = nr;
+            cout << "\nSuprafetele camerelor: \n";
+            for(int i = 0; i < b.nrRooms; i++)
+            {
+                cout << "Suprafata camera " << i + 1 <<": ";
+                int nr2;
+                in >> nr2;
+                exc(nr2);
+                b.roomSurface[i] = nr2;
+            }
+        }
+        catch(int)
+        {
+            cout << "Valoare negativa!\n";
+        }
+        catch(char)
+        {
+            cout << "Valoare incorecta\n";
+        }
+
+
+
+        cout << "Are spatiu exterior? (0 sau 1)\n";
+        int i;
+        in >> i;
+        try{
+            if(i != 0 && i != 1) throw -1;
+            b.extSpace = bool(i);
+        }
+        catch(int)
+        {
+            cout << "Variabila extSpace nu este de tip bool\n";
+        }
+
+
+        cout << "Introduceti pretul: ";
+        int price;
+        in >> price;
+        try{
+            if(price < 0) throw -1;
+            b.price = price;
+        }
+        catch(int)
+        {
+            cout << "Pretul nu poate fi negativ\n";
+        }
+
+        cout << "Introduceti anul construirii: ";
+        int an;
+        in >> an;
+        try{
+            if(an < 0) throw -1;
+            b.yearOfConst = an;
+        }
+        catch(int)
+        {
+            cout << "Anul constructiei nu poate fi negativ\n";
+        }
+
+        cin.get();
+
+        return in;
+
+
+    }
+
+    friend ostream& operator << (ostream& out, Building& b)
+    {
+
+        out << b.ownerName << " are o proprietate de " << b.getTotalSurface() << " mp construita in anul " << b.yearOfConst << endl;                                 //getTotalSurface() doesn't work here
+        out << "Suprafete pe camere sunt: \n";
+        for(int i =0 ; i < b.nrRooms; i++)
+        {
+            out << "Camera " << i+1 << " are ";
+            out << fixed;
+            out << setprecision(2);
+            out << b.roomSurface[i] << " mp \n";
+        }
+
+        char type[15];
+        if(!strcmp(b.type, "ap"))
+            strcpy(type,"Apartament");
+        else if(!strcmp(b.type, "gs"))
+            strcpy(type,"Garsoniera");
+        else if(!strcmp(b.type, "cs"))
+            strcpy(type,"Casa");
+
+        out << "Imobilul se afla in zona: " << b.adress << endl;
+        if(b.state == 's')
+            out << type << " vandut. ";
+        if(b.state == 'r')
+            out << type << " inchiriat. ";
+        if(b.state == 'a')
+            out << type << " disponibil. ";
+        if(b.extSpace)
+            out << "Are spatiu e8xterior. ";
+        else
+            out << "Nu are spatiu exterior. ";
+        out << "Pretul imobilului este de " << b.price << endl;
+
+        return out;
+
+    }
+
+    friend ifstream& operator >> (ifstream& fin, Building& b)
+    {
+
+        char aux[100];
+        fin.get(aux, 100);
+        if(b.ownerName != NULL)
+            delete [] b.ownerName;
+        b.ownerName =  new char[strlen(aux) + 1];
+        strcpy(b.ownerName, aux);
+        fin.get();
+
+        char aux2[100];
+        fin.get(aux2, 100);
+        if(b.adress != NULL)
+            delete [] b.adress;
+        b.adress =  new char[strlen(aux2) + 1];
+        strcpy(b.adress, aux2);
+        fin.get();
+
+        char htype[3];
+        fin.get(htype, 4);
+        fin.get();
+        try{
+            if(abs(strcmp(htype, "ap")) && abs(strcmp(htype, "cs")) && abs(strcmp(htype, "gs")))
+                throw -1;
+            strcpy(b.type, htype);
+        }
+        catch(int)
+        {
+            cout << "Tipul nu este dintre variantele disponibile(ap, cs, gs)\n";
+        }
+
+        char hstate;
+        fin >> hstate;
+        try{
+            if(hstate != 'a' && hstate != 'r' && hstate != 's') throw -1;
+            b.state = hstate;
+        }
+        catch(int)
+        {
+            cout << "Starea nu este dintre variantele disponibile(a, r, s)\n";
+        }
+
+        int nr;
+        fin >> nr;
+        try{
+            exc(nr);
+            b.nrRooms = nr;
+            for(int i = 0; i < b.nrRooms; i++)
+            {
+                int nr2;
+                fin >> nr2;
+                exc(nr2);
+                b.roomSurface[i] = nr2;
+            }
+        }
+        catch(int)
+        {
+            cout << "Valoare negativa!\n";
+        }
+        catch(char)
+        {
+            cout << "Valoare incorecta\n";
+        }
+
+
+        int i;
+        fin >>i;
+        try{
+            if(i != 0 && i != 1) throw -1;
+            b.extSpace = bool(i);
+        }
+        catch(int)
+        {
+            cout << "Variabila extSpace nu este de tip bool\n";
+        }
+
+        int price;
+        fin >> price;
+        try{
+            if(price < 0) throw -1;
+            b.price = price;
+        }
+        catch(int)
+        {
+            cout << "Pretul nu poate fi negativ\n";
+        }
+
+        int an;
+        fin >> an;
+        try{
+            if(an < 0) throw -1;
+            b.yearOfConst = an;
+        }
+        catch(int)
+        {
+            cout << "Anul constructiei nu poate fi negativ\n";
+        }
+
+        fin.get();
+    }
+
+    friend ofstream& operator << (ofstream& fout, Building& b)
+    {
+        fout << b.ownerName << " are o proprietate de " << b.getTotalSurface() << " mp construita in anul " << b.yearOfConst << endl;                                 //getTotalSurface() doesn't work here
+        fout << "Suprafete pe camere sunt: \n";
+        for(int i =0 ; i < b.nrRooms; i++)
+        {
+            fout << "Camera " << i+1 << " are ";
+            fout << fixed;
+            fout << setprecision(2);
+            fout << b.roomSurface[i] << " mp \n";
+        }
+
+        char type[15];
+        if(!strcmp(b.type, "ap"))
+            strcpy(type,"Apartament");
+        else if(!strcmp(b.type, "gs"))
+            strcpy(type,"Garsoniera");
+        else if(!strcmp(b.type, "cs"))
+            strcpy(type,"Casa");
+
+        fout << "Imobilul se afla in zona: " << b.adress << endl;
+        if(b.state == 's')
+            fout << type << " este vandut. ";
+        if(b.state == 'r')
+            fout << type << " este inchiriat. ";
+        if(b.state == 'a')
+            fout << type << " este disponibil. ";
+        if(b.extSpace)
+            fout << "Are spatiu exterior. ";
+        else
+            fout << "Nu are spatiu exterior. ";
+        fout << "Pretul imobilului este de " << b.price << endl;
+
+        return fout;
+    }
+/// ....................................................................DESTRUCTOR................................................
+
+    ~Building()
+    {
+
+        if(this -> ownerName != NULL)
+            delete [] this -> ownerName;
+        if(this -> roomSurface != NULL)
+            delete [] this -> roomSurface;
+        if(this -> adress != NULL)
+            delete [] this -> adress;
+    }
+
+};
+
+///-------------------------------------------------------------------- Buyer ----------------------------------------------------------
+
+class Buyer : public Interface
+
+{
+private:
+    int age;
+    int nrAccounts;
+    bool isIntersted;
+    char options;               //buying, renting, none(daca nu mai este interesat)  -> b/r/n
+    char *name;
+    char cnp[14];
+    float salary;
+    float *otherIncomes;
+    double totalFromOtherIncomes;
+    const int idBuyer;
+    static int currentId;
+
+public:
+/// ....................................................................CONSTRUCTORI................................................
+
+///................................................FARA PARAMETRU...................................................................
+
+    Buyer() : idBuyer(currentId ++ )
+    {
+        this -> age = 0;
+        this -> salary = 0;
+        this -> nrAccounts = 0;
+        this -> options = ' ';
+        this -> isIntersted = bool(0);
+        this -> totalFromOtherIncomes = 0;
+
+        strcpy(this -> cnp, "unknown");
+
+        this -> otherIncomes = new float[0];
+        this -> name = new char[strlen("Unknown") + 1];
+            strcpy(this -> name, "Unknown");
+
+    }
+
+///................................................CU TOTI PARAMETRII...................................................................
+
+    Buyer(int age, bool isIntersted, char options, char *name, char cnp[13], float salary, int nrAccounts, float *otherIncomes) : idBuyer(currentId ++ )
+    {
+        try{
+            exc(age);
+            this -> age = age;
+        }
+        catch(int){
+            cout << "Varsta nu poate fi negativa\n";
+        }
+
+        try{
+            if(options != 'b' && options != 'r' && options != 'n') throw -1;
+            this -> options = options;
+        }
+        catch(int){
+            cout << "Optiunea nu este dintre variantele disponibile(b, r, n)\n";
+        }
+
+        try{
+            exc(salary);
+            this -> salary = salary;
+        }
+        catch(int){
+            cout << "Salariul nu poate fi negativ\n";
+        }
+
+        try{
+            if(nrAccounts < 0) throw -1;
+            this -> nrAccounts = nrAccounts;
+            this -> otherIncomes = new float[nrAccounts];
+            double total = 0;
+            for(int i = 0; i < nrAccounts; i++)
+            {
+                this -> otherIncomes[i] = otherIncomes[i];
+                total = total + otherIncomes[i];
+            }
+            this -> totalFromOtherIncomes = total;
+        }
+        catch(int)
+        {
+            cout << "Numarul de conturi nu poate fi negativ\n";
+        }
+
+        try{
+            excBool(isIntersted);
+            this -> isIntersted = isIntersted;
+        }
+        catch(int){
+            cout << "Variabila nu este de tip bool\n";
+        }
+
+        try{
+             this -> name = new char[strlen(name) + 1];
+             strcpy(this -> name, name);
+        }
+        catch(bad_alloc){
+            cout << "Nu s-a putut aloca spatiu\n";
+        }
+        strcpy(this -> cnp, cnp);
+
+
+
+    }
+///................................................CU PARAMETRII...................................................................
+
+    Buyer(int age, bool isIntersted, char options, char *name, float salary) : idBuyer(currentId ++ )
+    {
+        this -> age = age;
+        this -> options = options;
+        this -> isIntersted = isIntersted;
+        this -> salary = salary;
+
+        this -> name = new char[strlen(this -> name) + 1];
+            strcpy(this -> name, name);
+
+    }
+
+    Buyer(char cnp[14], float salary, int nrAccounts, float *otherIncomes) : idBuyer(currentId ++ )
+    {
+        this -> salary = salary;
+        this -> nrAccounts = nrAccounts;
+
+        strcpy(this -> cnp, cnp);
+
+        this -> otherIncomes = new float[this -> nrAccounts];
+
+        double total = 0;
+        for(int i = 0; i < this -> nrAccounts; i++)
+        {
+            this -> otherIncomes[i] = otherIncomes[i];
+            total = total + otherIncomes[i];
+        }
+
+
+        this -> totalFromOtherIncomes = total;
+    }
+
+
+///................................................DE COPIERE...................................................................
+
+    Buyer(const Buyer& b) : idBuyer(currentId ++ )
+    {
+        this -> age = b.age;
+        this -> options = b.options;
+        this -> isIntersted = b.isIntersted;
+        this -> salary = b.salary;
+        this -> nrAccounts = b.nrAccounts;
+
+        strcpy(this -> cnp, b.cnp);
+
+        this -> name = new char[0];
+        this -> otherIncomes = new float[0];
+
+        if(this -> name != NULL)
+                delete [] this -> name;
+        if(this -> otherIncomes != NULL)
+                delete [] this -> otherIncomes;
+
+        this -> name = new char[strlen(b.name) + 1];
+            strcpy(this -> name, b.name);
+
+        this -> otherIncomes = new float[b.nrAccounts];
+
+        double total = 0;
+        for(int i = 0; i < b.nrAccounts; i++)
+        {
+            this -> otherIncomes[i] = b.otherIncomes[i];
+            total = total + b.otherIncomes[i];
+        }
+        this -> totalFromOtherIncomes = total;
+
+    }
+
+///................................................SUPRAINCARCAREA =...................................................................
+
+    Buyer& operator = (const Buyer &b)
+    {
+        if( this != &b)
+        {
+            this -> age = b.age;
+            this -> options = b.options;
+            this -> isIntersted = b.isIntersted;
+            this -> salary = b.salary;
+            this -> nrAccounts = b.nrAccounts;
+
+            strcpy(this -> cnp, b.cnp);
+
+            if(this -> name != NULL)
+                delete [] this -> name;
+            if(this -> otherIncomes != NULL)
+                delete [] this -> otherIncomes;
+
+            this -> name = new char[strlen(this -> name) + 1];
+            strcpy(this -> name, b.name);
+
+            this -> otherIncomes = new float[b.nrAccounts];
+
+            double total = 0;
+            for(int i = 0; i < b.nrAccounts; i++)
+            {
+                this -> otherIncomes[i] = b.otherIncomes[i];
+                total = total + b.otherIncomes[i];
+            }
+            this -> totalFromOtherIncomes = total;
+
+        }
+        return *this;
+    }
+
+/// ....................................................................SETTERS................................................
+
+    void setAge(int a)
+    {
+        this -> age = a;
+    }
+
+    void setName(char *n)
+    {
+        if(this -> name != NULL)
+            delete [] this -> name;
+        this -> name = new char[strlen(n) + 1];
+        strcpy(this -> name, n);
+    }
+    void setOptions(char o)
+    {
+        this -> options = o;
+    }
+    void setSalary(float s)
+    {
+        this -> salary = s;
+    }
+    void setOtherIncomes(int nrAccountsAux, float *otherIncomesAux)
+    {
+        if(this -> otherIncomes != NULL)
+            delete [] this -> otherIncomes;
+
+        this -> nrAccounts = nrAccountsAux;
+        this -> otherIncomes = new float[nrAccountsAux];
+        for(int i = 0; i < nrAccountsAux; i++)
+            this -> otherIncomes[i] = otherIncomesAux[i];
+    }
+    void setIntersted(bool o)
+    {
+        this -> isIntersted = o;
+    }
+
+
+/// ....................................................................GETTERS................................................
+
+    int getAge() const
+    {
+        return this -> age;
+    }
+    bool getIntersted() const
+    {
+        return bool(this -> isIntersted);
+    }
+    int getNrAccounts() const
+    {
+        return this -> nrAccounts;
+    }
+    char* getName() const
+    {
+        return this -> name;
+    }
+    char* getCnp()
+    {
+        return this -> cnp;
+    }
+    char getOptions() const
+    {
+        return this -> options;
+    }
+    float getSalary() const
+    {
+        return this -> salary;
+    }
+    double getTotalIncome() const
+    {
+        double total = 0;
+        total = total + 12 * this -> salary;
+        if(this -> nrAccounts != 0)
+            for(int i = 0; i < this -> nrAccounts; i++)
+            {
+                total = total + this -> otherIncomes[i];
+            }
+        return total;
+    }
+
+ ///..................................................................SUPRAINCARCARI OPERATORI...................................................................
+
+    const Buyer operator ++ ()
+    {
+        this -> age ++;
+        return *this;
+    }
+
+    const Buyer operator ++ (int)
+    {
+        Buyer aux(*this);
+        this -> age ++;
+        return aux;
+    }
+
+    bool operator == (const Buyer &b)
+    {
+        if(strcmp(this -> cnp, b.cnp) == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    bool operator < (const Buyer &b)
+    {
+        double t1;
+        double t2 = 0;
+        t2 = t2 + 12 * b.salary;
+        if(b.nrAccounts != 0)
+            for(int i = 0; i < b.nrAccounts; i++)
+            {
+                t2 = t2 + b.otherIncomes[i];
+            }
+        t1 = getTotalIncome();
+        if(t1 < t2)
+            return true;
+        return false;
+    }
+
+    Buyer& operator + (float i)
+    {
+        this -> salary = this -> salary + i;
+        return *this;
+    }
+
+    Buyer& operator * (float i)
+    {
+        this -> salary = this -> salary * i;      //crestere a salariului cu un proccent
+        return *this;
+    }
+
+    char* operator [] (int i)
+    {
+        if(i == 1)
+            return this -> name;
+    }
+
+    explicit operator int()
+    {
+        return (int)this -> salary;
+    }
+
+
+ ///..................................................................FUNCTIONALITATI...................................................................
+
+    double bugetBuy()
+    {
+        float total = 0;
+        total = total + getTotalIncome();
+        total = total * 20 * 0.3;
+        return total;
+    }
+    float bugetRent()
+    {
+        float total = 0;
+        total = 0.3 * this -> salary;
+        return total;
+    }
+
+    void addAccount(float s)
+    {
+        float *aux = new float[this -> nrAccounts];
+
+        for(int i = 0; i < this -> nrAccounts; i++)
+        {
+            aux[i] = this -> otherIncomes[i];
+        }
+
+        this -> nrAccounts ++;
+        delete [] this -> otherIncomes;
+        this -> otherIncomes = new float[this -> nrAccounts];
+
+        for(int i = 0; i < this -> nrAccounts; i++)
+        {
+            this -> otherIncomes[i] = aux[i];
+        }
+        this -> otherIncomes[this -> nrAccounts - 1] = s;
+    }
+
+    double totalIncome()                           //-----din interfata
+    {
+        double total = 0;
+        total = total + 12 * this -> salary;
+        if(this -> nrAccounts != 0)
+            for(int i = 0; i < this -> nrAccounts; i++)
+            {
+                total = total + this -> otherIncomes[i];
+            }
+
+        return total;
+    }
+
+    float anualSalary()                             //-----din interfata
+    {
+        float total = 0;
+        total = 12 * this -> salary;
+        return total;
+    }
+
+
+
+/// .................................................................... SUPRAINCARCARILE << SI >> ................................................
+
+    friend ofstream& operator << (ofstream& fout, Buyer& b)
+    {
+        fout << "Persoana " << b.name << ", in varsta de " << b.age;
+
+        if(b.isIntersted)
+        {
+            fout << " este interesata sa ";
+            if(b.getOptions() == 'b') fout << "cumpere.";
+            else if(b.getOptions() == 'r') fout << "inchirieze.";
+        }
+
+        else
+            fout << " nu este interesata sa cumpere/inchirieze. ";
+        fout << endl;
+
+        fout << "Are un salariu de ";
+        fout << fixed;
+        fout << setprecision(2);
+        fout << b.salary << endl;
+
+        fout << "Venitul total este de: ";
+        fout << fixed;
+        fout << setprecision(2);
+        fout << b.getTotalIncome() << endl;
+
+        fout << "Are cnp ul acesta: " << b.cnp << " si Id ul acesta: " << b.idBuyer << endl;
+
+        return fout;
+    }
+
+    friend ifstream& operator >> (ifstream& fin, Buyer& b)
+    {
+        char aux[100];
+        fin.get(aux, 100);
+        if(b.name != NULL)
+            delete [] b.name;
+        try{
+            b.name = new char[strlen(aux) + 1];
+            strcpy(b.name, aux);
+        }
+        catch(bad_alloc){
+            cout << "Nu s-a putut aloca memorie\n";
+        }
+
+        fin.get();
+
+        int age;
+        fin >> age;
+        try{
+            exc(age);
+            b.age = age;
+        }
+        catch(int){
+            cout << "Varsta nu poate fi negativa\n";
+        }
+        char c[100];
+        fin >> c;
+        strcpy(b.cnp, c);
+        fin.get();
+
+        int opt;
+        fin >> opt;
+        try{
+            excBool(opt);
+            b.isIntersted = bool(opt);
+        }
+        catch(int){
+            cout << "Variabila nu este de tip bool\n";
+        }
+
+        char options;
+        fin >> options;
+        try{
+            if(options != 'b' && options != 'r' && options != 'n') throw -1;
+            b.options = options;
+        }
+        catch(int){
+            cout << "Optiunea nu este dintre variantele disponibile(b, r, n)\n";
+        }
+        fin.get();
+
+        int salary;
+        fin >>  salary;
+        try{
+            exc(salary);
+            b.salary = salary;
+        }
+        catch(int){
+            cout << "Salariul nu poate fi negativ\n";
+        }
+
+        int ok;
+        fin >> ok;
+        if(ok == 0)
+        {
+            b.nrAccounts = 0;
+            b.otherIncomes = new float[0];
+        }
+        else if(ok == 1)
+        {
+            int nrAccounts;
+            fin >> nrAccounts;
+            try{
+                exc(nrAccounts);
+                b.nrAccounts = nrAccounts;
+                if(b.nrAccounts != 0)
+                {
+                    b.otherIncomes = new float[b.nrAccounts];
+                    for(int i = 0; i < b.nrAccounts; i++)
+                    {
+                        int nr2;
+                        fin >> nr2;
+                        try{
+                            exc(nr2);
+                            b.otherIncomes[i] = nr2;
+                        }
+                        catch(int){
+                            cout << "Suma nu poate fi neagtiva\n";
+                        }
+
+                    }
+                }
+            }
+            catch(int){
+                cout << "Numarul de conturi nu poate fi negativ\n";
+            }
+        }
+        else
+            cout << "Nu ati selectat da sau nu\n";
+
+        fin.get();
+        return fin;
+    }
+
+    friend istream& operator >> (istream& in, Buyer& b)
+    {
+        cout << "Introduceti datele despre cumparator: \n";
+
+        cout << "Introduceti numele lui: \n";
+        char aux[100];
+        in.get(aux, 100);
+        if(b.name != NULL)
+            delete [] b.name;
+        try{
+            b.name = new char[strlen(aux) + 1];
+            strcpy(b.name, aux);
+        }
+        catch(bad_alloc){
+            cout << "Nu s-a putut aloca memorie\n";
+        }
+        in.get();
+
+        cout << "Varsta cumparatorului: \n";
+        int age;
+        in >> age;
+        try{
+            exc(age);
+            b.age = age;
+        }
+        catch(int){
+            cout << "Varsta nu poate fi negativa\n";
+        }
+
+        cout << "CNP ul: \n";
+        char c[100];
+        in >> c;
+        strcpy(b.cnp, c);
+        in.get();
+
+        cout << "Este interesat sa cumpere/inchirieze? (0-nu, 1-da)\n";
+        int opt;
+        in >> opt;
+        try{
+            excBool(opt);
+            b.isIntersted = bool(opt);
+            if(b.isIntersted == false)
+                b.options = 'n';
+            else
+            {
+                cout << "Ce doreste sa faca? (b-cumparat, r-inchiriat, n - niciuna)\n";
+                char options;
+                in >> options;
+                try{
+                    if(options != 'b' && options != 'r' && options != 'n') throw -1;
+                    b.options = options;
+                }
+                catch(int){
+                    cout << "Optiunea nu este dintre variantele disponibile(b, r, n)\n";
+                }
+                in.get();
+            }
+        }
+        catch(int){
+            cout << "Variabila nu este de tip bool\n";
+        }
+
+        cout << "Care este salariul lunar? \n";
+        int salary;
+        in >>  salary;
+        try{
+            exc(salary);
+            b.salary = salary;
+        }
+        catch(int){
+            cout << "Salariul nu poate fi negativ\n";
+        }
+
+
+        cout << "Are si alte surse de venit? (0-nu, 1-da) \n";
+        int ok;
+        in >> ok;
+        if(ok == 0)
+        {
+            b.nrAccounts = 0;
+            b.otherIncomes = new float[0];
+        }
+        else if(ok == 1)
+        {
+            cout << "Introduceti numarul de conturi in care sunt celalte venituri: \n";
+            int nrAccounts;
+            in >> nrAccounts;
+            try{
+                exc(nrAccounts);
+                b.nrAccounts = nrAccounts;
+                if(b.nrAccounts != 0)
+                {
+                    b.otherIncomes = new float[b.nrAccounts];
+                    for(int i = 0; i < b.nrAccounts; i++)
+                    {
+                        cout << "Suma din contul " << i + 1 << ": ";
+                        int nr2;
+                        in >> nr2;
+                        try{
+                            exc(nr2);
+                            b.otherIncomes[i] = nr2;
+                        }
+                        catch(int){
+                            cout << "Suma nu poate fi neagtiva\n";
+                        }
+                    }
+                }
+            }
+            catch(int){
+                cout << "Numarul de conturi nu poate fi negativ\n";
+            }
+
+        }
+        else
+            cout << "Nu ati selectat da sau nu\n";
+
+        in.get();
+        return in;
+    }
+
+    friend ostream& operator << (ostream& out, const Buyer& b)
+    {
+        return b.print(out);
+    }
+
+    virtual ostream& print (ostream& out) const
+    {
+        out << "Persoana " << this -> name << ", in varsta de " << this -> age;
+
+        if(this -> isIntersted)
+        {
+            out << " este interesata sa ";
+            if(getOptions() == 'b') out << "cumpere.";
+            else if(getOptions() == 'r') out << "inchirieze.";
+        }
+        else
+            out << " nu este interesata sa cumpere/inchirieze. ";
+        out << endl;
+
+        out << "Are un salariu de ";
+        out << fixed;
+        out << setprecision(2);
+        out << this -> salary << endl;
+
+        out << "Venitul total este de: ";
+        out << fixed;
+        out << setprecision(2);
+        out << getTotalIncome() << endl;
+
+        out << "Are cnp ul acesta: " << this -> cnp << " si Id ul acesta: " << this -> idBuyer << endl;
+
+        return out;
+    }
+
+
+
+/// ....................................................................DESTRUCTOR................................................
+
+    ~Buyer()
+    {
+        if(this -> name != NULL)
+            delete [] this -> name;
+        if(this -> otherIncomes != NULL)
+            delete [] this -> otherIncomes;
+    }
+
+};
+
+
+class ForeignBuyer : public Buyer
+
+{
+private:
+
+    string nationality;
+    bool resident;
+    int nrProperties;
+
+public:
+
+    ForeignBuyer() : Buyer()
+    {
+        this -> nationality = "unknown";
+        this -> resident = 0;
+        this -> nrProperties = 0;
+    }
+
+    ForeignBuyer(int age, bool isIntersted, char options, char *name, char cnp[13], float anualSalary, int nrAccounts, float *otherIncomes, string nationality, bool resident, int nrProperties) : Buyer(age, isIntersted, options, name, cnp, anualSalary, nrAccounts, otherIncomes)
+    {
+        this -> nationality = nationality;
+        try{
+            excBool(resident);
+            this -> resident = bool(resident);
+        }
+        catch(int){
+            cout << "Variabila nu este de tip bool\n";
+        }
+        try{
+            if(nrProperties < 0) throw -1;
+            this -> nrProperties = nrProperties;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+    }
+
+    ForeignBuyer(const ForeignBuyer &fb) : Buyer(fb)
+    {
+        Buyer :: operator = (fb);
+        this -> nationality = fb.nationality;
+        this -> resident = fb.resident;
+        this -> nrProperties = fb.nrProperties;
+    }
+
+    ForeignBuyer& operator = (const ForeignBuyer &fb)
+    {
+        if(this != &fb)
+        {
+            Buyer :: operator = (fb);
+            this -> nationality = fb.nationality;
+            this -> resident = fb.resident;
+            this -> nrProperties = fb.nrProperties;
+        }
+        return *this;
+    }
+
+
+    friend istream& operator >> (istream& in, ForeignBuyer& fb)
+    {
+        in >> (Buyer&)fb;
+        cout << "Nationalitatea cumparatorului:\n";
+        in >> fb.nationality;
+        cout << "Este rezident in tara noastra?\n";
+        int nr;
+        in >> nr;
+        try{
+            excBool(nr);
+            fb.resident = bool(nr);
+        }
+        catch(int){
+            cout << "Variabila nu este de tip bool\n";
+        }
+
+        cout << "Cate proprietati mai are in tara?\n";
+        int nr2;
+        in >> nr2;
+        try{
+            if(nr2 < 0) throw -1;
+            fb.nrProperties = nr2;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        return in;
+    }
+    friend ostream& operator << (ostream& out, ForeignBuyer& fb)
+    {
+        out << (Buyer&)fb;
+        out << "Cumparatorul este strain, de cetatenie " << fb.nationality;
+        if(fb.resident)
+            out << " si este rezident al tarii.\n";
+        else
+            out << " si nu este rezident al tarii.\n";
+        out << "Acesta are " << fb.nrProperties << " proprietati in tara.\n";
+        return out;
+
+    }
+    friend ifstream& operator >> (ifstream& fin, ForeignBuyer& fb)
+    {
+        fin >> (Buyer&)fb;
+        fin >> fb.nationality;
+        int nr;
+        fin >> nr;
+        try{
+            excBool(nr);
+            fb.resident = bool(nr);
+        }
+        catch(int){
+            cout << "Variabila nu este de tip bool\n";
+        }
+        int nr2;
+        fin >> nr2;
+        try{
+            if(nr2 < 0) throw -1;
+            fb.nrProperties = nr2;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        return fin;
+    }
+    friend ofstream& operator << (ofstream& fout, ForeignBuyer& fb)
+    {
+        fout << (Buyer&)fb;
+        fout << "Cumparatorul este strain, de cetatenie " << fb.nationality;
+        if(fb.resident)
+            fout << " si este rezident al tarii.\n";
+        else
+            fout << " si nu este rezident al tarii.\n";
+        fout << "Acesta are " << fb.nrProperties << " proprietati in tara.\n";
+        return fout;
+
+    }
+
+    virtual ostream& print(ostream& out) const override
+    {
+        out << getName() << " este de cetatenie " << this -> nationality;
+        if(this -> resident)
+            out << " si locuieste in tara. ";
+        else
+            out << " si nu locuieste in tara. ";
+        out << endl;
+        out << "Acesta are " << this -> nrProperties << " proprietati in tara";
+        if(getIntersted())
+            out << " si este interesata sa cumpere. ";
+        else
+            out << " si nu este interesata sa cumpere. ";
+        out << " Are un venit total de " << getTotalIncome();
+
+        return out;
+    }
+
+    ~ForeignBuyer() {}
+
+};
+
+///------------------------------------------------------------------- Employee ----------------------------------------------------------
+
+class Employee                  /// abstract class
+
+{
+private:
+    int years;
+    char *name;
+    float salary;
+    const int idEmployee;
+    static int currentId;
+
+public:
+/// ....................................................................CONSTRUCTORI................................................
+
+///................................................FARA PARAMETRU...................................................................
+
+    Employee() : idEmployee(currentId ++)
+    {
+        this -> salary = 0;
+        this -> years = 0;
+        this -> name = new char[strlen("Unknown") + 1];
+            strcpy(this -> name, "Unknown");
+    }
+
+///................................................CU PARAMETRII...................................................................
+
+    Employee(int years, char *name, float salary) : idEmployee(currentId ++ )
+    {
+        try{
+            if(years < 0) throw -1;
+            this -> years = years;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        try{
+            if(salary < 0) throw -1;
+            this -> salary = salary;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        try{
+            this -> name = new char[strlen(name) + 1];
+            strcpy(this -> name, name);
+        }
+        catch(bad_alloc){
+            cout << "Nu s-a putut aloca memorie\n";
+        }
+
+    }
+
+///................................................DE COPIERE...................................................................
+
+    Employee(const Employee& e) : idEmployee(currentId ++)
+    {
+        this -> years = e.years;
+        this -> salary = e.salary;
+        this -> name = new char[0];
+            delete [] this -> name;
+        this -> name = new char[strlen(e.name) + 1];
+            strcpy(this -> name, e.name);
+    }
+
+///................................................SUPRAINCARCAREA =...................................................................
+
+    Employee& operator = (const Employee &e)
+    {
+        if(this != &e)
+        {
+            this -> years = e.years;
+            this -> salary = e.salary;
+
+            this -> name = new char[0];
+            if(this -> name != NULL)
+                delete [] this -> name;
+
+            this -> name = new char[strlen(e.name) + 1];
+                strcpy(this -> name, e.name);
+        }
+        return *this;
+    }
+///................................................ SETTERS ...................................................................
+
+    void setSalary(int s)
+    {
+        this -> salary = s;
+    }
+    void setName(char *n)
+    {
+        if(this -> name != NULL)
+            delete [] this -> name;
+        this -> name = new char[strlen(n) + 1];
+        strcpy(this -> name, n);
+    }
+    void setYears(int n)
+    {
+        this -> years = n;
+    }
+
+
+///................................................ GETTERS ...................................................................
+
+    int getYears()
+    {
+        return this -> years;
+    }
+
+    char* getName()
+    {
+        return this -> name;
+    }
+    float getSalary()
+    {
+        return this -> salary;
+    }
+
+
+    virtual float taxes()
+    {
+        return 0.1*12*this -> salary;
+    }
+
+/// .................................................................... functie virtuala pura ................................................
+
+    virtual int nrHouses() = 0;
+
+/// .................................................................... SUPRAINCARCARILE << SI >> ................................................
+
+    friend ostream& operator << (ostream& out, Employee &e)
+    {
+        out << e.name << " are un salariu de ";
+        out << fixed;
+        out << setprecision(2);
+        out << e.salary << " si " << e.years << " ani vechime.";
+        out << "Are id-ul " << e.idEmployee << ".\n";
+
+        return out;
+    }
+
+    friend istream& operator >> (istream& in, Employee &e)
+    {
+        cout << "Introduceti numele: \n";
+        char aux[100];
+        in.get(aux, 100);
+        in.get();
+        try{
+            e.name = new char[strlen(aux) + 1];
+            strcpy(e.name, aux);
+        }
+        catch(bad_alloc){
+            cout << "Nu s-a putut aloca memorie\n";
+        }
+
+
+        cout << "De cati ani lucreaza la agentie? \n";
+        int years;
+        in >> years;
+        try{
+            if(years < 0) throw -1;
+            e.years = years;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+
+        cout << "Introduceti salariul: \n";
+        int salary;
+        in >> salary;
+        try{
+            if(salary < 0) throw -1;
+            e.salary = salary;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+
+        in.get();
+
+        return in;
+    }
+
+    friend ofstream& operator << (ofstream& fout, Employee& e)
+    {
+        fout << e.name << " are un salariu de ";
+        fout << fixed;
+        fout << setprecision(2);
+        fout << e.salary << " si " << e.years << " ani vechime.";
+        fout << "Are id-ul " << e.idEmployee << ".\n";
+
+        return fout;
+    }
+
+    friend ifstream& operator >> (ifstream& fin, Employee& e)
+    {
+        char aux[100];
+        fin.get(aux, 100);
+        fin.get();
+        try{
+            e.name = new char[strlen(aux) + 1];
+            strcpy(e.name, aux);
+        }
+        catch(bad_alloc){
+            cout << "Nu s-a putut aloca memorie\n";
+        }
+
+        int years;
+        fin >> years;
+        try{
+            if(years < 0) throw -1;
+            e.years = years;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+
+        int salary;
+        fin >> salary;
+        try{
+            if(salary < 0) throw -1;
+            e.salary = salary;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        fin.get();
+
+        return fin;
+    }
+/// ....................................................................DESTRUCTOR................................................
+
+    ~Employee()
+    {
+        if(this -> name != NULL)
+            delete [] this -> name;
+    }
+
+
+};
+
+class Agent : public Employee, public Interface
+
+{
+
+private:
+    int nrHousesSold;
+    int nrHousesRented;
+    int nrHousesOnMarket;
+    Building *housesSold;
+    Building *housesRented;
+    Building *housesOnMarket;
+
+
+public:
+/// ....................................................................CONSTRUCTORI................................................
+
+///................................................FARA PARAMETRU...................................................................
+
+    Agent() : Employee()
+    {
+        this -> nrHousesSold = 0;
+        this -> nrHousesRented = 0;
+        this -> nrHousesOnMarket = 0;
+
+        this -> housesSold = new Building[0];
+        this -> housesRented = new Building[0];
+        this -> housesOnMarket = new Building[0];
+
+    }
+
+///................................................CU PARAMETRII...................................................................
+
+    Agent(int years, char *name, float salary, int nrHousesSold, int nrHousesRented, int nrHousesOnMarket, Building *housesSold, Building *housesRented, Building *housesOnMarket) : Employee(years, name, salary)
+    {
+        try{
+            if(nrHousesSold < 0) throw -1;
+            this -> nrHousesSold = nrHousesSold;
+            for(int i = 0; i < this -> nrHousesSold; i++)
+                this -> housesSold[i] = housesSold[i];
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        try{
+            if(nrHousesRented < 0) throw -1;
+            this -> nrHousesRented = nrHousesRented;
+            for(int i = 0; i < this -> nrHousesRented; i++)
+                this -> housesRented[i] = housesRented[i];
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        try{
+            if(nrHousesOnMarket < 0) throw -1;
+            this -> nrHousesOnMarket = nrHousesOnMarket;
+            for(int i = 0; i < this -> nrHousesOnMarket; i++)
+                this -> housesOnMarket[i] = housesOnMarket[i];
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+
+    }
+
+///................................................DE COPIERE...................................................................
+
+    Agent(const Agent& b) : Employee(b)
+    {
+        this -> nrHousesSold = b.nrHousesSold;
+        this -> nrHousesRented = b.nrHousesRented;
+        this -> nrHousesOnMarket = b.nrHousesOnMarket;
+
+        this -> housesSold = new Building[0];
+        this -> housesRented = new Building[0];
+        this -> housesOnMarket = new Building[0];
+
+        if(this -> housesSold != NULL)
+            delete [] this -> housesRented;
+        if(this -> housesRented != NULL)
+            delete [] this -> housesSold;
+        if(this -> housesOnMarket != NULL)
+            delete [] this -> housesOnMarket;
+
+        this -> housesSold = new Building[b.nrHousesSold];
+        this -> housesRented = new Building[b.nrHousesRented];
+        this -> housesOnMarket = new Building[b.nrHousesOnMarket];
+
+        for(int i = 0; i < this -> nrHousesSold; i++)
+            this -> housesSold[i] = b.housesSold[i];
+        for(int i = 0; i < this -> nrHousesRented; i++)
+            this -> housesRented[i] = b.housesRented[i];
+        for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            this -> housesOnMarket[i] = b.housesOnMarket[i];
+
+    }
+
+///................................................SUPRAINCARCAREA =...................................................................
+
+    Agent& operator = (const Agent &b)
+    {
+        if(this != &b)
+        {
+            Employee :: operator = (b);
+            this -> nrHousesSold = b.nrHousesSold;
+            this -> nrHousesRented = b.nrHousesRented;
+            this -> nrHousesOnMarket = b.nrHousesOnMarket;
+
+            this -> housesSold = new Building[0];
+            this -> housesRented = new Building[0];
+            this -> housesOnMarket = new Building[0];
+
+            if(this -> housesSold != NULL)
+                delete [] this -> housesRented;
+            if(this -> housesRented != NULL)
+                delete [] this -> housesSold;
+            if(this -> housesOnMarket != NULL)
+                delete [] this -> housesOnMarket;
+
+            this -> housesSold = new Building[b.nrHousesSold];
+            this -> housesRented = new Building[b.nrHousesRented];
+            this -> housesOnMarket = new Building[b.nrHousesOnMarket];
+
+            for(int i = 0; i < this -> nrHousesSold; i++)
+                this -> housesSold[i] = b.housesSold[i];
+            for(int i = 0; i < this -> nrHousesRented; i++)
+                this -> housesRented[i] = b.housesRented[i];
+            for(int i = 0; i < this -> nrHousesOnMarket; i++)
+                this -> housesOnMarket[i] = b.housesOnMarket[i];
+
+        }
+        return *this;
+    }
+
+/// .................................................................... GETTERS ................................................
+
+    float getComission()
+    {
+        float c = 0;
+
+        for(int i = 0; i < this -> nrHousesSold; i++)
+            c = c + (this -> housesSold[i]).getPrice();
+        for(int i = 0; i < this -> nrHousesRented; i++)
+            c = c + (this -> housesRented[i]).anualRent();
+
+        c = c * 6/100;                  //comision de 6% al tranzactiilor
+
+        return c;
+    }
+    int getNrHousesSold()
+    {
+        return this -> nrHousesSold;
+    }
+    int getNrHousesRented()
+    {
+        return this -> nrHousesRented;
+    }
+    int getNrHousesOnMarket()
+    {
+        return this -> nrHousesOnMarket;
+    }
+    Building* getHousesSold()
+    {
+      //  for(int i = 0; i < this -> nrHousesSold; i++)
+           // cout << (this -> housesSold[i]).getName() << " " << (this -> housesSold[i]).getAdress() << endl;
+        return this -> housesSold;
+    }
+    Building* getHousesRented()
+    {
+     //   for(int i = 0; i < this -> nrHousesRented; i++)
+    //        cout << (this -> housesRented[i]).getName() << " " << (this -> housesRented[i]).getAdress() << endl;
+        return this -> housesRented;
+    }
+    Building* getHousesOnMarket()
+    {
+     //   for(int i = 0; i < this -> nrHousesOnMarket; i++)
+      //      cout << (this -> housesOnMarket[i]).getName() << " " << (this -> housesOnMarket[i]).getAdress() << endl;
+        return this -> housesOnMarket;
+    }
+
+
+
+
+/// .................................................................... FUNCTIONALITATI ................................................
+
+    void removeHouseSold(const Building &b)
+    {
+        int index = -1;
+        for(int i = 0; i < this -> nrHousesSold; i++)
+            if(this -> housesSold[i] == b)
+                index = i;
+        if(index == -1)
+            cout << "Casa nu exista in lista!\n";
+        else
+        {
+            Building *auxList;
+            auxList = new Building[this -> nrHousesSold - 1];
+            int j = 0;
+            for(int i = 0; i < this -> nrHousesSold; i++)
+            {
+                if(i == index)
+                    j--;
+                else
+                    auxList[j] = this -> housesSold[i];
+                j++;
+            }
+
+            delete [] this -> housesSold;
+            this -> nrHousesSold --;
+            this -> housesSold = new Building[this -> nrHousesSold];
+            for(int i = 0; i < this -> nrHousesSold; i++)
+            {
+                this -> housesSold[i] = auxList[i];
+            }
+        }
+    }
+
+    void removeHouseRented(const Building &b)
+    {
+        int index = -1;
+        for(int i = 0; i < this -> nrHousesRented; i++)
+            if(this -> housesRented[i] == b)
+                index = i;
+        if(index == -1)
+            cout << "Casa nu exista in lista!\n";
+        else
+        {
+            Building *auxList;
+            auxList = new Building[this -> nrHousesRented - 1];
+            int j = 0;
+            for(int i = 0; i < this -> nrHousesRented; i++)
+            {
+                if(i == index)
+                    j--;
+                else
+                    auxList[j] = this -> housesRented[i];
+                j++;
+            }
+
+            delete [] this -> housesRented;
+            this -> nrHousesRented --;
+            this -> housesRented = new Building[this -> nrHousesRented];
+            for(int i = 0; i < this -> nrHousesRented; i++)
+            {
+                this -> housesRented[i] = auxList[i];
+            }
+        }
+    }
+
+    void removeHouseOnMarket(const Building &b)
+    {
+        int index = -1;
+        for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            if(this -> housesOnMarket[i] == b)
+                index = i;
+        if(index == -1)
+            cout << "Casa nu exista in lista!\n";
+        else
+        {
+            Building *auxList;
+            auxList = new Building[this -> nrHousesOnMarket - 1];
+            int j = 0;
+            for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            {
+                if(i == index)
+                    j--;
+                else
+                    auxList[j] = this -> housesOnMarket[i];
+                j++;
+            }
+
+            delete [] this -> housesOnMarket;
+            this -> nrHousesOnMarket --;
+            this -> housesOnMarket = new Building[this -> nrHousesOnMarket];
+            for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            {
+                this -> housesOnMarket[i] = auxList[i];
+            }
+        }
+    }
+
+    void changeStatusToSold(const Building &b)
+    {
+        int index = -1;
+        for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            if(this -> housesOnMarket[i] == b)
+                index = i;
+        if(index == -1)
+            cout << "Casa nu exista in lista!\n";
+        else
+        {
+            Building aux;
+            aux = this -> housesOnMarket[index];
+            aux.setState('s');
+            removeHouseOnMarket(b);
+            addHouseSold(aux);
+        }
+    }
+
+    void changeStatusToRented(const Building &b)
+    {
+        int index = -1;
+        for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            if(this -> housesOnMarket[i] == b)
+                index = i;
+        if(index == -1)
+            cout << "Casa nu exista in lista!\n";
+        else
+        {
+            Building aux;
+            aux = this -> housesOnMarket[index];
+            aux.setState('r');
+            removeHouseOnMarket(b);
+            addHouseRented(aux);
+        }
+    }
+
+    void addHouseRented(Building &b)
+    {
+
+        if(this -> nrHousesRented != 0)
+        {
+            Building *bAux;
+            bAux = new Building[this -> nrHousesRented];
+            for(int i = 0; i < this -> nrHousesRented; i++)
+            bAux[i] = this -> housesRented[i];
+            delete [] this -> housesRented;
+            this -> nrHousesRented ++;
+            this -> housesRented = new Building[this -> nrHousesRented];
+            for(int i = 0; i < this -> nrHousesRented - 1; i++)
+                this -> housesRented[i] = bAux[i];
+            this -> housesRented[this -> nrHousesRented - 1] = b;
+        }
+        else
+        {
+            this -> nrHousesRented ++;
+            this -> housesRented = new Building[this -> nrHousesRented];
+            this -> housesRented[this -> nrHousesRented - 1] = b;
+        }
+
+
+
+    }
+
+    void addHouseSold(Building &b)
+    {
+
+        if(this -> nrHousesSold != 0)
+        {
+            Building *bAux;
+            bAux = new Building[this -> nrHousesSold];
+            for(int i = 0; i < this -> nrHousesSold; i++)
+            bAux[i] = this -> housesSold[i];
+            delete [] this -> housesSold;
+            this -> nrHousesSold ++;
+            this -> housesSold = new Building[this -> nrHousesSold];
+            for(int i = 0; i < this -> nrHousesSold - 1; i++)
+                this -> housesSold[i] = bAux[i];
+            this -> housesSold[this -> nrHousesSold - 1] = b;
+        }
+        else
+        {
+            this -> nrHousesSold ++;
+            this -> housesSold = new Building[this -> nrHousesSold];
+            this -> housesSold[this -> nrHousesSold - 1] = b;
+        }
+
+
+    }
+
+    void addHouseOnMarket(Building &b)
+    {
+        if(this -> nrHousesOnMarket != 0)
+        {
+            Building *bAux;
+            bAux = new Building[this -> nrHousesOnMarket];
+            for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            bAux[i] = this -> housesOnMarket[i];
+            delete [] this -> housesOnMarket;
+            this -> nrHousesOnMarket++;
+            this -> housesOnMarket = new Building[this -> nrHousesOnMarket];
+            for(int i = 0; i < this -> nrHousesOnMarket - 1; i++)
+                this -> housesOnMarket[i] = bAux[i];
+            this -> housesOnMarket[this -> nrHousesOnMarket- 1] = b;
+        }
+        else
+        {
+            this -> nrHousesOnMarket++;
+            this -> housesOnMarket = new Building[this -> nrHousesOnMarket];
+            this -> housesOnMarket[this -> nrHousesOnMarket- 1] = b;
+        }
+
+
+    }
+
+    int checkHouseAvailable(Building &b)
+    {
+        int index = -1;
+        for(int i = 0; i < this -> nrHousesOnMarket; i++)
+            if(this -> housesOnMarket[i] == b)
+                index = i;
+        if(index == -1)
+            return 0;
+        return 1;
+    }
+
+    float anualSalary()
+    {
+        float s = Employee :: getSalary();
+        return 12*s;
+    }
+
+    double totalIncome()
+    {
+        double total;
+        total = anualSalary() + getComission();
+        return total;
+    }
+
+    int nrHouses()
+    {
+        return this -> nrHousesOnMarket + this -> nrHousesRented + this -> nrHousesSold;
+    }
+
+    float taxes()
+    {
+        float total = totalIncome();
+        return 0.1*total;
+    }
+/// .................................................................... SUPRAINCARCARI ................................................
+
+    Agent& operator + (Building& b)
+    {
+        if(b.getState() == 'r')
+            addHouseRented(b);
+        else if(b.getState() == 's')
+            addHouseSold(b);
+        else if(b.getState() == 'a')
+            addHouseOnMarket(b);
+        else
+            cout << "Nu ati introdus o varianta posibila!\n";
+        return *this;
+    }
+
+/// .................................................................... SUPRAINCARCARILE << SI >> ................................................
+
+    friend ostream& operator << (ostream& out, Agent &b)
+    {
+        out << (Employee&)b;
+        out << "Acesta a vandut si inchiriat " << b.nrHousesSold + b.nrHousesRented << " case, din care a obtinut un comision de " << b.getComission() << endl;
+        if(b.nrHousesRented != 0)
+        {
+            out << "Casele inchiriate sunt acestea:\n";
+            for(int i = 0; i < b.nrHousesRented; i++)
+            {
+                //out << "Id imobil: " << (b.housesRented[i]).getId();
+                out << "--- Proprietar: " << (b.housesRented[i]).getName();
+                out << "--- Adresa: " << (b.housesRented[i]).getAdress();
+                out << endl;
+            }
+        }
+        if(b.nrHousesSold != 0)
+        {
+            out << "Casele vandute sunt acestea:\n";
+            for(int i = 0; i < b.nrHousesSold; i++)
+                {
+                    //out << "Id imobil: " << (b.housesSold[i]).getId();
+                    out << "--- Proprietar: " << (b.housesSold[i]).getName();
+                    out << "--- Adresa: " << (b.housesSold[i]).getAdress();
+                   // out << "--- starea: " << (b.housesSold[i]).getState();
+                    out << endl;
+                }
+        }
+        if(b.nrHousesOnMarket != 0)
+        {
+            out << "Casele disponibile sunt acestea:\n";
+            for(int i = 0; i < b.nrHousesOnMarket; i++)
+                {
+                    //out << "Id imobil: " << (b.housesOnMarket[i]).getId();
+                    out << "--- Proprietar: " << (b.housesOnMarket[i]).getName();
+                    out << "--- Adresa: " << (b.housesOnMarket[i]).getAdress();
+                    out << endl;
+                }
+        }
+
+        return out;
+    }
+
+    friend istream& operator >> (istream& in, Agent &b)
+    {
+        in >> (Employee&)b;
+        int n;
+        cout << "Introduceti numarul de case vandute: \n";
+        in >> n;
+        try{
+        if(n < 0) throw -1;
+        if(n != 0)
+        {
+            cout << "Introduceti datele despre casele respective:\n";
+            b.nrHousesSold = 0;
+            for(int i = 0; i < n; i++)
+                {
+                    Building aux;
+                    in.get();
+                    in >> aux;
+                    b.addHouseSold(aux);
+                }
+            in.get();
+        }
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        cout << "Introduceti numarul de case inchiriate: \n";
+        in >> n;
+        try{
+        if(n < 0) throw -1;
+        if(n != 0)
+        {
+            cout << "Introduceti datele despre casele respective:\n";
+            b.nrHousesRented = 0;
+            for(int i = 0; i < n; i++)
+                {
+                    Building aux;
+                    in.get();
+                    in >> aux;
+                    b.addHouseRented(aux);
+                }
+            in.get();
+        }
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        cout << "Introduceti numarul de case disponibile pt vanzare/cumparare: \n";
+        in >> n;
+        try{
+        if(n < 0) throw -1;
+        if(n != 0)
+        {
+            cout << "Introduceti datele despre casele respective:\n";
+            b.nrHousesOnMarket = 0;
+            for(int i = 0; i < n; i++)
+                {
+                    Building aux;
+                    in.get();
+                    in >> aux;
+                    b.addHouseOnMarket(aux);
+                }
+            in.get();
+        }
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        return in;
+    }
+
+    friend ofstream& operator << (ofstream& fout, Agent &b)
+    {
+        fout << (Employee&)b;
+        fout << "Acesta a vandut si inchiriat " << b.nrHousesSold + b.nrHousesRented << " case, din care a obtinut un comision de " << b.getComission() << endl;
+        if(b.nrHousesRented != 0)
+        {
+            fout << "Casele inchiriate sunt acestea:\n";
+            for(int i = 0; i < b.nrHousesRented; i++)
+            {
+                fout << "--- Proprietar: " << (b.housesRented[i]).getName();
+                fout << "--- Adresa: " << (b.housesRented[i]).getAdress();
+                fout << endl;
+            }
+        }
+        if(b.nrHousesSold != 0)
+        {
+            fout << "Casele vandute sunt acestea:\n";
+            for(int i = 0; i < b.nrHousesSold; i++)
+                {
+                    fout << "--- Proprietar: " << (b.housesSold[i]).getName();
+                    fout << "--- Adresa: " << (b.housesSold[i]).getAdress();
+                    fout << "--- starea: " << (b.housesSold[i]).getState();
+                    fout << endl;
+                }
+        }
+        if(b.nrHousesOnMarket != 0)
+        {
+            fout << "Casele disponibile sunt acestea:\n";
+            for(int i = 0; i < b.nrHousesOnMarket; i++)
+                {
+                    fout << "--- Proprietar: " << (b.housesOnMarket[i]).getName();
+                    fout << "--- Adresa: " << (b.housesOnMarket[i]).getAdress();
+                    fout << endl;
+                }
+        }
+        else
+            fout << "Nu are case disponibile momentan\n";
+
+        return fout;
+    }
+
+    friend ifstream& operator >> (ifstream& fin, Agent &b)
+    {
+        fin >> (Employee&)b;
+        int n;
+        fin >> n;
+        try{
+        if(n < 0) throw -1;
+        if(n != 0)
+        {
+            b.nrHousesSold = 0;
+            for(int i = 0; i < n; i++)
+                {
+                    Building aux;
+                    fin.get();
+                    fin >> aux;
+                    b.addHouseSold(aux);
+                }
+            fin.get();
+        }
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+
+        fin >> n;
+        try{
+        if(n < 0) throw -1;
+        if(n != 0)
+        {
+            b.nrHousesRented = 0;
+            for(int i = 0; i < n; i++)
+                {
+                    Building aux;
+                    fin.get();
+                    fin >> aux;
+                    b.addHouseRented(aux);
+                }
+            fin.get();
+        }
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        fin >> n;
+        try{
+        if(n < 0) throw -1;
+        if(n != 0)
+        {
+            b.nrHousesOnMarket = 0;
+            for(int i = 0; i < n; i++)
+                {
+                    Building aux;
+                    fin.get();
+                    fin >> aux;
+                    b.addHouseOnMarket(aux);
+                }
+            fin.get();
+        }
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        fin.get();
+
+        return fin;
+    }
+
+/// ....................................................................DESTRUCTOR................................................
+
+
+    ~Agent()
+    {
+        if(this -> housesRented != NULL)
+            delete [] this -> housesRented;
+        if(this -> housesSold != NULL)
+            delete [] this -> housesSold;
+        if(this -> housesOnMarket != NULL)
+            delete [] this -> housesOnMarket;
+    }
+
+};
+
+class Broker : public Employee
+
+{
+private:
+    int nrContracts;
+    int yearsLeadingPosition;
+
+public:
+
+    Broker() : Employee()
+    {
+        this -> nrContracts = 0;
+        this -> yearsLeadingPosition = 0;
+    }
+
+    Broker(const Broker& d) : Employee(d)
+    {
+        this -> nrContracts = d.nrContracts;
+        this -> yearsLeadingPosition  = d.yearsLeadingPosition;
+    }
+
+    Broker& operator = (const Broker& d)
+    {
+        if(this != &d)
+        {
+            Employee :: operator = (d);
+            this -> nrContracts = d.nrContracts;
+            this -> yearsLeadingPosition  = d.yearsLeadingPosition;
+        }
+        return *this;
+    }
+
+    int nrHouses()
+    {
+        return 0;
+    }
+
+    void setNrContracts(int a)
+    {
+        this -> nrContracts = a;
+    }
+    void setYearsLeadingPosition(int a)
+    {
+        this -> yearsLeadingPosition = a;
+    }
+
+    int getNrContracts()
+    {
+        return this -> nrContracts;
+    }
+    int getYearsLeadingPosition()
+    {
+        return this -> yearsLeadingPosition;
+    }
+
+    friend ostream& operator << (ostream& out, Broker& d)
+    {
+        out << (Employee&)d;
+        out << "Brokerul are un numar de " << d.nrContracts << " contracte si " << d.yearsLeadingPosition << " ani in pozitie de conducere.\n";
+        return out;
+    }
+
+    friend istream& operator >> (istream& in, Broker& d)
+    {
+        in >> (Employee&)d;
+        cout << "Introduceti nr de contracte:\n";
+        int nrContracts;
+        in >> nrContracts;
+        try{
+            if(nrContracts < 0) throw -1;
+            d.nrContracts = nrContracts;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        cout << "Introduceti nr de ani de cand e in pozitie de conducere: \n";
+        int yearsLeadingPosition;
+        in >> yearsLeadingPosition;
+        try{
+            if(yearsLeadingPosition < 0) throw -1;
+            d.yearsLeadingPosition = yearsLeadingPosition;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        in.get();
+        return in;
+    }
+
+    friend ofstream& operator << (ofstream& fout, Broker &d)
+    {
+        fout << (Employee&)d;
+        fout << "Brokerul are un numar de " << d.nrContracts << " contracte si " << d.yearsLeadingPosition << " ani in pozitie de conducere.\n";
+        return fout;
+    }
+
+    friend ifstream& operator >> (ifstream& fin, Broker& d)
+    {
+        fin >> (Employee&)d;
+        int nrContracts;
+        fin >> nrContracts;
+        try{
+            if(nrContracts < 0) throw -1;
+            d.nrContracts = nrContracts;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        int yearsLeadingPosition;
+        fin >> yearsLeadingPosition;
+        try{
+            if(yearsLeadingPosition < 0) throw -1;
+            d.yearsLeadingPosition = yearsLeadingPosition;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        fin.get();
+        return fin;
+    }
+
+};
+
+///-------------------------------------------------------------------- Agency ----------------------------------------------------------
+
+class Agency
+
+{
+
+private:
+
+    double totalIncome;
+    int year;
+    static int currentYear;
+    int nrBrokers;
+    int nrAgents;
+    Broker *brokers;
+    Agent *agents;
+    set<char*> sBrokers;
+    set<char*> sAgents;
+    set<char*> :: iterator it;
+
+public:
+
+    static char agencyName[22];
+    static char agencyAdress[15];
+
+/// ....................................................................CONSTRUCTORI................................................
+
+///................................................FARA PARAMETRU...................................................................
+
+    Agency()
+    {
+        this -> totalIncome = 0;
+        this -> nrBrokers = 0;
+        this -> nrAgents = 0;
+        this -> year = 0;
+
+        this -> brokers = new Broker[0];
+        this -> agents = new Agent[0];
+    }
+
+///................................................CU PARAMETRU...................................................................
+
+    Agency(int nrBrokers, int nrAgents, int year, double totalIncome, Broker *brokers, Agent *agents)
+    {
+        try{
+            if(totalIncome < 0) throw -1;
+            this -> totalIncome = totalIncome;
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        this -> year = year;
+        try{
+            if(nrBrokers < 0) throw -1;
+            this -> nrBrokers = nrBrokers;
+            this -> brokers = new Broker[nrBrokers];
+            for(int i = 0; i < nrBrokers; i++)
+            {
+                this -> brokers[i] = brokers[i];
+                sBrokers.insert(brokers[i].getName());
+            }
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+
+        try{
+            if(nrAgents < 0) throw -1;
+            this -> nrAgents = nrAgents;
+            this -> agents = new Agent[nrAgents];
+            for(int i = 0; i < nrAgents; i++)
+            {
+                this -> agents[i] = agents[i];
+                sAgents.insert(agents[i].getName());
+            }
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+
+    }
+
+///................................................DE COPIERE...................................................................
+
+    Agency(const Agency& a)
+    {
+        this -> totalIncome = a.totalIncome;
+        this -> nrBrokers = a.nrBrokers;
+        this -> nrAgents = a.nrAgents;
+        this -> year = a.year;
+
+        this -> brokers = new Broker[0];
+        this -> agents = new Agent[0];
+        delete [] this -> brokers;
+        delete [] this -> agents;
+
+        this -> brokers = new Broker[a.nrBrokers];
+        this -> agents = new Agent[a.nrAgents];
+
+        for(int i = 0; i < a.nrBrokers; i++)
+            this -> brokers[i] = a.brokers[i];
+        for(int i = 0; i < a.nrAgents; i++)
+            this -> agents[i] = a.agents[i];
+
+    }
+
+///................................................SUPRAINCARCAREA =...................................................................
+
+    Agency& operator = (const Agency &a)
+    {
+        if(this != &a)
+        {
+            this -> totalIncome = a.totalIncome;
+            this -> nrBrokers = a.nrBrokers;
+            this -> nrAgents = a.nrAgents;
+            this -> year = a.year;
+
+            this -> brokers = new Broker[0];
+            this -> agents = new Agent[0];
+            if(this -> brokers != NULL)
+                delete [] this -> brokers;
+            if(this -> agents != NULL)
+                delete [] this -> agents;
+
+            this -> brokers = new Broker[a.nrBrokers];
+            this -> agents = new Agent[a.nrAgents];
+
+            for(int i = 0; i < a.nrBrokers; i++)
+                this -> brokers[i] = a.brokers[i];
+            for(int i = 0; i < a.nrAgents; i++)
+                this -> agents[i] = a.agents[i];
+        }
+        return *this;
+    }
+
+/// .................................................................... FUNCTINALITATI ................................................
+
+    void addBroker(Broker& b)
+    {
+        Broker *bAux;
+        bAux = new Broker[this -> nrBrokers];
+        for(int i = 0; i < this -> nrBrokers; i++)
+            bAux[i] = this -> brokers[i];
+        delete [] this -> brokers;
+        this -> nrBrokers ++;
+        this -> brokers = new Broker[this -> nrBrokers];
+        for(int i = 0; i < this -> nrBrokers - 1; i++)
+            this -> brokers[i] = bAux[i];
+        this -> brokers[this -> nrBrokers - 1] = b;
+        sBrokers.insert(b.getName());
+    }
+
+    void addAgent(Agent& b)
+    {
+        Agent *bAux;
+        bAux = new Agent[this -> nrAgents];
+        for(int i = 0; i < this -> nrAgents; i++)
+            bAux[i] = this -> agents[i];
+        delete [] this -> agents;
+        this -> nrAgents ++;
+        this -> agents = new Agent[this -> nrAgents];
+        for(int i = 0; i < this -> nrAgents - 1; i++)
+            this -> agents[i] = bAux[i];
+        this -> agents[this -> nrAgents - 1] = b;
+        sAgents.insert(b.getName());
+    }
+
+    void printAgents()
+    {
+        cout << "Agentii sunt: \n";
+        set<char*> :: iterator it;
+        for(it = sAgents.begin(); it != sAgents.end(); it++)
+            cout << "\t - " << *it << endl;
+    }
+
+    void printBrokers()
+    {
+        cout << "Brokerii sunt: \n";
+        set<char*> :: iterator it;
+        for(it = sBrokers.begin(); it != sBrokers.end(); it++)
+            cout << "\t - " << *it << endl;
+    }
+
+/// .................................................................... SUPRAINCARCARILE << SI >> ................................................
+
+
+    friend ostream& operator << (ostream& out, Agency &a)
+    {
+        out << "Agentia imobiliara " << a.agencyName << " are " << a.nrBrokers + a.nrAgents << " angajati. ";
+        out << "A fost infiintata in anul " << a.year << endl;
+        out << "Cifra de afaceri a agentiei " << a.agencyName << " este de ";
+        out << fixed;
+        out << setprecision(2);
+        out << a.totalIncome << endl;
+
+        if(a.nrBrokers != 0)
+        {
+            out << "Brokerii sunt: \n";
+            set<char*> :: iterator it;
+            for(it = (a.sBrokers).begin(); it != (a.sBrokers).end(); it++)
+                out << "\t - " << *it << endl;
+         //   for(int i = 0; i < a.nrBrokers; i++)
+         //       out << a.brokers[i] << endl;
+
+        }
+        else
+            out << "Agentia nu are brokeri!\n";
+
+        if(a.nrAgents != 0)
+        {
+            out << "Agentii sunt: \n";
+            set<char*> :: iterator it;
+            for(it = (a.sAgents).begin(); it != (a.sAgents).end(); it++)
+                out << "\t - " << *it << endl;
+         //   for(int i = 0; i < a.nrAgents; i++)
+          //      out << a.agents[i] << endl;
+        }
+        else
+            out << "Agentia nu are agenti!\n";
+
+
+        return out;
+    }
+    friend ofstream& operator << (ofstream& fout, Agency &a)
+    {
+        fout << "Agentia imobiliara " << a.agencyName << " are " << a.nrBrokers + a.nrAgents << " angajati. ";
+        fout << "A fost infiintata in anul " << a.year << endl;
+        fout << "Cifra de afaceri a agentiei " << a.agencyName << " este de ";
+        fout << fixed;
+        fout << setprecision(2);
+        fout << a.totalIncome << endl;
+
+        if(a.nrBrokers != 0)
+        {
+            fout << "Brokerii sunt: \n";
+            set<char*> :: iterator it;
+            for(it = (a.sBrokers).begin(); it != (a.sBrokers).end(); it++)
+                fout << "\t - " << *it << endl;
+         //   for(int i = 0; i < a.nrBrokers; i++)
+         //       out << a.brokers[i] << endl;
+
+        }
+        else
+            fout << "Agentia nu are brokeri!\n";
+
+        if(a.nrAgents != 0)
+        {
+            fout << "Agentii sunt: \n";
+            set<char*> :: iterator it;
+            for(it = (a.sAgents).begin(); it != (a.sAgents).end(); it++)
+                fout << "\t - " << *it << endl;
+         //   for(int i = 0; i < a.nrAgents; i++)
+          //      out << a.agents[i] << endl;
+        }
+        else
+            fout << "Agentia nu are agenti!\n";
+
+
+        return fout;
+    }
+
+    friend istream& operator >> (istream& in, Agency &a)
+    {
+        int n;
+        cout << "Introduceti numarul de brokeri al agentiei: \n";
+        in >> n;
+        try{
+        if(n < 0) throw -1;
+        if(n != 0)
+        {
+            cout << "Introduceti datele brokerilor: \n";
+            a.nrBrokers = 0;
+            for(int i = 0; i < n; i++)
+            {
+                Broker aux;
+                in.get();
+                in >> aux;
+                a.addBroker(aux);
+            }
+            in.get();
+        }
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        cout << "Introduceti numarul de agenti al agentiei: \n";
+        in >> n;
+        try{
+        if(n < 0) throw -1;
+        if(n != 0)
+        {
+            cout << "Introduceti datele agentilor: \n";
+            a.nrAgents = 0;
+            for(int i = 0; i < n; i++)
+            {
+                Agent aux;
+                in.get();
+                in >> aux;
+                a.addAgent(aux);
+            }
+            in.get();
+        }
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+
+        cout << "Introduceti cifra de afaceri a agentiei: \n";
+        in >> a.totalIncome;
+        cout << "Introduceti anul infiintarii agentiei: \n";
+        in >> a.year;
+
+        in.get();
+        return in;
+    }
+    friend ifstream& operator >> (ifstream& fin, Agency &a)
+    {
+        int n;
+        fin >> n;
+        try{
+        if(n < 0) throw -1;
+        if(n != 0)
+        {
+            a.nrBrokers = 0;
+            for(int i = 0; i < n; i++)
+            {
+                Broker aux;
+                fin.get();
+                fin >> aux;
+                a.addBroker(aux);
+            }
+            fin.get();
+        }
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+        fin >> n;
+        try{
+        if(n < 0) throw -1;
+        if(n != 0)
+        {
+            a.nrAgents = 0;
+            for(int i = 0; i < n; i++)
+            {
+                Agent aux;
+                fin.get();
+                fin >> aux;
+                a.addAgent(aux);
+            }
+            fin.get();
+        }
+        }
+        catch(int){
+            cout << "Numarul nu poate fi negativ\n";
+        }
+
+        fin >> a.totalIncome;
+        fin >> a.year;
+
+        fin.get();
+        return fin;
+    }
+
+/// ....................................................................DESTRUCTOR................................................
+
+    ~Agency()
+    {
+        if(this -> brokers != NULL)
+            delete [] this -> brokers;
+        if(this -> agents != NULL)
+            delete [] this -> agents;
+    }
+
+
+};
+
+template<> Agent& add(Agent &a, Building &bu){
+    return a + bu;
+}
+
+class TransactionsSingleton{
+private:
+
+    static TransactionsSingleton *instance;
+    TransactionsSingleton(){}
+public:
+    static TransactionsSingleton *getInstance(){
+        if(!instance)
+            instance = new TransactionsSingleton;
+        return instance;
+    }
+    void buy(Building &bu, Buyer &br, Agent &a)
+    {
+        if(!a.checkHouseAvailable(bu))
+            cout << "Agentul nu are casa in lista de case disponibile!\n";
+        else if(!br.getIntersted())
+            cout << "Persoana nu doreste sa faca vreo tranzactie!\n";
+        else if(br.getOptions() != 'b')
+            cout << "Persoana nu este interesata sa cumpere!\n";
+        else if(br.bugetBuy() < bu.getPrice())
+            cout << "Pretul imobilului nu este in bugetul persoanei interesate!\n";
+        else
+        {
+            a.changeStatusToSold(bu);
+            bu.setState('s');
+            br.setIntersted(0);
+            br.setOptions('n');
+            cout << "Tranzactia s-a efectuat cu succes!\n";
+        }
+    }
+    void rent(Building &bu, Buyer &br, Agent &a)
+    {
+        if(!a.checkHouseAvailable(bu))
+            cout << "Agentul nu are casa in lista de case disponibile!\n";
+        else if(!br.getIntersted())
+            cout << "Persoana nu doreste sa faca vreo tranzactie!\n";
+        else if(br.getOptions() != 'r')
+            cout << "Persoana nu este interesata sa inchirieze!\n";
+        else if(12*br.bugetRent() < bu.anualRent())
+            cout << "Pretul chiriei nu este in bugetul persoanei interesate!\n";
+        else
+        {
+            a.changeStatusToRented(bu);
+            bu.setState('r');
+            br.setIntersted(0);
+            br.setOptions('n');
+
+            cout << "Tranzactia s-a efectuat cu succes!\n";
+        }
+    }
+    void newHouse(Building &bu, Agent &a)
+    {
+        a = add(a, bu);
+    }
+
+};
+
+TransactionsSingleton *TransactionsSingleton :: instance = 0;
+
+char Agency :: agencyName[22] = "Real Estate Bucharest";
+char Agency :: agencyAdress[15] = "Bucurestii Noi";
+int Agency :: currentYear = 2020;
+
+
+int Building :: currentYear = 2020;
+int Building :: currentId = 0;
+int Buyer :: currentId = 0;
+int Employee :: currentId = 0;
+
+ifstream f1("dateBuyers.txt");
+ifstream f2("dateBuildings.txt");
+ifstream f3("dateEmployees.txt");
+ifstream f4("dateAgency.txt");
+ofstream g("dateOUT.txt");
+
+
+map<int, Building> buildings;
+map<int, Building> :: iterator it;
+vector<Buyer> buyers;
+list <Agent> agents;
+list <Agent> :: iterator itr1;
+list <Broker> brokers;
+list <Broker> :: iterator itr;
+
+Building b1, b2, b3, b4, b5, b6;
+Buyer by1, by2;
+ForeignBuyer fb1;
+Broker bk1, bk2;
+Agent a1, a2, a3;
+Agency A;
+
+int nrBuildings = 0;
+
+void readFiles()
+{
+
+    f2 >> b1;
+    f2 >> b2;
+    f2 >> b3;
+    f2 >> b4;
+    f2 >> b5;
+    f2 >> b6;
+
+    buildings.insert(pair<int, Building>(1, b1));
+    buildings.insert(pair<int, Building>(2, b2));
+    buildings.insert(pair<int, Building>(3, b3));
+    buildings.insert(pair<int, Building>(4, b4));
+    buildings.insert(pair<int, Building>(5, b5));
+    buildings.insert(pair<int, Building>(6, b6));
+
+    nrBuildings = 6;
+
+    f1 >> by1;
+    f1 >> by2;
+    f1 >> fb1;
+
+    buyers.push_back(by1);
+    buyers.push_back(by2);
+    buyers.push_back(fb1);                          //cast la Buyer normal
+
+    //broker
+
+    f3 >> bk1;
+    f3 >> bk2;
+
+    brokers.push_back(bk1);
+    brokers.push_back(bk2);
+
+    //agent
+    f3.get();
+
+    f3 >> a1;
+    f3 >> a2;
+    f3 >> a3;
+    a1.addHouseOnMarket(b1);
+    a1.addHouseRented(b3);
+    a1.addHouseSold(b5);
+    a2.addHouseOnMarket(b2);
+    a2.addHouseRented(b4);
+    a2.addHouseSold(b6);
+
+
+    agents.push_back(a1);
+    agents.push_back(a2);
+    agents.push_back(a3);
+
+    f4 >> A;
+    for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+        A.addAgent(*itr1);
+    for(itr = brokers.begin(); itr != brokers.end(); ++itr)
+        A.addBroker(*itr);
+
+
+}
+void writeFiles()
+{
+    /// ------------------------- BUILDINGS -------------------------
+    for(int i = 0; i < 44; i++)
+        g << "=";
+    g << " BUILDINGS ";
+    for(int i = 0; i < 45; i++)
+        g << "=";
+    g << endl;
+
+    for(it = buildings.begin(); it != buildings.end(); ++it)
+    {
+        g << "\t Building " << it->first << endl;
+        g << it->second << endl;
+    }
+
+    /// ------------------------- BUYERS -------------------------
+    for(int i = 0; i < 46; i++)
+        g << "=";
+    g << " BUYERS ";
+    for(int i = 0; i < 46; i++)
+        g << "=";
+    g << endl;
+
+    int j = 1;
+    for(auto i = buyers.begin(); i != buyers.end(); ++i)
+    {
+        g << "\t Buyer " << j << endl;
+        g << *i << endl;
+        j++;
+    }
+
+    /// ------------------------- BROKERS -------------------------
+    for(int i = 0; i < 45; i++)
+        g << "=";
+    g << " BROKERS ";
+    for(int i = 0; i < 46; i++)
+        g << "=";
+    g << endl;
+
+    j = 1;
+    for(itr = brokers.begin(); itr != brokers.end(); ++itr)
+    {
+        g << "\t Broker " << j << endl;
+        g << *itr << endl;
+        j++;
+    }
+
+    /// ------------------------- AGENTS -------------------------
+    for(int i = 0; i < 46; i++)
+        g << "=";
+    g << " AGENTS ";
+    for(int i = 0; i < 46; i++)
+        g << "=";
+    g << endl;
+
+    j = 1;
+    for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+    {
+        g << "\t Agent " << j << endl;
+        g << *itr1 << endl;
+        j++;
+    }
+
+    /// ------------------------- AGENCY -------------------------
+
+    for(int i = 0; i < 46; i++)
+        g << "=";
+    g << " AGENCY ";
+    for(int i = 0; i < 46; i++)
+        g << "=";
+    g << endl;
+    g << A << endl;
+
+
+}
+
+void meniu()
+{
+
+int ok = 1;
+while(ok)
+{
+    int o1;
+    cout << "----------Bine ati venit la agentia imobiliara " << A.agencyName << "!----------\n";
+    cout << "Ce doriti sa faceti? \n";
+    cout << "       1 - Adaugati element\n";
+    cout << "       2 - Afisati elemente salvate deja\n";
+    cout << "       3 - Modificari asupra elementelor salvate\n";
+    cout << "       4 - Tranzactii\n";
+    cout << "       5 - Export date\n";
+    cout << "       0 - Exit\n";
+
+    cin >> o1;
+
+    switch(o1){
+    case 0:
+    {
+        cout << "Ati iesit din program!\n";
+        break;
+    }
+    case 1:         //adaugati elemente
+    {
+        cout << endl;
+        cout << "1 - Adaugati cladire\n";
+        cout << "2 - Adaugati cumparator\n";
+        cout << "3 - Adaugati angajat\n";
+        cout << "0 - Exit\n";
+
+        int o2;
+        cin >> o2;
+
+        switch(o2){
+        case 0:
+        {
+            cout << "Ati iesit din program!\n";
+            break;
+        }
+        case 1:         //cladirea
+        {
+            Building ba;
+            cin.get();
+            cin >> ba;
+            cout << endl;
+
+            int ok2 = 1;
+            while(ok2)
+            {
+            cout << "Ce doriti sa faceti cu noua cladire?\n";
+            cout << "\t 0 - Exit\n";
+            cout << "\t 1 - Afisare informatii\n";
+            cout << "\t 2 - Modificare informatii\n";
+            cout << "\t 3 - Afisare in fisier\n";
+            cout << "\t 4 - Adaugare in lista de cladiri\n";
+
+            int o5;
+            cin >> o5;
+            switch(o5){
+            case 0:
+                {
+                    cout << "Ati iesit\n";
+                    break;
+                }
+            case 1:             //afisare info
+                {
+                    cout << "Ce doriti sa afisati?\n";
+                    cout << "\t 1 - Numele proprietarului\n";
+                    cout << "\t 2 - Pret\n";
+                    cout << "\t 3 - Nr camere\n";
+                    cout << "\t 4 - Suprafata totala\n";
+                    cout << "\t 5 - Adresa\n";
+                    cout << "\t 6 - Anul construirii\n";
+                    cout << "\t 7 - Tot\n";
+
+                    int o6;
+                    cin >> o6;
+                    switch(o6){
+                    case 1:
+                        {
+                            cout << ba.getName() << endl;
+                            break;
+                        }
+                    case 2:
+                        {
+                            cout << ba.getPrice() << endl;
+                            break;
+                        }
+                    case 3:
+                        {
+                            cout << ba.getNrRooms() << endl;
+                            break;
+                        }
+                    case 4:
+                        {
+                            cout << ba.getTotalSurface() << endl;
+                            break;
+                        }
+                    case 5:
+                        {
+                            cout << ba.getAdress() << endl;
+                            break;
+                        }
+                    case 6:
+                        {
+                            cout << ba.getYearOfConst() << endl;
+                            break;
+                        }
+                    case 7:
+                        {
+                            cout << ba << endl;
+                            break;
+                        }
+                    default:
+                        cout << "Nu ati introdus nici una din variantele date!\n";
+                    }
+
+                    break;
+                }
+            case 2:             //modificare info
+                {
+                    cout << "Ce doriti sa modificati la cladire?\n";
+                    cout << "\t 1 - Numele proprietarului\n";
+                    cout << "\t 2 - Pretul\n";
+                    cout << "\t 3 - Starea (r - inchiriat, s - vandut, a - disponibil)\n";
+                    cout << "\t 4 - Camerele\n";
+
+                    int o6;
+                    cin >> o6;
+                    switch(o6){
+                    case 1:
+                        {
+                            cout << "Introdcuceti noul nume: \n";
+                            char aux[100];
+                            cin.get(aux, 100);
+                            cin.get();
+                            ba.setName(aux);
+                            cout << "Numele a fost modificat! \n";
+                            break;
+                        }
+                    case 2:
+                        {
+                            cout << "Introdcuceti noul pret: \n";
+                            double aux;
+                            cin >> aux;
+                            cin.get();
+                            ba.setPrice(aux);
+                            cout << "Pretul a fost modificat! \n";
+                            break;
+                        }
+                    case 3:
+                        {
+                            cout << "Introdcuceti noua stare: (r, s, a)\n";
+                            char aux;
+                            cin >> aux;
+                            cin.get();
+                            ba.setState(aux);
+                            cout << "Starea a fost modificata! \n";
+                            break;
+                        }
+                    case 4:
+                        {
+                            cout << "Introdcuceti nr de camere si suprafetele acestora: \n";
+                            int nr;
+                            float *s;
+                            cin >> nr;
+                            s = new float[nr];
+                            for(int i = 0; i < nr; i++)
+                            {
+                                cout << "Suprafata camerei " << i+1 << ": ";
+                                cin >> s[i];
+                            }
+                            cin.get();
+                            ba.setRooms(nr, s);
+                            cout << "Camerele au fost modificate! \n";
+                            cout << "Suprafetele lor sunt acum: \n";
+                            for(int i = 0; i < nr; i++)
+                                cout << s[i] << " ";
+                            cout << endl;
+                            break;
+                        }
+                    default:
+                        cout << "Nu ati ales una din variantele date!\n";
+                    }
+                    break;
+                }
+            case 3:
+                {
+                    g << ba;
+                    cout << "S-a afisat in fisier!\n";
+                    break;
+                }
+            case 4:
+                {
+                    nrBuildings++;
+                    buildings.insert(pair<int, Building>(nrBuildings, ba));
+                    cout << "S-a adaugat!\n";
+                    break;
+                }
+            default:
+                cout << "Nu ati introdus nici una din variantele date!\n";
+            }
+
+            cout << "Mai doriti ceva legat de cladire? (0 - nu sau 1 - da) \n";
+            cin >> ok2;
+
+            }
+            break;
+        }                                   //end of case 1 switch o2
+        case 2:         //cumparator
+        {
+            Buyer cumparator;
+            cin.get();
+            cin >>  cumparator;
+            cout << endl;
+
+            int ok2 = 1;
+            while(ok2)
+            {
+            cout << "Ce doriti sa faceti cu noul cumparator?\n";
+            cout << "\t 0 - Exit\n";
+            cout << "\t 1 - Afisare informatii\n";
+            cout << "\t 2 - Modificare informatii\n";
+            cout << "\t 3 - Afisare in fisier\n";
+            cout << "\t 4 - Adaugare in lista de cumparatori\n";
+
+            int o3;
+            cin >> o3;
+            switch(o3){
+            case 0:
+                {
+                    cout << "Ati iesit\n";
+                    break;
+                }
+            case 1:
+                {
+                    cout << "Ce doriti sa afisati?\n";
+                    cout << "\t 1 - Nume\n";
+                    cout << "\t 2 - CNP\n";
+                    cout << "\t 3 - Varsta\n";
+                    cout << "\t 4 - Daca este interesat sa cumpere/inchirieze\n";
+                    cout << "\t 5 - Optiunea cumparat/inchiriat\n";
+                    cout << "\t 6 - Bugetul\n";
+                    cout << "\t 7 - Tot\n";
+
+                    int o4;
+                    cin >> o4;
+                    switch(o4){
+                    case 1:
+                        {
+                            cout << cumparator.getName() << endl;
+                            break;
+                        }
+                    case 2:
+                        {
+                            cout << cumparator.getCnp() << endl;
+                            break;
+                        }
+                    case 3:
+                        {
+                            cout <<cumparator.getAge() << endl;
+                            break;
+                        }
+                    case 4:
+                        {
+                            if(cumparator.getIntersted())
+                                cout << "Da\n";
+                            else
+                                cout << "Nu\n";
+                            break;
+                        }
+                    case 5:
+                        {
+                            if(cumparator.getOptions() == 'b')
+                                cout << "Vrea sa cumpere\n";
+                            else if(cumparator.getOptions() == 'r')
+                                cout << "Vrea sa inchirieze\n";
+                            else if(cumparator.getOptions() == 'n')
+                                cout << "Nu vrea sa cumpere sau sa inchirieze\n";
+                            break;
+                        }
+                    case 6:
+                        {
+                            if(cumparator.getOptions() == 'b')
+                                cout << "Are un buget de cumparare de " << cumparator.bugetBuy() << endl;
+                            else if(cumparator.getOptions() == 'r')
+                                cout << "Are un buget de inchiriere de " << cumparator.bugetRent() << endl;
+                            else
+                                cout << "Bugetul se calculeaza daca doreste sa cumpere sau sa inchirieze\n";
+                            break;
+                        }
+                    case 7:
+                        {
+                            cout << cumparator << endl;
+                            break;
+                        }
+                    default:
+                        cout << "Nu ati introdus nici una din variantele date!\n";
+                    }
+                }
+            case 2:
+                {
+                    cout << "Ce doriti sa modificati la cumparator?\n";
+                    cout << "\t 1 - Nume\n";
+                    cout << "\t 2 - Daca este interesat sa cumpere/inchirieze (0 sau 1)\n";
+                    cout << "\t 3 - Optiunea: b - cumparare/r - inchiriere/ n - niciuna\n";
+                    cout << "\t 4 - Salariul\n";
+                    cout << "\t 5 - Alte venituri\n";
+
+                    int o4;
+                    cin >> o4;
+                    switch(o4){
+                    case 1:
+                        {
+                            cout << "Introdcuceti noul nume: \n";
+                            char aux[100];
+                            cin.get();
+                            cin.get(aux, 100);
+                            cin.get();
+                            cumparator.setName(aux);
+                            cout << "Numele a fost modificat! \n";
+                            break;
+                        }
+                    case 2:
+                        {
+                            cout << "Doreste sa cumpere/inchirieze? (0 - nu, 1 - da)\n";
+                            int a;
+                            cin >> a;
+                            cumparator.setIntersted(bool(a));
+                            cout << "Modificarea s-a efectuat\n";
+                            break;
+                        }
+                    case 3:
+                        {
+                            cout << "Introdcuceti noua optiune: (b - cumparare/r - inchiriere/ n - niciuna)\n";
+                            char aux;
+                            cin >> aux;
+                            cin.get();
+                            cumparator.setOptions(aux);
+                            cout << "Optiunea a fost modificata! \n";
+                            break;
+                        }
+                    case 4:
+                        {
+                            cout << "Introdcuceti noul salariu: \n";
+                            float aux;
+                            cin.get();
+                            cin >> aux;
+                            cin.get();
+                            cumparator.setSalary(aux);
+                            cout << "Salariul a fost modificat! \n";
+                            break;
+                        }
+                    case 5:
+                        {
+                            cout << "Introdcuceti nr de conturi si veniturile din acestea: \n";
+                            int nr;
+                            float *v;
+                            cin >> nr;
+                            v = new float[nr];
+                            for(int i = 0; i < nr; i++)
+                            {
+                                cout << "Suma din contul " << i+1 << ": ";
+                                cin >> v[i];
+                            }
+                            cin.get();
+                            cumparator.setOtherIncomes(nr, v);
+                            cout << "Conturile au fost modificate! \n";
+                            cout << "Sumele sunt acum: \n";
+                            for(int i = 0; i < nr; i++)
+                                cout << v[i] << " ";
+                            cout << endl;
+                            break;
+                        }
+                    default:
+                        cout << "Nu ati introdus nici una din variantele date!\n";
+                    }
+                    break;
+                }
+            case 3:
+                {
+                    g << "\t Buyer " << buyers.size() + 1 << endl;
+                    g << cumparator << endl;
+                    cout << "S-a afisat in fisier!\n";
+                    break;
+                }
+            case 4:
+                {
+                    buyers.push_back(cumparator);
+                    cout << "S-a adaugat!\n";
+                    break;
+                }
+            default:
+                cout << "Nu ati introdus nici una din variantele date!\n";
+            }
+            cout << "Mai doriti ceva legat de cumparator? (0 sau 1) \n";
+            cin >> ok2;
+            }
+            break;
+        }                       //end of case 2 switch o2
+
+        case 3:         //angajat  ----- broker sau agent
+        {
+            cout << "Broker sau agent?\n";
+            cout << "1 - Adaugare Broker\n";
+            cout << "2 - Adaugare Agent\n";
+            cout << "0 - Exit\n";
+
+            int o4;
+            cin >> o4;
+
+            switch(o4){
+            case 0:
+                {
+                    cout << "Ati iesit din program!\n";
+                    break;
+                }
+            case 1:             //adaugare broker
+                {
+                    Broker b;
+                    cin.get();
+                    cin >> b;
+                    cout << endl;
+
+                    int ok3 = 1;
+                    while(ok3)
+                    {
+                    cout << "Ce doriti sa faceti acum? \n";
+                    cout << "\t 0 - Exit\n";
+                    cout << "\t 1 - Afisare informatii ale bokerului\n";
+                    cout << "\t 2 - Modificare informatii ale bokerului\n";
+                    cout << "\t 3 - Afisare in fisier\n";
+                    cout << "\t 4 - Adaugare in lista de brokeri\n";
+
+                    int o5;
+                    cin >> o5;
+
+                    switch(o5){
+                    case 0:
+                        {
+                            cout << "Ati iesit din program!\n";
+                            break;
+                        }
+                    case 1:
+                        {
+                            cout << "Ce informatii doriti sa afisati?\n";
+                            cout << "   1 - Nr de contracte \n";
+                            cout << "   2 - Salariul lunar \n";
+                            cout << "   3 - Ani experienta\n";
+                            cout << "   4 - Ani in pozitia de conducere\n";
+                            cout << "   5 - Numele\n";
+                            cout << "   6 - Tot\n";
+                            cout << "   0 - Exit\n";
+
+                            int o5;
+                            cin >> o5;
+
+                            switch(o5){
+                            case 0:
+                                {
+                                    cout << "Ati iesit din program!\n";
+                                    break;
+                                }
+                            case 1:
+                                {
+                                    cout << b.getNrContracts() << endl;
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    cout << b.getSalary() << endl;
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    cout << b.getYears() << endl;
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    cout << b.getYearsLeadingPosition() << endl;
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    cout << b.getName() << endl;
+                                    break;
+                                }
+                            case 6:
+                                {
+                                    cout << b << endl;
+                                    break;
+                                }
+
+
+                            }
+                            break;
+                        }
+                    case 2:
+                        {
+                            cout << "Ce doriti sa modificati?\n";
+                            cout << "\t 1 -  Nume\n";
+                            cout << "\t 2 -  Salariu\n";
+                            cout << "\t 3 -  Ani experienta\n";
+                            cout << "\t 4 -  Ani in pozitie de conducere\n";
+                            cout << "\t 5 -  Nr contracte\n";
+
+                            int o6;
+                            cin >> o6;
+                            switch(o6){
+                            case 1:
+                                {
+                                    cout << "Introdcuceti noul nume: \n";
+                                    char aux[100];
+                                    cin.get(aux, 100);
+                                    cin.get();
+                                    b.setName(aux);
+                                    cout << "Numele a fost modificat! \n";
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    cout << "Introdcuceti noul salariu: \n";
+                                    float aux;
+                                    cin.get();
+                                    cin >> aux;
+                                    cin.get();
+                                    b.setSalary(aux);
+                                    cout << "Salariul a fost modificat! \n";
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    cout << "Introdcuceti noua valoare: \n";
+                                    int aux;
+                                    cin.get();
+                                    cin >> aux;
+                                    cin.get();
+                                    b.setYears(aux);
+                                    cout << "Anii au fost modificati! \n";
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    cout << "Introdcuceti noua valoare: \n";
+                                    int aux;
+                                    cin.get();
+                                    cin >> aux;
+                                    cin.get();
+                                    b.setYearsLeadingPosition(aux);
+                                    cout << "Anii au fost modificati! \n";
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    cout << "Introdcuceti nr de contracte: \n";
+                                    int aux;
+                                    cin.get();
+                                    cin >> aux;
+                                    cin.get();
+                                    b.setNrContracts(aux);
+                                    cout << "Nr de contracte a fost modificat! \n";
+                                    break;
+                                }
+                            default:
+                                cout << "Nu ati ales una din variantele date!\n";
+
+                            }
+                            break;
+                        }
+                    case 3:
+                        {
+                            g << "\t Broker " << brokers.size() + 1 << endl;
+                            g << b << endl;
+                            cout << "S-a afisat in fisier!\n";
+                            break;
+                        }
+                    case 4:
+                        {
+                            brokers.push_back(b);
+                            cout << "S-a adaugat!\n";
+                            break;
+                        }
+
+                    default:
+                        cout << "Nu ati introdus nici una din variantele date!\n";
+                    }
+                    cout << "Mai doriti ceva legat de broker? (0 - nu sau 1 - da) \n";
+                    cin >> ok3;
+                    }
+                    break;
+                }
+            case 2:             //adaugare agent
+                {
+                    Agent a1;
+                    cin.get();
+                    cin >> a1;
+                    cout << endl;
+
+                    int ok3 = 1;
+                    while(ok3)
+                    {
+                    cout << "Ce doriti sa faceti acum? \n";
+                    cout << "\t 0 - Exit\n";
+                    cout << "\t 1 - Afisare informatii ale agentului\n";
+                    cout << "\t 2 - Modificare informatii ale agentului\n";
+                    cout << "\t 3 - Afisare in fisier\n";
+                    cout << "\t 4 - Adaugare in lista de agenti\n";
+
+                    int o5;
+                    cin >> o5;
+
+                    switch(o5){
+                    case 0:
+                        {
+                            cout << "Ati iesit din program!\n";
+                            break;
+                        }
+                    case 1:
+                        {
+                            cout << "Ce informatii doriti sa afisati?\n";
+                            cout << "   1 - Nr case vandute \n";
+                            cout << "   2 - Nr case inchiriate \n";
+                            cout << "   3 - Nr case disponibile \n";
+                            cout << "   4 - Comisionul castigat \n";
+                            cout << "   5 - Salariul lunar \n";
+                            cout << "   6 - Ani experienta\n";
+                            cout << "   7 - Numele\n";
+                            cout << "   8 - Tot\n";
+                            cout << "   0 - Exit\n";
+
+                            int o6;
+                            cin >> o6;
+
+                            switch(o6){
+                            case 0:
+                                {
+                                    cout << "Ati iesit din program!\n";
+                                    break;
+                                }
+                            case 1:
+                                {
+                                    cout << a1.getNrHousesSold() << endl;
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    cout << a1.getNrHousesRented() << endl;
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    cout << a1.getNrHousesOnMarket() << endl;
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    cout << a1.getComission() << endl;
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    cout << a1.getSalary() << endl;
+                                    break;
+                                }
+                            case 6:
+                                {
+                                    cout << a1.getYears() << endl;
+                                    break;
+                                }
+                            case 7:
+                                {
+                                    cout << a1.getName() << endl;
+                                    break;
+                                }
+                            case 8:
+                                {
+                                    cout << a1 << endl;
+                                    break;
+                                }
+                            default:
+                                cout << "Nu ati introdus una din variantele date!\n";
+
+                            }
+
+                            break;
+                        }
+                    case 2:
+                        {
+                            cout << "Ce doriti sa modificati?\n";
+                            cout << "\t 1 -  Nume\n";
+                            cout << "\t 2 -  Salariu\n";
+                            cout << "\t 3 -  Ani experienta\n";
+                            cout << "\t 4 -  Adaugare casa disponibila\n";
+                            cout << "\t 5 -  Adaugare casa vanduta\n";
+                            cout << "\t 6 -  Adaugare casa inchiriata\n";
+
+                            int o6;
+                            cin >> o6;
+                            switch(o6){
+                            case 1:
+                                {
+                                    cout << "Introdcuceti noul nume: \n";
+                                    char aux[100];
+                                    cin.get(aux, 100);
+                                    cin.get();
+                                    a1.setName(aux);
+                                    cout << "Numele a fost modificat! \n";
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    cout << "Introdcuceti noul salariu: \n";
+                                    float aux;
+                                    cin.get();
+                                    cin >> aux;
+                                    cin.get();
+                                    a1.setSalary(aux);
+                                    cout << "Salariul a fost modificat! \n";
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    cout << "Introdcuceti noua valoare: \n";
+                                    int aux;
+                                    cin.get();
+                                    cin >> aux;
+                                    cin.get();
+                                    a1.setYears(aux);
+                                    cout << "Anii au fost modificati! \n";
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    cout << "Selectati ce tip de casa doriti sa aduagati:\n";
+                                    cout << "\t 1 - Salvata\n";
+                                    cout << "\t 2 - Introduce o casa noua\n";
+
+                                    int o7;
+                                    cin >> o7;
+                                    switch(o7){
+                                    case 1:
+                                        {
+                                            cout << "Afisare case salvate: \n";
+                                            for(int i = 1; i <= nrBuildings; i++)
+                                            {
+                                                if(buildings[i].getState() == 'a')
+                                                {
+                                                    cout << "\t Building " << i << endl;
+                                                    cout << buildings[i] << endl;
+                                                }
+
+                                            }
+                                            cout << endl;
+                                            cout << "Introduceti nr casei pe care doriti sa o adaugati:\n";
+                                            int nr;
+                                            cin >> nr;
+
+                                            a1 = a1 + buildings[nr];
+                                            cout << "Casa a fost adaugata!\n";
+
+                                            break;
+                                        }
+                                    case 2:
+                                        {
+                                            Building bd1;
+                                            cin >> bd1;
+                                            cout << "Aceasta e cladirea pe care ati introdus-o\n";
+                                            cout << bd1 << endl;
+                                            if(bd1.getState() == 'a')
+                                            {
+                                                a1 = a1 + bd1;
+                                                cout << "Casa a fost adaugata!\n";
+                                            }
+
+                                            else
+                                                cout << "Casa pe care ati aduagat-o nu este disponibila!\n";
+
+                                            break;
+                                        }
+                                    default:
+                                        cout << "Nu ati introdus nici una din variantele date!\n";
+                                    }
+
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    cout << "Selectati ce tip de casa doriti sa aduagati:\n";
+                                    cout << "\t 1 - Salvata\n";
+                                    cout << "\t 2 - Introduce o casa noua\n";
+
+                                    int o7;
+                                    cin >> o7;
+                                    switch(o7){
+                                    case 1:
+                                        {
+                                            cout << "Afisare case salvate: \n";
+                                            for(int i = 1; i <= nrBuildings; i++)
+                                            {
+                                                if(buildings[i].getState() == 's')
+                                                {
+                                                    cout << "\t Building " << i << endl;
+                                                    cout << buildings[i] << endl;
+                                                }
+
+                                            }
+                                            cout << endl;
+                                            cout << "Introduceti nr casei pe care doriti sa o adaugati:\n";
+                                            int nr;
+                                            cin >> nr;
+
+                                            a1 = a1 + buildings[nr];
+                                            cout << "Casa a fost adaugata!\n";
+
+                                            break;
+                                        }
+                                    case 2:
+                                        {
+                                            Building bd1;
+                                            cin >> bd1;
+                                            cout << "Aceasta e cladirea pe care ati introdus-o\n";
+                                            cout << bd1 << endl;
+                                            if(bd1.getState() == 'a')
+                                            {
+                                                a1 = a1 + bd1;
+                                                cout << "Casa a fost adaugata!\n";
+                                            }
+
+                                            else
+                                                cout << "Casa pe care ati aduagat-o nu este pentru vanzare!\n";
+
+                                            break;
+                                        }
+                                    default:
+                                        cout << "Nu ati introdus nici una din variantele date!\n";
+                                    }
+
+                                    break;
+                                }
+                            case 6:
+                                {
+                                    cout << "Selectati ce tip de casa doriti sa aduagati:\n";
+                                    cout << "\t 1 - Salvata\n";
+                                    cout << "\t 2 - Introduce o casa noua\n";
+
+                                    int o7;
+                                    cin >> o7;
+                                    switch(o7){
+                                    case 1:
+                                        {
+                                            cout << "Afisare case salvate: \n";
+                                            for(int i = 1; i <= nrBuildings; i++)
+                                            {
+                                                if(buildings[i].getState() == 'r')
+                                                {
+                                                    cout << "\t Building " << i << endl;
+                                                    cout << buildings[i] << endl;
+                                                }
+
+                                            }
+                                            cout << endl;
+                                            cout << "Introduceti nr casei pe care doriti sa o adaugati:\n";
+                                            int nr;
+                                            cin >> nr;
+
+                                            a1 = a1 + buildings[nr];
+                                            cout << "Casa a fost adaugata!\n";
+
+                                            break;
+                                        }
+                                    case 2:
+                                        {
+                                            Building bd1;
+                                            cin >> bd1;
+                                            cout << "Aceasta e cladirea pe care ati introdus-o\n";
+                                            cout << bd1 << endl;
+                                            if(bd1.getState() == 'a')
+                                            {
+                                                a1 = a1 + bd1;
+                                                cout << "Casa a fost adaugata!\n";
+                                            }
+
+                                            else
+                                                cout << "Casa pe care ati aduagat-o nu este pentru inchiriere!\n";
+
+                                            break;
+                                        }
+                                    default:
+                                        cout << "Nu ati introdus nici una din variantele date!\n";
+                                    }
+
+                                    break;
+                                }
+                            default:
+                                cout << "Nu ati ales una din variantele date!\n";
+
+                            }
+                            break;
+                        }
+                    case 3:
+                        {
+                            g << a1 << endl;
+                            cout << "S-a afisat in fisier!\n";
+                            break;
+                        }
+                    case 4:
+                        {
+                            agents.push_back(a1);
+                            cout << "S-a adaugat!\n";
+                            break;
+                        }
+                    default:
+                        cout << "Nu ati introdus nici una din variantele date!\n";
+                    }
+                    cout << "Mai doriti ceva legat de agent? (0 - nu sau 1 - da) \n";
+                    cin >> ok3;
+                    }
+
+                    break;
+                }
+            default:
+                cout << "Nu ati introdus nici una din variantele date!\n";
+
+            }
+
+            break;
+        }               //end of case3 switch o2
+
+        }               //end of switch o2
+        break;
+    }                                           //end of case 1 switch o1
+    case 2:         //afisati elemente existente
+    {
+        Broker *baux = new Broker[0];
+        Agent *aaux = new Agent[0];
+
+        int ok1 = 1;
+        while(ok1)
+        {
+            cout << "Ce doriti sa afisati?\n";
+            cout << "1 - Cladire\n";
+            cout << "2 - Cumparator\n";
+            cout << "3 - Broker\n";
+            cout << "4 - Agent\n";
+            cout << "5 - Agentie\n";
+            cout << "0 - Exit\n";
+
+            int o2;
+            cin >> o2;
+            cin.get();
+            switch(o2){
+            case 0:
+            {
+                cout << "Ati iesit din program!\n";
+                break;
+            }
+            case 1:
+            {
+                for(it = buildings.begin(); it != buildings.end(); ++it)
+                {
+                    cout << "\t Building " << it->first << endl;
+                    cout << it->second << endl;
+                }
+                break;
+            }
+            case 2:
+            {
+                int j = 1;
+                for(auto i = buyers.begin(); i != buyers.end(); ++i)
+                {
+                    cout << "\t Buyer " << j << endl;
+                    cout << *i << endl;
+                    j++;
+                }
+                break;
+            }
+            case 3:
+            {
+                int j = 1;
+                for(itr = brokers.begin(); itr != brokers.end(); ++itr)
+                {
+                    cout << "\t Broker " << j << endl;
+                    cout << *itr << endl;
+                    j++;
+                }
+                break;
+            }
+            case 4:
+            {
+                int j = 1;
+                for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+                {
+                    cout << "\t Agent " << j << endl;
+                    cout << *itr1 << endl;
+                    j++;
+                }
+                break;
+            }
+            case 5:
+            {
+                cout << A << endl;
+                break;
+            }
+            default:
+                cout << "Nu ati introdus nici una din variantele date!\n";
+            }               //end of switch o2
+
+            cout << "Mai doriti sa afisati si alt obiet? (0 - nu sau 1 - da)\n";
+            cin >> ok1;
+            if(ok1 == 0)
+                cout << "Asta a fost tot!\n";
+
+        }
+        break;
+    }                       //end of case 2 switch o1
+    case 3:         //modificari
+    {
+        cout << "Ce doriti sa modificati?\n";
+        cout << "\t 0 - Exit\n";
+        cout << "\t 1 - Buildings\n";
+        cout << "\t 2 - Buyers\n";
+        cout << "\t 3 - Brokers\n";
+        cout << "\t 4 - Agents\n";
+        cout << "\t 5 - Agency\n";
+
+        int o2;
+        cin >> o2;
+        switch(o2){
+        case 0:
+            {
+                cout << "Ati iesit din program!\n";
+                break;
+            }
+        case 1:
+            {
+                cout << "---------------- Buildings ----------------\n";
+                for(it = buildings.begin(); it != buildings.end(); ++it)
+                {
+                    cout << "\t Building " << it->first << endl;
+                    cout << it->second << endl;
+                }
+                cout << endl;
+                cout << "Introduceti numarul cladirii la care doriti sa modificati ceva:\n";
+                int nr;
+                cin >> nr;
+                cout << endl;
+
+                int ok2 = 1;
+                while(ok2)
+                {
+                    cout << "Ce doriti sa modificati la cladire?\n";
+                    cout << "\t 1 - Numele proprietarului\n";
+                    cout << "\t 2 - Pretul\n";
+                    cout << "\t 3 - Starea (r - inchiriat, s - vandut, a - disponibil)\n";
+                    cout << "\t 4 - Camerele\n";
+
+                    int o6;
+                    cin >> o6;
+                    switch(o6){
+                    case 1:
+                        {
+                            cout << "Introdcuceti noul nume: \n";
+                            char aux[100];
+                            cin.get(aux, 100);
+                            cin.get();
+                            buildings[nr].setName(aux);
+                            cout << "Numele a fost modificat! \n";
+                            break;
+                        }
+                    case 2:
+                        {
+                            cout << "Introdcuceti noul pret: \n";
+                            double aux;
+                            cin >> aux;
+                            cin.get();
+                            buildings[nr].setPrice(aux);
+                            cout << "Pretul a fost modificat! \n";
+                            break;
+                        }
+                    case 3:
+                        {
+                            cout << "Introdcuceti noua stare: \n";
+                            char aux;
+                            cin >> aux;
+                            cin.get();
+                            buildings[nr].setState(aux);
+                            cout << "Starea a fost modificata! \n";
+                            break;
+                        }
+                    case 4:
+                        {
+                            cout << "Introdcuceti nr de camere si suprafetele acestora: \n";
+                            int nr;
+                            float *s;
+                            cin >> nr;
+                            s = new float[nr];
+                            for(int i = 0; i < nr; i++)
+                            {
+                                cout << "Suprafata camerei " << i+1 << ": ";
+                                cin >> s[i];
+                            }
+                            cin.get();
+                            buildings[nr].setRooms(nr, s);
+                            cout << "Camerele au fost modificate! \n";
+                            cout << "Suprafetele lor sunt acum: \n";
+                            for(int i = 0; i < nr; i++)
+                                cout << s[i] << " ";
+                            cout << endl;
+                            break;
+                        }
+                    default:
+                        cout << "Nu ati ales una din variantele date!\n";
+                }
+
+                cout << "Mai doriti sa modificati ceva? (0 - nu sau 1 - da) \n";
+                cin >> ok2;
+
+                }
+                cout << "Aceasta este cladirea modificata:\n";
+                cout << buildings[nr] << endl;
+                break;
+            }
+        case 2:
+            {
+                cout << "---------------- Buyers ----------------\n";
+                int j = 1;
+                for(auto i = buyers.begin(); i != buyers.end(); ++i)
+                {
+                    cout << "\t Buyer " << j << endl;
+                    cout << *i << endl;
+                    j++;
+                }
+                cout << endl;
+                cout << "Introduceti numarul cumparatorului la care doriti sa modificati ceva:\n";
+                int nr;
+                cin >> nr;
+                nr = nr - 1;
+                cout << endl;
+
+                int ok2 = 1;
+                while(ok2)
+                {
+                    cout << "Ce doriti sa modificati la cumparator?\n";
+                    cout << "\t 1 - Nume\n";
+                    cout << "\t 2 - Daca este interesat sa cumpere/inchirieze(0 sau 1)\n";
+                    cout << "\t 3 - Optiunea: b - cumparare/r - inchiriere/n - niciuna\n";
+                    cout << "\t 4 - Salariul\n";
+                    cout << "\t 5 - Alte venituri\n";
+
+                    int o4;
+                    cin >> o4;
+                    switch(o4){
+                    case 1:
+                        {
+                            cout << "Introdcuceti noul nume: \n";
+                            char aux[100];
+                            cin.get();
+                            cin.get(aux, 100);
+                            cin.get();
+                            buyers[nr].setName(aux);
+                            cout << "Numele a fost modificat! \n";
+                            break;
+                        }
+                    case 2:
+                        {
+                            cout << "Doreste sa cumpere/inchirieze?\n";
+                            int a;
+                            cin >> a;
+                            buyers[nr].setIntersted(bool(a));
+                            cout << "Modificarea s-a efectuat\n";
+                            break;
+                        }
+                    case 3:
+                        {
+                            cout << "Introdcuceti noua optiune: \n";
+                            char aux;
+                            cin >> aux;
+                            cin.get();
+                            buyers[nr].setOptions(aux);
+                            cout << "Optiunea a fost modificata! \n";
+                            break;
+                        }
+                    case 4:
+                        {
+                            cout << "Introdcuceti noul salariu: \n";
+                            float aux;
+                            cin.get();
+                            cin >> aux;
+                            cin.get();
+                            buyers[nr].setSalary(aux);
+                            cout << "Salariul a fost modificat! \n";
+                            break;
+                        }
+                    case 5:
+                        {
+                            cout << "Introdcuceti nr de conturi si veniturile din acestea: \n";
+                            int nr2;
+                            float *v;
+                            cin >> nr2;
+                            v = new float[nr2];
+                            for(int i = 0; i < nr2; i++)
+                            {
+                                cout << "Suma din contul " << i+1 << ": ";
+                                cin >> v[i];
+                            }
+                            cin.get();
+                            buyers[nr].setOtherIncomes(nr, v);
+                            cout << "Conturile au fost modificate! \n";
+                            cout << "Sumele sunt acum: \n";
+                            for(int i = 0; i < nr2; i++)
+                                cout << v[i] << " ";
+                            cout << endl;
+                            break;
+                        }
+                    default:
+                        cout << "Nu ati introdus nici una din variantele date!\n";
+                    }
+                    cout << "Mai doriti sa modificati ceva? (0 - nu sau 1 - da) \n";
+                    cin >> ok2;
+                }
+                cout << "Acesta este cumparatorul modificat:\n";
+                cout << buyers[nr] << endl;
+                break;
+            }
+        case 3:
+            {
+                cout << "---------------- Brokers ----------------\n";
+                int j = 1;
+                for(itr = brokers.begin(); itr != brokers.end(); ++itr)
+                {
+                    cout << "\t Broker " << j << endl;
+                    cout << *itr << endl;
+                    j++;
+                }
+                cout << endl;
+                cout << "Introduceti numarul brokerului la care doriti sa modificati ceva:\n";
+                int nr;
+                cin >> nr;
+                j = 1;
+                Broker bkr;
+                for(itr = brokers.begin(); itr != brokers.end(); ++itr)
+                {
+                    if(nr == j)
+                        bkr = *itr;
+                    j++;
+                }
+                cout << endl;
+
+                int ok2 = 1;
+                while(ok2)
+                {
+                    cout << "Ce doriti sa modificati?\n";
+                    cout << "\t 1 -  Nume\n";
+                    cout << "\t 2 -  Salariu\n";
+                    cout << "\t 3 -  Ani experienta\n";
+                    cout << "\t 4 -  Ani in pozitie de conducere\n";
+                    cout << "\t 5 -  Nr contracte\n";
+
+                    int o6;
+                    cin >> o6;
+                    switch(o6){
+                            case 1:
+                                {
+                                    cout << "Introdcuceti noul nume: \n";
+                                    char aux[100];
+                                    cin.get();
+                                    cin.get(aux, 100);
+                                    cin.get();
+                                    bkr.setName(aux);
+                                    cout << "Numele a fost modificat! \n";
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    cout << "Introdcuceti noul salariu: \n";
+                                    float aux;
+                                    cin.get();
+                                    cin >> aux;
+                                    cin.get();
+                                    bkr.setSalary(aux);
+                                    cout << "Salariul a fost modificat! \n";
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    cout << "Introdcuceti noua valoare: \n";
+                                    int aux;
+                                    cin.get();
+                                    cin >> aux;
+                                    cin.get();
+                                    bkr.setYears(aux);
+                                    cout << "Anii au fost modificati! \n";
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    cout << "Introdcuceti noua valoare: \n";
+                                    int aux;
+                                    cin.get();
+                                    cin >> aux;
+                                    cin.get();
+                                    bkr.setYearsLeadingPosition(aux);
+                                    cout << "Anii au fost modificati! \n";
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    cout << "Introdcuceti nr de contracte: \n";
+                                    int aux;
+                                    cin.get();
+                                    cin >> aux;
+                                    cin.get();
+                                    bkr.setNrContracts(aux);
+                                    cout << "Nr de contracte a fost modificat! \n";
+                                    break;
+                                }
+                            default:
+                                cout << "Nu ati ales una din variantele date!\n";
+
+                            }
+                    cout << "Mai doriti sa modificati ceva? (0 - nu sau 1 - da) \n";
+                    cin >> ok2;
+                }
+                cout << "Acesta este brokerul modificat:\n";
+                cout << bkr << endl;
+                break;
+            }
+        case 4:
+            {
+                cout << "---------------- Agents ----------------\n";
+                int j = 1;
+                for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+                {
+                    cout << "\t Agent " << j << endl;
+                    cout << *itr1 << endl;
+                    j++;
+                }
+                cout << endl;
+                cout << "Introduceti numarul agentului la care doriti sa modificati ceva:\n";
+                int nr;
+                cin >> nr;
+                j = 1;
+                Agent ag;
+                for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+                {
+                    if(nr == j)
+                        ag = *itr1;
+                    j++;
+                }
+                cout << endl;
+
+                int ok2 = 1;
+                while(ok2)
+                {
+                    cout << "Ce doriti sa modificati?\n";
+                    cout << "\t 1  -  Nume\n";
+                    cout << "\t 2  -  Salariu\n";
+                    cout << "\t 3  -  Ani experienta\n";
+                    cout << "\t 4  -  Adaugare casa disponibila\n";
+                    cout << "\t 5  -  Adaugare casa vanduta\n";
+                    cout << "\t 6  -  Adaugare casa inchiriata\n";
+                    cout << "\t 7  -  Eliminare casa disponibila\n";
+                    cout << "\t 8  -  Eliminare casa vanduta\n";
+                    cout << "\t 9  -  Eliminare casa inchiriata\n";
+                    cout << "\t 10 -  Transfer case disponibile -> vandute\n";
+                    cout << "\t 11 -  Transfer case disponibile -> inchiriate\n";
+
+                    int o6;
+                    cin >> o6;
+                    switch(o6){
+                            case 1:
+                                {
+                                    cout << "Introdcuceti noul nume: \n";
+                                    char aux[100];
+                                    cin.get(aux, 100);
+                                    cin.get();
+                                    ag.setName(aux);
+                                    cout << "Numele a fost modificat! \n";
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    cout << "Introdcuceti noul salariu: \n";
+                                    float aux;
+                                    cin.get();
+                                    cin >> aux;
+                                    cin.get();
+                                    ag.setSalary(aux);
+                                    cout << "Salariul a fost modificat! \n";
+                                    break;
+                                }
+                            case 3:
+                                {
+                                    cout << "Introdcuceti noua valoare: \n";
+                                    int aux;
+                                    cin.get();
+                                    cin >> aux;
+                                    cin.get();
+                                    ag.setYears(aux);
+                                    cout << "Anii au fost modificati! \n";
+                                    break;
+                                }
+                            case 4:
+                                {
+                                    cout << "Selectati ce tip de casa doriti sa aduagati:\n";
+                                    cout << "\t 1 - Salvata\n";
+                                    cout << "\t 2 - Introduce o casa noua\n";
+
+                                    int o7;
+                                    cin >> o7;
+                                    switch(o7){
+                                    case 1:
+                                        {
+                                            cout << "Afisare case salvate: \n";
+                                            for(int i = 1; i <= nrBuildings; i++)
+                                            {
+                                                if(buildings[i].getState() == 'a')
+                                                {
+                                                    cout << "\t Building " << i << endl;
+                                                    cout << buildings[i] << endl;
+                                                }
+
+                                            }
+                                            cout << endl;
+                                            cout << "Introduceti nr casei pe care doriti sa o adaugati:\n";
+                                            int nr;
+                                            cin >> nr;
+
+                                            ag = ag + buildings[nr];
+                                            cout << "Casa a fost adaugata!\n";
+
+                                            break;
+                                        }
+                                    case 2:
+                                        {
+                                            Building bd1;
+                                            cin >> bd1;
+                                            cout << "Aceasta e cladirea pe care ati introdus-o\n";
+                                            cout << bd1 << endl;
+                                            if(bd1.getState() == 'a')
+                                            {
+                                                ag = ag + bd1;
+                                                cout << "Casa a fost adaugata!\n";
+                                            }
+
+                                            else
+                                                cout << "Casa pe care ati aduagat-o nu este disponibila!\n";
+
+                                            break;
+                                        }
+                                    default:
+                                        cout << "Nu ati introdus nici una din variantele date!\n";
+                                    }
+
+                                    break;
+                                }
+                            case 5:
+                                {
+                                    cout << "Selectati ce tip de casa doriti sa aduagati:\n";
+                                    cout << "\t 1 - Salvata\n";
+                                    cout << "\t 2 - Introduce o casa noua\n";
+
+                                    int o7;
+                                    cin >> o7;
+                                    switch(o7){
+                                    case 1:
+                                        {
+                                            cout << "Afisare case salvate: \n";
+                                            for(int i = 1; i <= nrBuildings; i++)
+                                            {
+                                                if(buildings[i].getState() == 's')
+                                                {
+                                                    cout << "\t Building " << i << endl;
+                                                    cout << buildings[i] << endl;
+                                                }
+
+                                            }
+                                            cout << endl;
+                                            cout << "Introduceti nr casei pe care doriti sa o adaugati:\n";
+                                            int nr;
+                                            cin >> nr;
+
+                                            ag = ag + buildings[nr];
+                                            cout << "Casa a fost adaugata!\n";
+
+                                            break;
+                                        }
+                                    case 2:
+                                        {
+                                            Building bd1;
+                                            cin >> bd1;
+                                            cout << "Aceasta e cladirea pe care ati introdus-o\n";
+                                            cout << bd1 << endl;
+                                            if(bd1.getState() == 'a')
+                                            {
+                                                ag = ag + bd1;
+                                                cout << "Casa a fost adaugata!\n";
+                                            }
+
+                                            else
+                                                cout << "Casa pe care ati aduagat-o nu este pentru vanzare!\n";
+
+                                            break;
+                                        }
+                                    default:
+                                        cout << "Nu ati introdus nici una din variantele date!\n";
+                                    }
+
+                                    break;
+                                }
+                            case 6:
+                                {
+                                    cout << "Selectati ce tip de casa doriti sa aduagati:\n";
+                                    cout << "\t 1 - Salvata\n";
+                                    cout << "\t 2 - Introduce o casa noua\n";
+
+                                    int o7;
+                                    cin >> o7;
+                                    switch(o7){
+                                    case 1:
+                                        {
+                                            cout << "Afisare case salvate: \n";
+                                            for(int i = 1; i <= nrBuildings; i++)
+                                            {
+                                                if(buildings[i].getState() == 'r')
+                                                {
+                                                    cout << "\t Building " << i << endl;
+                                                    cout << buildings[i] << endl;
+                                                }
+
+                                            }
+                                            cout << endl;
+                                            cout << "Introduceti nr casei pe care doriti sa o adaugati:\n";
+                                            int nr;
+                                            cin >> nr;
+
+                                            ag = ag + buildings[nr];
+                                            cout << "Casa a fost adaugata!\n";
+
+                                            break;
+                                        }
+                                    case 2:
+                                        {
+                                            Building bd1;
+                                            cin >> bd1;
+                                            cout << "Aceasta e cladirea pe care ati introdus-o\n";
+                                            cout << bd1 << endl;
+                                            if(bd1.getState() == 'a')
+                                            {
+                                                ag = ag + bd1;
+                                                cout << "Casa a fost adaugata!\n";
+                                            }
+
+                                            else
+                                                cout << "Casa pe care ati aduagat-o nu este pentru inchiriere!\n";
+
+                                            break;
+                                        }
+                                    default:
+                                        cout << "Nu ati introdus nici una din variantele date!\n";
+                                    }
+
+                                    break;
+                                }
+                            case 7:
+                                {
+                                    cout << "Afisare case disponibile: \n";
+                                    Building* buildingsOnMarket;
+                                    buildingsOnMarket = ag.getHousesOnMarket();
+                                    for(int i = 0; i < ag.getNrHousesOnMarket(); i++)
+                                    {
+                                        cout << "\t Building " << i << endl;
+                                        cout << buildingsOnMarket[i] << endl;
+                                    }
+                                    if(ag.getNrHousesOnMarket() == 0)
+                                        cout << "Agentul nu are case disponibile!\n";
+                                    else
+                                    {
+                                        cout << "Introduceti nr casei pe care doriti sa o eliminati:\n";
+                                        int nr2;
+                                        cin >> nr2;
+                                        if(nr2 < 0 || nr2 >= ag.getNrHousesOnMarket())
+                                            cout << "Casa nu exista in lista\n";
+                                        else
+                                        {
+                                            ag.removeHouseOnMarket(buildingsOnMarket[nr2]);
+                                            cout << "Casa a fost eliminata!\n";
+                                        }
+                                    }
+                                    break;
+                                }
+                            case 8:
+                                {
+                                    cout << "Afisare case vandute: \n";
+                                    Building* buildingsSold;
+                                    buildingsSold = ag.getHousesSold();
+                                    for(int i = 0; i < ag.getNrHousesSold(); i++)
+                                    {
+                                        cout << "\t Building " << i << endl;
+                                        cout << buildingsSold[i] << endl;
+                                    }
+                                    if(ag.getNrHousesSold() == 0)
+                                        cout << "Agentul nu are case vandute!\n";
+                                    else
+                                    {
+                                        cout << "Introduceti nr casei pe care doriti sa o eliminati:\n";
+                                        int nr2;
+                                        cin >> nr2;
+                                        if(nr2 < 0 || nr2 >= ag.getNrHousesSold())
+                                            cout << "Casa nu exista in lista\n";
+                                        else
+                                        {
+                                            ag.removeHouseSold(buildingsSold[nr2]);
+                                            cout << "Casa a fost eliminata!\n";
+                                        }
+                                    }
+                                    break;
+
+                                }
+                            case 9:
+                                {
+                                    cout << "Afisare case inchiriate: \n";
+                                    Building* buildingsRented;
+                                    buildingsRented = ag.getHousesRented();
+                                    for(int i = 0; i < ag.getNrHousesRented(); i++)
+                                    {
+                                        cout << "\t Building " << i << endl;
+                                        cout << buildingsRented[i] << endl;
+                                    }
+                                    if(ag.getNrHousesRented() == 0)
+                                        cout << "Agentul nu are case inchiriate!\n";
+                                    else
+                                    {
+                                        cout << "Introduceti nr casei pe care doriti sa o eliminati:\n";
+                                        int nr2;
+                                        cin >> nr2;
+                                        if(nr2 < 0 || nr2 >= ag.getNrHousesRented())
+                                            cout << "Casa nu exista in lista\n";
+                                        else
+                                        {
+                                            ag.removeHouseRented(buildingsRented[nr2]);
+                                            cout << "Casa a fost eliminata!\n";
+                                        }
+                                    }
+                                    break;
+                                }
+                            case 10:
+                                {
+                                    cout << "Afisare case disponibile: \n";
+                                    Building* buildingsOnMarket;
+                                    buildingsOnMarket = ag.getHousesOnMarket();
+                                    for(int i = 0; i < ag.getNrHousesOnMarket(); i++)
+                                    {
+                                        cout << "\t Building " << i << endl;
+                                        cout << buildingsOnMarket[i] << endl;
+                                    }
+                                    if(ag.getNrHousesOnMarket() == 0)
+                                        cout << "Agentul nu are case disponibile!\n";
+                                    else
+                                    {
+                                        cout << "Introduceti nr casei pe care doriti sa o mutati la case vandute:\n";
+                                        int nr2;
+                                        cin >> nr2;
+                                        if(nr2 < 0 || nr2 >= ag.getNrHousesOnMarket())
+                                            cout << "Casa nu exista in lista\n";
+                                        else
+                                        {
+                                            ag.changeStatusToSold(buildingsOnMarket[nr2]);
+                                            cout << "Casa a fost mutata!\n";
+                                        }
+                                    }
+                                    break;
+                                }
+                            case 11:
+                                {
+                                    cout << "Afisare case disponibile: \n";
+                                    Building* buildingsOnMarket;
+                                    buildingsOnMarket = ag.getHousesOnMarket();
+                                    for(int i = 0; i < ag.getNrHousesOnMarket(); i++)
+                                    {
+                                        cout << "\t Building " << i << endl;
+                                        cout << buildingsOnMarket[i] << endl;
+                                    }
+                                    if(ag.getNrHousesOnMarket() == 0)
+                                        cout << "Agentul nu are case disponibile!\n";
+                                    else
+                                    {
+                                        cout << "Introduceti nr casei pe care doriti sa o mutati la case inchiriate:\n";
+                                        int nr2;
+                                        cin >> nr2;
+                                        if(nr2 < 0 || nr2 >= ag.getNrHousesOnMarket())
+                                            cout << "Casa nu exista in lista\n";
+                                        else
+                                        {
+                                            ag.changeStatusToRented(buildingsOnMarket[nr2]);
+                                            cout << "Casa a fost mutata!\n";
+                                        }
+                                    }
+                                    break;
+                                }
+                            default:
+                                cout << "Nu ati ales una din variantele date!\n";
+
+                            }
+                    cout << "Mai doriti sa modificati ceva? (0 - nu sau 1 - da) \n";
+                    cin >> ok2;
+                }
+                cout << "Acesta este agentul modificat:\n";
+                cout << ag << endl;
+                break;
+            }
+        case 5:
+            {
+                cout << "Ce doriti sa modificati la agentie?\n";
+                cout << "\t 1 - Adaugare agent\n";
+                cout << "\t 2 - Adaugare broker\n";
+
+                int o3;
+                cin >> o3;
+                switch(o3){
+                case 1:
+                    {
+                        cout << "Selectati ce tip de agent doriti sa adaugati:\n";
+                        cout << "\t 1 - Salvat\n";
+                        cout << "\t 2 - Introduce agent nou\n";
+
+                        int o4;
+                        switch(o4){
+                        case 1:
+                            {
+                                cout << "---------- Agents ----------\n";
+                                int j = 1;
+                                for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+                                {
+                                    cout << "\t Agent " << j << endl;
+                                    cout << *itr1 << endl;
+                                    j++;
+                                }
+                                cout << endl;
+                                cout << "Introduceti numarul agentului pe care doriti sa il adaugati:\n";
+                                int nr;
+                                cin >> nr;
+                                j = 1;
+                                Agent ag;
+                                for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+                                {
+                                    if(nr == j)
+                                    ag = *itr1;
+                                    j++;
+                                }
+                                cout << endl;
+                                A.addAgent(ag);
+                                cout << "Agentul a fost adaugat!\n";
+                                break;
+                            }
+                        case 2:
+                            {
+                                Agent ag;
+                                cin >> ag;
+                                cout << "Acesta este agentul introdus:\n";
+                                cout << ag << endl;
+                                A.addAgent(ag);
+                                cout << "Agentul a fost adaugat\n";
+                                break;
+                            }
+                        default:
+                            cout << "Nu ati ales una din variantele date!\n";
+
+                        }
+
+                    }
+                case 2:
+                    {
+                        cout << "Selectati ce tip de broker doriti sa adaugati:\n";
+                        cout << "\t 1 - Salvat\n";
+                        cout << "\t 2 - Introduce broker nou\n";
+
+                        int o4;
+                        switch(o4){
+                        case 1:
+                            {
+                                cout << "---------- Brokers ----------\n";
+                                int j = 1;
+                                for(itr = brokers.begin(); itr != brokers.end(); ++itr)
+                                {
+                                    cout << "\t Broker " << j << endl;
+                                    cout << *itr << endl;
+                                    j++;
+                                }
+                                cout << endl;
+                                cout << "Introduceti numarul brokerului pe care doriti sa il adaugati:\n";
+                                int nr;
+                                cin >> nr;
+                                j = 1;
+                                Broker bk;
+                                for(itr = brokers.begin(); itr != brokers.end(); ++itr)
+                                {
+                                    if(nr == j)
+                                    bk = *itr;
+                                    j++;
+                                }
+                                cout << endl;
+                                A.addBroker(bk);
+                                cout << "Brokerul a fost adaugat!\n";
+                                break;
+                            }
+                        case 2:
+                            {
+                                Broker bk;
+                                cin >> bk;
+                                cout << "Acesta este brokerul introdus:\n";
+                                cout << bk << endl;
+                                A.addBroker(bk);
+                                cout << "Brokerul a fost adaugat\n";
+                                break;
+                            }
+                        default:
+                            cout << "Nu ati ales una din variantele date!\n";
+                        }
+                    }
+                default:
+                    cout << "Nu ati ales una din variantele date!\n";
+                }
+            }
+        default:
+            cout << "Nu ati ales una din variantele date!\n";
+        }
+
+        break;
+    }
+    case 4:         //tranzactii
+    {
+        cout << "Ce tranzactie doriti?\n";
+        cout << "\t 0 - Exit\n";
+        cout << "\t 1 - Cumparare\n";
+        cout << "\t 2 - Inchiriere\n";
+        cout << "\t 3 - Adaugare casa noua unui agent\n";
+
+        int o2;
+        cin >> o2;
+        switch(o2){
+        case 0:
+            {
+                cout << "Ati iesit din program!\n";
+                break;
+            }
+        case 1:
+            {
+                cout << "Selectati agent:\n";
+                cout << "\t 1 - Salvat\n";
+                cout << "\t 2 - Nou\n";
+
+                Agent ag;
+
+                int o3;
+                cin >> o3;
+                switch(o3){
+                case 1:
+                    {
+                        cout << "---------------- Agents ----------------\n";
+                        int j = 1;
+                        for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+                        {
+                            cout << "\t Agent " << j << endl;
+                            cout << *itr1 << endl;
+                            j++;
+                        }
+                        cout << endl;
+                        cout << "Introduceti numarul agentului pe care doriti sa il selectati:\n";
+                        int nr;
+                        cin >> nr;
+                        j = 1;
+
+                        for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+                        {
+                            if(nr == j)
+                                ag = *itr1;
+                            j++;
+                        }
+                        cout << endl;
+                        break;
+                    }
+                case 2:
+                    {
+                        cout << "Introdceti un agent nou:\n";
+                        cin >> ag;
+                        cout << "Agentul introdus:\n";
+                        cout << ag << endl;
+                        break;
+                    }
+                default:
+                    cout << "Nu ati introdus o varianta activa!\n";
+                }
+
+                cout << "Selectati cumparator:\n";
+                cout << "\t 1 - Salvat\n";
+                cout << "\t 2 - Nou\n";
+
+                Buyer by;
+
+                cin >> o3;
+                switch(o3){
+                case 1:
+                    {
+                        cout << "---------------- Buyers ----------------\n";
+                        int j = 1;
+                        for(auto i = buyers.begin(); i != buyers.end(); ++i)
+                        {
+                            cout << "\t Buyer " << j << endl;
+                            cout << *i << endl;
+                            j++;
+                        }
+                        cout << endl;
+                        cout << "Introduceti numarul cumparatorului pe care doriti sa il selectati:\n";
+                        int nr;
+                        cin >> nr;
+                        j = 1;
+                        for(auto i = buyers.begin(); i != buyers.end(); ++i)
+                        {
+                            if(nr == j)
+                                by = *i;
+                            j++;
+                        }
+                        cout << endl;
+                        break;
+                    }
+                case 2:
+                    {
+                        cout << "Introdceti un cumparator nou:\n";
+                        cin >> by;
+                        cout << "Cumparatorul introdus:\n";
+                        cout << by << endl;
+                        break;
+                    }
+                default:
+                    cout << "Nu ati introdus o varianta activa!\n";
+                }
+
+                cout << "Selectati cladirea:\n";
+                cout << "\t 1 - Salvata\n";
+                cout << "\t 2 - Noua\n";
+
+                Building bu;
+
+                cin >> o3;
+                switch(o3){
+                case 1:
+                    {
+                        cout << "---------------- Buildings ----------------\n";
+                        for(it = buildings.begin(); it != buildings.end(); ++it)
+                        {
+                            cout << "\t Building " << it->first << endl;
+                            cout << it->second << endl;
+                        }
+                        cout << endl;
+                        cout << "Introduceti numarul cladirii pe care doriti sa o selectati:\n";
+                        int nr;
+                        cin >> nr;
+                        bu = buildings[nr];
+                        cout << endl;
+                        break;
+                    }
+                case 2:
+                    {
+                        cout << "Introdceti o cladire nou:\n";
+                        cin >> bu;
+                        cout << "Cladirea introdus:\n";
+                        cout << bu << endl;
+                        break;
+                    }
+                default:
+                    cout << "Nu ati introdus o varianta activa!\n";
+                }
+
+                cout << "\t Agent:\n";
+                cout << ag << endl;
+                cout << "\t Cumparator:\n";
+                cout << by << endl;
+                cout << "\t Cladire:\n";
+                cout << bu << endl;
+
+                TransactionsSingleton *t = t -> getInstance();
+                t -> buy(bu, by, ag);
+
+                cout << "Acestea sunt modificarile:\n";
+                cout << "\t Agent:\n";
+                cout << ag << endl;
+                cout << "\t Cumparator:\n";
+                cout << by << endl;
+                cout << "\t Cladire:\n";
+                cout << bu << endl;
+                break;
+            }
+        case 2:
+            {
+
+                cout << "Selectati agent:\n";
+                cout << "\t 1 - Salvat\n";
+                cout << "\t 2 - Nou\n";
+
+                Agent ag;
+
+                int o3;
+                cin >> o3;
+                switch(o3){
+                case 1:
+                    {
+                        cout << "---------------- Agents ----------------\n";
+                        int j = 1;
+                        for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+                        {
+                            cout << "\t Agent " << j << endl;
+                            cout << *itr1 << endl;
+                            j++;
+                        }
+                        cout << endl;
+                        cout << "Introduceti numarul agentului pe care doriti sa il selectati:\n";
+                        int nr;
+                        cin >> nr;
+                        j = 1;
+
+                        for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+                        {
+                            if(nr == j)
+                                ag = *itr1;
+                            j++;
+                        }
+                        cout << endl;
+                        break;
+                    }
+                case 2:
+                    {
+                        cout << "Introdceti un agent nou:\n";
+                        cin >> ag;
+                        cout << "Agentul introdus:\n";
+                        cout << ag << endl;
+                        break;
+                    }
+                default:
+                    cout << "Nu ati introdus o varianta activa!\n";
+                }
+
+                cout << "Selectati cumparator:\n";
+                cout << "\t 1 - Salvat\n";
+                cout << "\t 2 - Nou\n";
+
+                Buyer by;
+
+                cin >> o3;
+                switch(o3){
+                case 1:
+                    {
+                        cout << "---------------- Buyers ----------------\n";
+                        int j = 1;
+                        for(auto i = buyers.begin(); i != buyers.end(); ++i)
+                        {
+                            cout << "\t Buyer " << j << endl;
+                            cout << *i << endl;
+                            j++;
+                        }
+                        cout << endl;
+                        cout << "Introduceti numarul cumparatorului pe care doriti sa il selectati:\n";
+                        int nr;
+                        cin >> nr;
+                        j = 1;
+                        for(auto i = buyers.begin(); i != buyers.end(); ++i)
+                        {
+                            if(nr == j)
+                                by = *i;
+                            j++;
+                        }
+                        cout << endl;
+                        break;
+                    }
+                case 2:
+                    {
+                        cout << "Introdceti un cumparator nou:\n";
+                        cin >> by;
+                        cout << "Cumparatorul introdus:\n";
+                        cout << by << endl;
+                        break;
+                    }
+                default:
+                    cout << "Nu ati introdus o varianta activa!\n";
+                }
+
+                cout << "Selectati cladirea:\n";
+                cout << "\t 1 - Salvata\n";
+                cout << "\t 2 - Noua\n";
+
+                Building bu;
+
+                cin >> o3;
+                switch(o3){
+                case 1:
+                    {
+                        cout << "---------------- Buildings ----------------\n";
+                        for(it = buildings.begin(); it != buildings.end(); ++it)
+                        {
+                            cout << "\t Building " << it->first << endl;
+                            cout << it->second << endl;
+                        }
+                        cout << endl;
+                        cout << "Introduceti numarul cladirii pe care doriti sa o selectati:\n";
+                        int nr;
+                        cin >> nr;
+                        bu = buildings[nr];
+                        cout << endl;
+                        break;
+                    }
+                case 2:
+                    {
+                        cout << "Introdceti o cladire nou:\n";
+                        cin >> bu;
+                        cout << "Cladirea introdus:\n";
+                        cout << bu << endl;
+                        break;
+                    }
+                default:
+                    cout << "Nu ati introdus o varianta activa!\n";
+                }
+
+                cout << "\t Agent:\n";
+                cout << ag << endl;
+                cout << "\t Cumparator:\n";
+                cout << by << endl;
+                cout << "\t Cladire:\n";
+                cout << bu << endl;
+
+                TransactionsSingleton *t = t -> getInstance();
+                t -> rent(bu, by, ag);
+                cout << "Acestea sunt modificarile:\n";
+                cout << "\t Agent:\n";
+                cout << ag << endl;
+                cout << "\t Cumparator:\n";
+                cout << by << endl;
+                cout << "\t Cladire:\n";
+                cout << bu << endl;
+
+                break;
+            }
+        case 3:
+            {
+                cout << "Selectati agent:\n";
+                cout << "\t 1 - Salvat\n";
+                cout << "\t 2 - Nou\n";
+
+                Agent ag;
+
+                int o3;
+                cin >> o3;
+                switch(o3){
+                case 1:
+                    {
+                        cout << "---------------- Agents ----------------\n";
+                        int j = 1;
+                        for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+                        {
+                            cout << "\t Agent " << j << endl;
+                            cout << *itr1 << endl;
+                            j++;
+                        }
+                        cout << endl;
+                        cout << "Introduceti numarul agentului pe care doriti sa il selectati:\n";
+                        int nr;
+                        cin >> nr;
+                        j = 1;
+
+                        for(itr1 = agents.begin(); itr1 != agents.end(); ++itr1)
+                        {
+                            if(nr == j)
+                                ag = *itr1;
+                            j++;
+                        }
+                        cout << endl;
+                        break;
+                    }
+                case 2:
+                    {
+                        cout << "Introdceti un agent nou:\n";
+                        cin >> ag;
+                        cout << "Agentul introdus:\n";
+                        cout << ag << endl;
+                        break;
+                    }
+                default:
+                    cout << "Nu ati introdus o varianta activa!\n";
+                }
+
+                cout << "Selectati cladirea:\n";
+                cout << "\t 1 - Salvata\n";
+                cout << "\t 2 - Noua\n";
+
+                Building bu;
+
+                cin >> o3;
+                switch(o3){
+                case 1:
+                    {
+                        cout << "---------------- Buildings ----------------\n";
+                        for(it = buildings.begin(); it != buildings.end(); ++it)
+                        {
+                            cout << "\t Building " << it->first << endl;
+                            cout << it->second << endl;
+                        }
+                        cout << endl;
+                        cout << "Introduceti numarul cladirii pe care doriti sa o selectati:\n";
+                        int nr;
+                        cin >> nr;
+                        bu = buildings[nr];
+                        cout << endl;
+                        break;
+                    }
+                case 2:
+                    {
+                        cout << "Introdceti o cladire nou:\n";
+                        cin >> bu;
+                        cout << "Cladirea introdus:\n";
+                        cout << bu << endl;
+                        break;
+                    }
+                default:
+                    cout << "Nu ati introdus o varianta activa!\n";
+                }
+
+                TransactionsSingleton *t = t -> getInstance();
+                t -> newHouse(bu, ag);
+
+                cout << "Casa a fost adaugata! Agentul modificat: \n";
+                cout << ag << endl;
+                break;
+            }
+        default:
+            cout << "Nu ati introdus o varianta activa!\n";
+        }
+        break;
+    }
+    case 5:
+    {
+        writeFiles();
+        break;
+    }
+    default:
+        cout << "Nu ati introdus o varianta activa!\n";
+
+    }                       //end of switch o1
+
+    cout << "Mai doriti si altceva? (0 - nu sau 1 - da)\n";
+    cin >> ok;
+    if(ok == 0)
+        cout << "Asta a fost tot, multumim!\n";
+}
+}
+
+int main()
+{
+
+    readFiles();
+    meniu();
+
+    f1.close();
+    f2.close();
+    f3.close();
+    g.close();
+
+    return 0;
+}
