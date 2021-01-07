@@ -32,4 +32,5 @@ contractelor de vanzare si inchiriere. Am luat ca si coeficient 5% din pretul im
 am inmultit pretul imobilului cu 0,6. In clasa Agent exista functii prin care pot fi adaugate/scoase case din cele 3 liste si functii prin care unor case li se schimba statutul
 din "available" in "rented" sau "sold". Tot in aceasta clasa am supraincarcat operatorul "+" pentru a adauga case in portofoliul agentului. La aceasta adaugare, programul
 identifica lista in care trebuie pusa casa cu ajutorul variabilei "state" din Building.
-
+    
+    In varianta finala am adaugat template si am construit clasa Transactions folosind Singleton.
