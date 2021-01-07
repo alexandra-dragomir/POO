@@ -1,0 +1,115 @@
+============================================ BUILDINGS =============================================
+	 Building 1
+Dragomir Alexandra are o proprietate de 70 mp construita in anul 2019
+Suprafete pe camere sunt: 
+Camera 1 are 30.00 mp 
+Camera 2 are 40.00 mp 
+Imobilul se afla in zona: Str Babesti, 12
+Apartament este disponibil. Nu are spatiu exterior. Pretul imobilului este de 100000.00
+
+	 Building 2
+Popa Alex are o proprietate de 60.00 mp construita in anul 2016
+Suprafete pe camere sunt: 
+Camera 1 are 60.00 mp 
+Imobilul se afla in zona: Victoriei, 20
+Garsoniera este disponibil. Nu are spatiu exterior. Pretul imobilului este de 20000.00
+
+	 Building 3
+Constantinescu Alin are o proprietate de 100.00 mp construita in anul 2010
+Suprafete pe camere sunt: 
+Camera 1 are 40.00 mp 
+Camera 2 are 40.00 mp 
+Camera 3 are 20.00 mp 
+Imobilul se afla in zona: Unirii, 45
+Apartament este inchiriat. Are spatiu exterior. Pretul imobilului este de 3500000.00
+
+	 Building 4
+Costache Marin are o proprietate de 110.00 mp construita in anul 2018
+Suprafete pe camere sunt: 
+Camera 1 are 20.00 mp 
+Camera 2 are 30.00 mp 
+Camera 3 are 20.00 mp 
+Camera 4 are 40.00 mp 
+Imobilul se afla in zona: Pipera
+Casa este inchiriat. Are spatiu exterior. Pretul imobilului este de 500000.00
+
+	 Building 5
+Sandu Livia are o proprietate de 70.00 mp construita in anul 2015
+Suprafete pe camere sunt: 
+Camera 1 are 70.00 mp 
+Imobilul se afla in zona: Victoriei, 21
+Garsoniera este vandut. Nu are spatiu exterior. Pretul imobilului este de 40000.00
+
+	 Building 6
+Constantinescu Maria are o proprietate de 70.00 mp construita in anul 2010
+Suprafete pe camere sunt: 
+Camera 1 are 30.00 mp 
+Camera 2 are 40.00 mp 
+Imobilul se afla in zona: Titan
+Apartament este vandut. Nu are spatiu exterior. Pretul imobilului este de 40000.00
+
+============================================== BUYERS ==============================================
+	 Buyer 1
+Persoana Dragomir Alexandra, in varsta de 20 este interesata sa cumpere.
+Are un salariu de 5000.00
+Venitul total este de: 90000.00
+Are cnp ul acesta: 6000000000000 si Id ul acesta: 7
+
+	 Buyer 2
+Persoana Chitu Maria, in varsta de 25 este interesata sa inchirieze.
+Are un salariu de 3000.00
+Venitul total este de: 46000.00
+Are cnp ul acesta: 2000000000000 si Id ul acesta: 8
+
+	 Buyer 3
+Persoana John Smith, in varsta de 30 este interesata sa cumpere.
+Are un salariu de 10000.00
+Venitul total este de: 120000.00
+Are cnp ul acesta: 4000000000000 si Id ul acesta: 6
+
+============================================= BROKERS ==============================================
+	 Broker 1
+Calin Andrei are un salariu de 4500.00 si 3 ani vechime.Are id-ul 5.
+Brokerul are un numar de 3 contracte si 3 ani in pozitie de conducere.
+
+	 Broker 2
+Calin Marian are un salariu de 4000.00 si 4 ani vechime.Are id-ul 6.
+Brokerul are un numar de 2 contracte si 2 ani in pozitie de conducere.
+
+============================================== AGENTS ==============================================
+	 Agent 1
+Popescu Alex are un salariu de 3000.00 si 5 ani vechime.Are id-ul 7.
+Acesta a vandut si inchiriat 2 case, din care a obtinut un comision de 12900.00
+Casele inchiriate sunt acestea:
+--- Proprietar: Constantinescu Alin--- Adresa: Unirii, 45
+Casele vandute sunt acestea:
+--- Proprietar: Sandu Livia--- Adresa: Victoriei, 21--- starea: s
+Casele disponibile sunt acestea:
+--- Proprietar: Dragomir Alexandra--- Adresa: Str Babesti, 12
+
+	 Agent 2
+Petru Luca are un salariu de 3000.00 si 6 ani vechime.Are id-ul 8.
+Acesta a vandut si inchiriat 2 case, din care a obtinut un comision de 3900.00
+Casele inchiriate sunt acestea:
+--- Proprietar: Costache Marin--- Adresa: Pipera
+Casele vandute sunt acestea:
+--- Proprietar: Constantinescu Maria--- Adresa: Titan--- starea: s
+Casele disponibile sunt acestea:
+--- Proprietar: Popa Alex--- Adresa: Victoriei, 20
+
+	 Agent 3
+Popescu Andrei are un salariu de 5000.00 si 7 ani vechime.Are id-ul 9.
+Acesta a vandut si inchiriat 0 case, din care a obtinut un comision de 0.00
+Nu are case disponibile momentan
+
+============================================== AGENCY ==============================================
+Agentia imobiliara Real Estate Bucharest are 5 angajati. A fost infiintata in anul 2010
+Cifra de afaceri a agentiei Real Estate Bucharest este de 1000000000.00
+Brokerii sunt: 
+	 - Calin Andrei
+	 - Calin Marian
+Agentii sunt: 
+	 - Popescu Andrei
+	 - Popescu Alex
+	 - Petru Luca
+
