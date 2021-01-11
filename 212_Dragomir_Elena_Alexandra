@@ -1,0 +1,639 @@
+#include <iostream>
+#include <string.h>
+#include <string>
+#include <stdio.h>
+#include <iomanip>
+#include <iterator>
+#include <set>
+#include <map>
+#include <vector>
+#include <list>
+#include <fstream>
+
+using namespace std;
+
+/*
+Dragmir Elena Alexandra - 212
+GNU GCC Compiler
+Szmeteanca Eduard Gabriel
+*/
+
+
+class Vaccin{
+
+private:
+    float pret;
+    float temperatura;
+    list <string> substante;
+    string producator;
+
+public:
+    Vaccin(){
+        pret = 0;
+        temperatura = 0;
+    }
+    Vaccin(float pret, float temperatura, list<string> substante, string producator){
+        this -> pret = pret;
+        this-> temperatura  = temperatura;
+        this -> substante = substante;
+        this -> producator = producator;
+    }
+
+    Vaccin(const Vaccin& v){
+        this -> pret = v.pret;
+        this-> temperatura  = v.temperatura;
+        this -> substante = v.substante;
+        this -> producator = v.producator;
+    }
+
+    string getProducator() { return this -> producator; }
+
+    virtual void afisareSchemaVaccinare() { cout << "nu exista o schema de vaccinare deoarece nu ati introdus un tip de vaccin\n";}
+
+    Vaccin& operator = (const Vaccin& v){
+        if(this != &v){
+            this -> pret = v.pret;
+            this-> temperatura  = v.temperatura;
+
+            if(this -> substante.size() != 0)
+                this -> substante.clear();
+            this -> substante = v.substante;
+            this -> producator = v.producator;
+        }
+        return *this;
+    }
+
+    friend istream& operator >> (istream& in, Vaccin& v){
+        cout << "Producator: "; in >> v.producator;
+        cout << "Pret: "; in >> v.pret;
+        cout << "Temperatura de epozitare: "; in >> v.temperatura;
+        cout << "Nr de substante continute: ";
+        int nr;
+        in >> nr;
+        for(int i = 0; i < nr; i++){
+            string s;
+            in >> s;
+            v.substante.push_back(s);
+        }
+        in.get();
+        return in;
+    }
+
+    friend ostream& operator << (ostream& out, Vaccin& v){
+        out << "Producator: " << v.producator;
+        out << "\nPret: " << v.pret;
+        out << "\nTemperatura de epozitare: " << v.temperatura;
+        out << "\nSubstante continute: \n";
+
+        list<string> :: iterator it;
+
+        for(it = v.substante.begin(); it != v.substante.end(); ++it){
+            out << "\t-" << *it <<endl;
+        }
+        return out;
+    }
+
+    ~Vaccin(){
+        substante.clear();
+    }
+};
+
+class VaccinAntiGripal : public Vaccin{
+
+
+private:
+    vector <string> tulpina;
+    bool recomandare;
+
+public:
+    VaccinAntiGripal() : Vaccin(){
+        recomandare = 0;
+    }
+
+    VaccinAntiGripal(float pret, float temperatura, list <string> substante, string producator, vector <string> tulpina, bool recomandare) : Vaccin(pret, temperatura, substante, producator){
+        this -> tulpina = tulpina; //strcpy(this -> tulpina, tulpina);
+        this -> recomandare = recomandare;
+    }
+
+
+    VaccinAntiGripal(const VaccinAntiGripal& v) : Vaccin(v){
+        this -> tulpina = v.tulpina;
+        this -> recomandare = v.recomandare;
+    }
+
+    void afisareSchemaVaccinare() {
+        cout << "Vaccinul se administreaza la adulti o doza de 0.5 ml, iar la copii și adolescenți o doza de 0.3 ml, repetandu-se din 2 în 2 ani\n";
+    }
+
+    VaccinAntiGripal& operator = (const VaccinAntiGripal& v){
+        if(this != &v){
+            Vaccin :: operator = (v);
+            if(this -> tulpina.size() != 0)
+                this -> tulpina.clear();
+            this -> tulpina = v.tulpina;
+            this -> recomandare = v.recomandare;
+        }
+        return *this;
+    }
+
+    friend istream& operator >> (istream& in, VaccinAntiGripal& v){
+        in >> (Vaccin&)v;
+        int nr;
+        cout << "Nr tulpini: "; in >> nr;
+        for(int i = 0; i < nr; i++){
+            string s;
+            in >> s;
+            v.tulpina.push_back(s);
+        }
+        int ok = 1;
+        while(ok){
+            cout << "Respecta recomandarile? (0 - nu, 1 - da)";
+            int a;
+            in >> a;
+            try{
+                if(a != 0 && a != 1) throw -1;
+                v.recomandare = bool(a);
+                ok = 0;
+            }
+            catch(int){
+                cout << "Nu este de tip bool!\n";
+                ok = 1;
+            }
+        }
+
+        return in;
+    }
+
+    friend ostream& operator << (ostream& out, VaccinAntiGripal& v){
+        out << (Vaccin&)v;
+
+        out << "Tulpini: \n";
+
+        for(int i = 0; i < v.tulpina.size(); i++){
+            out << v.tulpina[i] << " ";
+        }
+        out << endl;
+        out << "\nResspecta: " << v.recomandare;
+        return out;
+    }
+
+    ~VaccinAntiGripal(){
+        tulpina.clear();
+    }
+
+
+};
+
+class VaccinSarsCov2 : public Vaccin{
+
+private:
+    list <string> reactii;
+    float eficienta;
+    list <string> medicamente;
+
+public:
+    VaccinSarsCov2() : Vaccin(){
+        eficienta = 0;
+    }
+
+    VaccinSarsCov2(float pret, float temperatura, list <string> substante, string producator, list <string> reactii, float eficienta, list<string> medicamente) : Vaccin(pret, temperatura, substante, producator){
+        this -> reactii = reactii;
+        this -> eficienta = eficienta;
+        this -> medicamente = medicamente;
+    }
+
+
+    VaccinSarsCov2(const VaccinSarsCov2& v) : Vaccin(v){
+        this -> reactii = v.reactii;
+        this -> eficienta = v.eficienta;
+        this -> medicamente = v.medicamente;
+    }
+
+    void afisareSchemaVaccinare(){
+        cout << "Vaccinul se administreaza persoanelor cu varsta de peste 16 ani, 2 doze la o perioada de 21 zile\n";
+    }
+
+    VaccinSarsCov2& operator = (const VaccinSarsCov2& v){
+        if(this != &v){
+            Vaccin :: operator = (v);
+            if(this -> reactii.size() != 0)
+                this -> reactii.clear();
+            if(this -> medicamente.size() != 0)
+                this -> medicamente.clear();
+
+            this -> reactii = v.reactii;
+            this -> eficienta = v.eficienta;
+            this -> medicamente = v.medicamente;
+        }
+        return *this;
+    }
+
+    friend istream& operator >> (istream& in, VaccinSarsCov2& v){
+        in >> (Vaccin&)v;
+        int nr;
+        cout << "Nr reactii: "; in >> nr;
+        for(int i = 0; i < nr; i++){
+            string s;
+            in >> s;
+            v.reactii.push_back(s);
+        }
+        cout << "Nr medicamente: "; in >> nr;
+        for(int i = 0; i < nr; i++){
+            string s;
+            in >> s;
+            v.medicamente.push_back(s);
+        }
+        cout << "Eficienta: "; in >> v.eficienta;
+
+        return in;
+    }
+
+    friend ostream& operator << (ostream& out, VaccinSarsCov2& v){
+        out << (Vaccin&)v;
+        list<string> :: iterator itr;
+        out << "Reactii : \n";
+        for(itr = v.reactii.begin(); itr != v.reactii.end(); ++itr){
+            out << "\t-" << *itr << endl;
+        }
+        out << "Medicamente : \n";
+        for(itr = v.medicamente.begin(); itr != v.medicamente.end(); ++itr){
+            out << "\t-" << *itr << endl;
+        }
+
+        out << "Eficienta: " << v.eficienta;
+
+        return out;
+    }
+
+    ~VaccinSarsCov2(){
+        reactii.clear();
+        medicamente.clear();
+    }
+
+
+
+};
+
+class VaccinAntiHepatita : public Vaccin{
+
+private:
+    char tipHepatita;
+    char* modVaccinare;
+
+public:
+    VaccinAntiHepatita() : Vaccin(){
+        tipHepatita = ' ';
+        modVaccinare = new char[0];
+    }
+
+    VaccinAntiHepatita(float pret, float temperatura, list <string> substante, string producator, char tipHepatita, char* modVaccinare) : Vaccin(pret, temperatura, substante, producator){
+        this -> tipHepatita = tipHepatita;
+        strcpy(this -> modVaccinare, modVaccinare);
+    }
+
+
+    VaccinAntiHepatita(const VaccinAntiHepatita& v) : Vaccin(v){
+        this -> tipHepatita = v.tipHepatita;
+        strcpy(this -> modVaccinare, v.modVaccinare);
+    }
+
+    VaccinAntiHepatita& operator = (const VaccinAntiHepatita& v){
+        if(this != &v){
+            Vaccin :: operator = (v);
+            if(this -> modVaccinare != NULL)
+                delete [] this -> modVaccinare;
+
+            this -> tipHepatita = v.tipHepatita;
+        }
+        return *this;
+    }
+
+    char getTip() { return tipHepatita; }
+
+    void afisareSchemaVaccinare(){
+        if(getTip() == 'C'){
+            cout << "Se administreaza doar la recomandarea medicului\n";
+        }
+        if(getTip() == 'A' || getTip() == 'B'){
+            cout << "La copii cu varsta mai mica de 1 an se adminstreaza 2 injectari la un interval de o luna, a treia injectare după 6 luni de la prima administrare, la adulti conform schemei de imunizare recomandata de medic\n";
+        }
+    }
+
+    friend istream& operator >> (istream& in, VaccinAntiHepatita& v){
+        in >> (Vaccin&)v;
+        in.get();
+        cout << "Tip hepatita: "; in >> v.tipHepatita; in.get();
+        cout << "Mod vaccinare: ";
+        char a[100];
+        in.get(a, 100);
+        in.get();
+        strcpy(v.modVaccinare, a);
+
+        return in;
+    }
+
+    friend ostream& operator << (ostream& out, VaccinAntiHepatita& v){
+        out << (Vaccin&)v;
+        out << "Tip hepatita: " << v.tipHepatita;
+        out << "\nMod vaccinare: " << v.modVaccinare << endl;
+
+        return out;
+    }
+
+    ~VaccinAntiHepatita(){
+        if(this -> modVaccinare != NULL)
+            delete [] this -> modVaccinare;
+    }
+
+
+
+};
+
+class Comanda{
+
+protected:
+    const int idComanda;           //proiect personal
+    static int currentId;
+    char* data;
+    char* nume;
+    vector<Vaccin> vaccinuri;
+    int *cantitati;
+
+public:
+
+    Comanda() : idComanda(currentId ++ ){
+        data = new char[0];
+        nume = new char[0];
+        cantitati = new int[0];
+    }
+
+    Comanda(char* data, char* nume, vector<Vaccin> vaccinuri, int* cantitati) : idComanda(currentId ++ ){
+        strcpy(this -> data, data);
+        strcpy(this -> nume, nume);
+        this -> vaccinuri = vaccinuri;
+        this -> cantitati = new int[vaccinuri.size()];
+        for(int i = 0; i < vaccinuri.size(); i++){
+            this -> cantitati[i] = cantitati[i];
+        }
+    }
+
+    Comanda(const Comanda& c) : idComanda(currentId ++ ){
+        strcpy(this -> data, c.data);
+        strcpy(this -> nume, c.nume);
+        this -> vaccinuri = c.vaccinuri;
+        this -> cantitati = new int[c.vaccinuri.size()];
+        for(int i = 0; i < c.vaccinuri.size(); i++){
+            this -> cantitati[i] = c.cantitati[i];
+        }
+    }
+
+    Comanda& operator = (const Comanda& c){
+        if(this != &c){
+
+            if(this -> data != NULL)
+                delete [] this -> data;
+            if(this -> nume != NULL)
+                delete [] this -> nume;
+            if(this -> cantitati != NULL)
+                delete [] this -> cantitati;
+
+            this -> data = new char[strlen(c.data) + 1];
+            this -> nume = new char[strlen(c.nume) + 1];
+            this -> cantitati = new int[c.vaccinuri.size()];
+
+            strcpy(this -> data, c.data);
+            strcpy(this -> nume, c.nume);
+
+            this -> vaccinuri = c.vaccinuri;
+
+            for(int i = 0; i < vaccinuri.size(); i++){
+                this -> cantitati[i] = cantitati[i];
+            }
+        }
+        return *this;
+    }
+
+    friend istream& operator >> (istream& in, Comanda& c){
+
+        cout << "Data: ";
+        char a[100];
+        in.get(a, 100);
+        in.get();
+        strcpy(c.data, a);
+
+        cout << "Nume: ";
+        char b[100];
+        in.get(b, 100);
+        in.get();
+        strcpy(c.nume, b);
+
+        int nr;
+        cout << "Vaccinuri comandate: \n";
+        cout << "Nr vaccinuri : "; in >> nr;
+
+        c.cantitati = new int[nr];
+      //  map<Vaccin, int> :: iterator it;
+
+        for(int i = 0; i < nr; i++){
+            cout << "Vaccinul " << i + 1 << endl;
+            Vaccin v;
+            cin >> v;
+            c.vaccinuri.push_back(v);
+
+            cout << "Nr de doze "; in >> c.cantitati[i];
+
+        }
+
+        return in;
+    }
+
+    friend ostream& operator << (ostream& out, Comanda& c){
+
+        out << "Data: " << c.data;
+        out << "\nNume: " << c.nume;
+
+        out << "\nVaccinuri comandate: \n";
+
+        int nr = c.vaccinuri.size();
+
+        for(int i = 0; i < nr; i++){
+            out << "Vaccinul " << i + 1 << endl;
+            out << c.vaccinuri[i];
+            out << "Nr de doze ";
+            out << c.cantitati[i] << endl;
+
+        }
+        return out;
+    }
+
+    ~Comanda(){
+        if(this -> data != NULL)
+            delete [] this -> data;
+        if(this -> nume != NULL)
+            delete [] this -> nume;
+        if(this -> cantitati != NULL)
+            delete [] this -> cantitati;
+
+        vaccinuri.clear();
+
+    }
+
+};
+
+int Comanda :: currentId = 0;
+
+class ListaComenzi{
+private:
+    vector<Comanda> comenzi;
+public:
+    ListaComenzi(){}
+
+    vector<Comanda> getComenzi() { return this -> comenzi; }
+
+    ListaComenzi& operator + (Comanda& c)
+    {
+        comenzi.push_back(c);
+        return *this;
+    }
+    ~ListaComenzi(){
+        comenzi.clear();
+    }
+};
+
+
+ofstream g("dateOUT.txt");
+
+
+class Program{            //  https://stackoverflow.com/questions/1008019/c-singleton-design-pattern un model de singleton care mi s-a parut complet si folositor in contextul meniului
+private:
+
+    static Program *instance;
+    Program(){}
+public:
+    vector <Vaccin> vaccinuri;
+    vector <Comanda> comenzi;
+
+    static Program *getInstance(){
+        if(!instance)
+            instance = new Program;
+        return instance;
+    }
+    Program(Program const&) = delete;
+    Program& operator = (Program const&) = delete;
+
+    void addVaccin(){
+        cout << "Ce fel de vaccin? (0 - antigripal, 1 - antihepatic, 2 - antiSarsCov2) \n";
+        int o1;
+        cin >> o1;
+        switch(o1){
+        case 0:
+            {
+                VaccinAntiGripal v;
+                cin >> v;
+                vaccinuri.push_back(v);
+                break;
+            }
+        case 1:
+            {
+                VaccinAntiHepatita v;
+                cin >> v;
+                vaccinuri.push_back(v);
+                break;
+            }
+        case 2:
+            {
+                VaccinSarsCov2 v;
+                cin >> v;
+                vaccinuri.push_back(v);
+                break;
+            }
+        default:
+            cout << "nu ati intrododus o varianta corecta\n";
+        }
+
+    }
+    void afisareVaccin(){
+        for(int i = 0; i < vaccinuri.size(); i++){
+            cout << "\tVaccinul " << i + 1 << endl;
+            cout << vaccinuri[i] << endl;
+        }
+    }
+
+    void numeProducatori(){
+        for(int i = 0; i < vaccinuri.size(); i++){
+            cout << "\tVaccinul " << i + 1 << " : ";
+            cout << vaccinuri[i].getProducator() << endl;
+        }
+    }
+    void addComanda(){
+        Comanda v;
+        cin >> v;
+        comenzi.push_back(v);
+    }
+
+    void afisareComenzi(){
+        for(int i = 0; i < comenzi.size(); i++){
+            cout << "\tComanda " << i + 1 << endl;
+            cout << comenzi[i] << endl;
+        }
+    }
+
+    void exportComenzi(){
+        for(int i = 0; i < comenzi.size(); i++){
+            g << "\tComanda " << i + 1 << endl;
+            g << comenzi[i] << endl;
+        }
+    }
+
+
+};
+
+Program *Program :: instance = 0;
+
+
+int main()
+{
+
+    Program *p = p -> getInstance();
+
+    int ok = 1;
+    while(ok){
+        cout << "Ce doriti sa faceti?\n";
+        cout << "1 - adaugare vaccin\n";
+        cout << "2 - afisare vaccin\n";
+        cout << "3 - adaugare comanda\n";
+        cout << "4 - afisare comanda\n";
+        cout << "5 - nume producatori\n";
+
+        int o1;
+        cin >> o1;
+        switch(o1){
+        case 1:
+            p -> addVaccin();
+            break;
+        case 2:
+            p -> afisareVaccin();
+            break;
+        case 3:
+            p -> addComanda();
+            break;
+        case 4:
+            p -> afisareComenzi();
+            break;
+        case 5:
+            p -> numeProducatori();
+            break;
+        case 6:
+            p -> exportComenzi();
+            break;
+
+
+        default:
+            cout << "Nu ati introdus nici una dintre variantele date\n";
+        }
+        cout << "\nMai doriti ceva?\n";
+        cin >> ok;
+    }
+
+    return 0;
+}
